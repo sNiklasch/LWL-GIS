@@ -40,9 +40,6 @@ var map, queryTask, query, template, disconHandler;
 var attributeFields = ["Sterberate_2010.Gestorbene", "Kreisname", "Geburtenrate_2010.Lebendgeborene", "Demographie.Fortgezogene", "Katholisch", "Leistungsempfaenger_2005.Leistungsempfänger_Pflegeversicherung_I"]; // used fields from the raw data 
 var diagramFields = new Array(attributeFields.length);
 
-var app = {};
-	app.map = null, app.toolbar = null, app.circle = false, app.symbols = null, app.printer = null;
-
 var activeLayer = 2; // which layer is active at the beginning
 var legend;
 /**
@@ -133,7 +130,15 @@ function init() {
         });
         dojo.connect(dijit.byId('map'), 'resize', map, map.resize);
     });
-
+    
+    //printer:
+    var printer = new esri.dijit.Print({
+          map: map,
+          url: "http://giv-learn2.uni-muenster.de/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task/"
+        }, dojo.byId("slideAwayButton_export"));
+        
+        printer.startup();
+    
     //Baselayer
     tiledMapServiceLayer = new esri.layers.ArcGISTiledMapServiceLayer("http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer");
     osmLayer = new esri.layers.OpenStreetMapLayer();
