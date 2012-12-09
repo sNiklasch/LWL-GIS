@@ -25,7 +25,7 @@ dojo.require("esri.dijit.BasemapGallery");
 dojo.require("esri.arcgis.utils");
 dojo.require("dijit.Tooltip");
 dojo.require("dijit.form.Slider");
-dojo.require("dojo.fx");
+
 
 var breakCount = 0; // keep track of how many individual breaks have been created, used to fetch the correct field values
 var featureLayer; // the active data overlay
@@ -52,7 +52,7 @@ var counter = 0;
 function init() {
     addTooltips(); //the mouse-over tooltips are created programmatically
     initDiagramFields(); //initialize which fields should be used for which diagram layer
-    var popup = new esri.dijit.Popup(null, dojo.create("div")); //init popups for diagrams
+    var popup = new esri.dijit.Popup(null, dojo.create("div")); //ini popups for diagrams
 
     esri.config.defaults.io.proxyUrl = "/arcgisserver/apis/javascript/proxy/proxy.ashx";
 
@@ -111,15 +111,9 @@ function init() {
     });
 
 
-    //resize the map when the browser resizes (CAUSES BUGS, this causes the map to randomly zoom on split mode creation)
-    var resizeTimer;
-    dojo.connect(dijit.byId('map'), 'resize', function() {  //resize the map if the div is resized
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout( function() {
-          //map.resize();
-          map.reposition();
-        }, 500);
-      });
+
+    //resize the map when the browser resizes
+    dojo.connect(dijit.byId('map'), 'resize', map, map.resize);
 
     //Scalebar
     dojo.connect(map, 'onLoad', function (theMap) {
@@ -128,23 +122,18 @@ function init() {
             scalebarUnit: 'metric',
             attachTo: "bottom-left"
         });
-        //dojo.connect(dijit.byId('map'), 'resize', map, map.resize);
+        dojo.connect(dijit.byId('map'), 'resize', map, map.resize);
     });
 
     //Baselayer
     tiledMapServiceLayer = new esri.layers.ArcGISTiledMapServiceLayer("http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer");
     osmLayer = new esri.layers.OpenStreetMapLayer();
     map.addLayer(osmLayer);
-<<<<<<< HEAD
-
-=======
     map.removeLayer(osmLayer);
     
->>>>>>> LWL-GIS added to GitHub
     onLoadCheck();
 
-	  initialColorization();
-	  reLocate();
+	initialColorization();
 }
 
 /*
@@ -175,13 +164,13 @@ function setFeatureLayerOpacity(opacity) {
 function initDiagramFields() {
     diagramFields[4] = new Array(4);
     diagramFields[4][1] = "Katholisch";
-    diagramFields[4][2] = "Evangelisch";
+    diagramFields[4][2] = "Evangelisc";
     diagramFields[4][3] = "Andere";
     diagramFields[4][4] = "Keine";
     diagramFields[5] = new Array(3);
-    diagramFields[5][1] = "Leistungsempfaenger_2005.Leistungsempfänger_Pflegeversicherung_I";
-    diagramFields[5][2] = "Leistungsempfaenger_2005.Leistungsempfänger_Pflegeversicherung_II";
-    diagramFields[5][3] = "Leistungsempfaenger_2005.Leistungsempfänger_Pflegeversicherung_III";
+    diagramFields[5][1] = "'2005$'.Leistungsempfänger Pflegeversicherung I";
+    diagramFields[5][2] = "'2005$'.Leistungsempfänger Pflegeversicherung II";
+    diagramFields[5][3] = "'2005$'.Leistungsempfänger Pflegeversicherung III";
 }
 
 /**
@@ -198,17 +187,12 @@ function initOperationalLayer() {
     featureLayer.setSelectionSymbol(new esri.symbol.SimpleFillSymbol());
     map.addLayers([featureLayer]);
 
+
+    console.log("layerIds:" + map.graphicsLayerIds);
+
+
+
 }
-
-
-/**
-* see http://help.arcgis.com/en/webapi/javascript/arcgis/help/jshelp_start.htm#jshelp/best_practices_feature_layers.htm
-* since changed API version to 2.7 this is method not used anymore
-*/
-function calcOffset() {
-  return (map.extent.getWidth() / map.width);
-}
-
 
 /**
  * additionally to the standard overlay, this can add an invisible,
@@ -230,7 +214,7 @@ function initDiagramLayer() {
 function connectDiagramFunc(layerNr) {
     disconHandler = dojo.connect(map, "onClick", executeQueryTask);
 
-    queryTask = new esri.tasks.QueryTask("http://giv-learn2.uni-muenster.de/ArcGIS/rest/services/LWL/lwl_collection/MapServer/" + layerNr);
+    queryTask = new esri.tasks.QueryTask("http://giv-learn.uni-muenster.de/ArcGIS/rest/services/LWL/lwl_collection/MapServer/" + layerNr);
 
     query = new esri.tasks.Query();
     query.returnGeometry = true;
@@ -288,7 +272,22 @@ function colorChange(count) {
  * This method is used to initially set classes - only used at startup! 
  */
 function initialColorization(){
-	addEqualBreaks(3, "FF0000", "00FF00");
+	symbol = new esri.symbol.SimpleFillSymbol();
+    symbol.setColor(new dojo.Color([150, 150, 150, 0.75]));
+    var renderer = new esri.renderer.ClassBreaksRenderer(symbol, attributeFields[activeLayer]);
+    
+    //the values are layer dependent, so if another initial layer is chosen, these values MUST be changed
+    renderer.addBreak(0,1702,new esri.symbol.SimpleFillSymbol().setColor(new dojo.Color("#FF0000")));
+            
+    renderer.addBreak(1703,3404,new esri.symbol.SimpleFillSymbol().setColor(new dojo.Color("#FFFF00")));
+            
+    renderer.addBreak(3405,5107,new esri.symbol.SimpleFillSymbol().setColor(new dojo.Color("#00FF00")));
+            
+    featureLayer.setRenderer(renderer);
+    featureLayer.refresh();
+
+    legend.refresh();
+	
 }
 
 /**
@@ -323,9 +322,9 @@ function layerChange(layerNr) {
         }
         initDiagramLayer();
         //handling checkbox for the basemap
-    } else if (layerNr == 99 && !(document.getElementById("baseMapChk").checked)) {
+    } else if (layerNr == 50 && !(document.getElementById("baseMapChk").checked)) {
     	map.removeLayer(osmLayer);
-    } else if (layerNr == 99 && (document.getElementById("baseMapChk").checked)) {
+    } else if (layerNr == 50 && (document.getElementById("baseMapChk").checked)) {
     	map.addLayer(osmLayer);
     } else {
 		//following applies if only a 'normal' layer change happens
@@ -353,15 +352,15 @@ function layerChange(layerNr) {
  * method for automatic (equal) breaks
  */
 function addEqualBreaks(number, colorStart, colorEnd) {
-    var breakStep = (maxValues[activeLayer] - minValues[activeLayer]) / (number);
-    var colorArray = generateColor(colorStart, colorEnd, number-1);
-    colorArray.reverse();
+
+    var breakStep = (maxValues[activeLayer] - minValues[activeLayer]) / (number + 1);
+    var colorArray = generateColor(colorStart, colorEnd, number);
 
     symbol = new esri.symbol.SimpleFillSymbol();
     symbol.setColor(new dojo.Color([150, 150, 150, 0.75]));
     var renderer = new esri.renderer.ClassBreaksRenderer(symbol, attributeFields[activeLayer]);
     
-    for (var i = 0; i < number; i++) {
+    for (var i = 0; i <= number; i++) {
         renderer.addBreak(Math.round((minValues[activeLayer] + i * breakStep) / 10) * 10,
         Math.round((minValues[activeLayer] + (i + 1) * breakStep) / 10) * 10,
         new esri.symbol.SimpleFillSymbol().setColor(dojo.colorFromHex('#' + colorArray[i])));
@@ -409,23 +408,21 @@ function executeQueryTask(evt) {
 function reLocate() {
 	for (var i = 0; i < parent.frames.length; i++) { //go through all frames and re-center
 		if (parent.frames[i].name != self.name) {
-			parent.frames[i].reCenterAndZoom(map.extent.getCenter(), map.getLevel()); //due to the frame problematic this does not work sometimes and causes errors
+			parent.frames[i].reCenterAndZoom(map.extent.getCenter(), map.getLevel(), map.extent, i);
 		}
 	}
 }
 
-
 /**
  * in split mode, synchronize zoom levels between both frames
- * (not used anymore)
  */
 function syncZoom(extent, zoomFactor, anchor, level) {
-    console.log("zoom from frame" + self.name);
+    console.log("zoom");
     for (var i = 0; i < parent.frames.length; i++) {
         if (parent.frames[i].name != self.name) { 
             try {
-                console.log("Zoom from syncZoom in frame: " + parent.frames[i].name);
                 parent.frames[i].counter = 0;
+                console.log(level + "/" + zoomFactor);
                 parent.frames[i].map.setLevel(level);
             } catch (err) {
                 console.log("zoom failed");
@@ -439,13 +436,9 @@ function syncZoom(extent, zoomFactor, anchor, level) {
  * check counter (check if the pan happened through actual mouse input) and
  * if the centers of both maps aren't identical
  */
-function reCenterAndZoom(center, zoom) {
+function reCenterAndZoom(center, zoom, extent, frameNr) {
 	if (counter < 1 && map.extent.getCenter().x != center.x && map.extent.getCenter().y != center.y) {
-        if(zoom == map.getLevel()){
-          map.centerAt(center);
-        }else{
-          map.centerAndZoom(center, zoom);
-        }
+        map.centerAndZoom(center, zoom);
     }
     counter++; //is only reset to zero on onMouseDown()
 }
@@ -458,10 +451,7 @@ function onLoadCheck() {
     if (self.name == "frame2") {
         document.getElementById("splitDiv").removeChild(document.getElementById("slideAwayButton_split"));
         if(map != null){
-          //reLocate();
-          //parent.frames[0].map.setLevel(map.getLevel());
-          //map.centerAndZoom(parent.frames[0].map.extent.getCenter(), parent.frames[0].map.getLevel());
-          //map.setLevel(parent.frames[0].map.getLevel());
+          map.setLevel(parent.frames[0].map.getLevel());
         }
     }
 

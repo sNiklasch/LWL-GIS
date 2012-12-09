@@ -21,7 +21,7 @@
     </script>
     
     <!-- ArcGIS Server Script -->
-    <script src="http://serverapi.arcgisonline.com/jsapi/arcgis/?v=2.7">
+    <script src="http://serverapi.arcgisonline.com/jsapi/arcgis/?v=2.6">
     </script>
     <!-- Menu behaviour (icons, sliding etc.) -->
     <script src="wipeMenu.js" type="text/javascript">
@@ -78,7 +78,7 @@
               </a>
               <br>
               <input type="radio" name="Layer" value="Demographie" onchange="layerChange(3)">
-              Auswanderungsrate 
+              Demographie 
               <a id="demographieInfo" style="cursor: help;">
                 <img src="images/Help_sm.png">
               </a>
@@ -114,7 +114,7 @@
      <!-- Base-map selection menu pane -->
      </div>
      <div dojoType="dijit.TitlePane" title="Hintergrundkarte" closable="false"  open="false" style="width:280px; overflow:auto;">
-	     	<input type="checkbox" id="baseMapChk" name="Layer" value="Basemap" onchange="layerChange(99)">
+	     	<input type="checkbox" id="baseMapChk" name="Layer" value="Basemap" onchange="layerChange(50)">
 	     		Hintergrundkarte einblenden
        <!--<div dojoType="dijit.layout.ContentPane" style="height:280px; overflow:auto;">
          <div id="basemapGallery" >
@@ -142,16 +142,14 @@
     <p>
       Klasseneinteilung:
     </p>
-    
     <!-- Individual classes -->
-    <div id="breaksPane" dojoType="dijit.TitlePane" title="Individuell" open="false" style="width:280px; overflow:auto; max-height:230px;">
-      <a> <!-- href="javascript:addIndivBreakField()"> -->
-        <p>Diese Funktion ist zur Zeit deaktiviert.</p>
+    <div id="breaksPane" dojoType="dijit.TitlePane" title="Individuell" open="true" style="width:280px; overflow:auto; max-height:230px;">
+      <a href="javascript:addIndivBreakField()">
         <img src="images/plus20.png">
       </a>
       <table id="Breaks">
       </table>
-    </div> 
+    </div>
     <!-- Automatic classes (equal breaks) -->
     <div dojoType="dijit.TitlePane" title="Automatisch" open="false" style="width:280px; overflow:auto;">
       <table border="0">
