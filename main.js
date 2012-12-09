@@ -1,30 +1,36 @@
 dojo.require("esri.map");
 dojo.require("esri.layers.FeatureLayer");
-dojo.require("dojox.widget.TitleGroup");
-dojo.require("dijit.TitlePane");
-dojo.require("dijit.form.Button");
-dojo.require("dijit.layout.AccordionContainer");
-dojo.require("dojo.parser");
-dojo.require("dijit.form.Textarea");
-dojo.require("dijit.form.DropDownButton");
-dojo.require("dijit.TooltipDialog");
-dojo.require("dijit.form.TextBox");
 dojo.require("esri.layers.osm");
-dojo.require("dijit.form.DropDownButton");
+dojo.require("esri.toolbars.draw");
+dojo.require("esri.dijit.Print");
 dojo.require("esri.dijit.Scalebar");
 dojo.require("esri.dijit.Legend");
+dojo.require("esri.dijit.Popup");
+dojo.require("esri.dijit.BasemapGallery");
+dojo.require("esri.tasks.query");
+dojo.require("esri.tasks.geometry");
+dojo.require("esri.virtualearth.VETiledLayer");
+dojo.require("esri.arcgis.utils");
+
+dojo.require("dojox.widget.TitleGroup");
+dojo.require("dojox.charting.themes.Julie");
+
+dojo.require("dojo.parser");
+
+dojo.require("dijit.form.DropDownButton");
+dojo.require("dijit.form.Button");
+dojo.require("dijit.form.Textarea");
+dojo.require("dijit.form.DropDownButton");
+dojo.require("dijit.form.TextBox");
+dojo.require("dijit.form.CheckBox");
+dojo.require("dijit.form.Slider");
+dojo.require("dijit.TitlePane");
+dojo.require("dijit.TooltipDialog");
 dojo.require("dijit.layout.BorderContainer");
 dojo.require("dijit.layout.ContentPane");
-dojo.require("esri.tasks.query");
-dojo.require("dojox.charting.themes.Julie");
-dojo.require("esri.tasks.geometry");
-dojo.require("esri.dijit.Popup");
+dojo.require("dijit.layout.AccordionContainer");
 dojo.require("dijit.dijit");
-dojo.require("esri.virtualearth.VETiledLayer");
-dojo.require("esri.dijit.BasemapGallery");
-dojo.require("esri.arcgis.utils");
 dojo.require("dijit.Tooltip");
-dojo.require("dijit.form.Slider");
 
 
 var breakCount = 0; // keep track of how many individual breaks have been created, used to fetch the correct field values
@@ -33,6 +39,9 @@ var diagramLayer; // the active clickable diagram layer
 var map, queryTask, query, template, disconHandler;
 var attributeFields = ["Sterberate_2010.Gestorbene", "Kreisname", "Geburtenrate_2010.Lebendgeborene", "Demographie.Fortgezogene", "Katholisch", "Leistungsempfaenger_2005.Leistungsempfänger_Pflegeversicherung_I"]; // used fields from the raw data 
 var diagramFields = new Array(attributeFields.length);
+
+var app = {};
+	app.map = null, app.toolbar = null, app.circle = false, app.symbols = null, app.printer = null;
 
 var activeLayer = 2; // which layer is active at the beginning
 var legend;
