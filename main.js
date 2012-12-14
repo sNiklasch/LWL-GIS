@@ -134,6 +134,17 @@ function init() {
     //printer:
     var printer = new esri.dijit.Print({
           map: map,
+          templates: [{
+    label: "PDF",
+    format: "PDF",
+    layout: "A4 Portrait",
+    layoutOptions: {
+      titleText: "LWL-GIS",
+      authorText: "LWL & ifgi",
+      copyrightText: "",
+      scalebarUnit: "Kilometers",
+    }
+  }],
           url: "http://giv-learn2.uni-muenster.de/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task/"
         }, dojo.byId("slideAwayButton_export"));
         
