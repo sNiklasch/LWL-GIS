@@ -142,7 +142,7 @@ function init() {
     format: "PDF",
     layout: "A4 Portrait",
     layoutOptions: {
-      titleText: "LWL-GIS",
+      titleText: "Titel",
       authorText: "LWL & ifgi",
       copyrightText: "",
       scalebarUnit: "Kilometers",
@@ -213,7 +213,7 @@ function initOperationalLayer() {
         opacity: .50
     });
     featureLayer.setSelectionSymbol(new esri.symbol.SimpleFillSymbol());
-    map.addLayers([featureLayer]);
+    map.addLayer(featureLayer);
 
     console.log("layerIds:" + map.graphicsLayerIds);
 }
@@ -229,7 +229,7 @@ function initDiagramLayer() {
         opacity: .0
     });
     diagramLayer.setSelectionSymbol(new esri.symbol.SimpleFillSymbol());
-    map.addLayers([diagramLayer]);    
+    map.addLayer(diagramLayer);    
 }
 
 /**
@@ -342,6 +342,10 @@ function layerChange(layerNr) {
             map.removeLayer(diagramLayer);
             diagramLayer = null;
         }
+        if (activeDiagramLayer != null) {
+            map.removeLayer(activeDiagramLayer);
+            diagramLayer = null;
+        }
         initDiagramLayer();
         addDiagramLayer(layerNr);
     } else if (layerNr == 5 && !(document.getElementById("pflegehilfeChk").checked)) {
@@ -356,6 +360,10 @@ function layerChange(layerNr) {
         document.getElementById("religionChk").checked = false;
         if (diagramLayer != null) {
             map.removeLayer(diagramLayer);
+            diagramLayer = null;
+        }
+        if (activeDiagramLayer != null) {
+            map.removeLayer(activeDiagramLayer);
             diagramLayer = null;
         }
         initDiagramLayer();
