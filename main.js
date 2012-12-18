@@ -1,6 +1,7 @@
 dojo.require("esri.map");
 dojo.require("esri.layers.FeatureLayer");
 dojo.require("esri.layers.osm");
+dojo.require("esri.layers.agsdynamic");
 dojo.require("esri.toolbars.draw");
 dojo.require("esri.dijit.Print");
 dojo.require("esri.dijit.Scalebar");
@@ -36,6 +37,8 @@ dojo.require("dijit.Tooltip");
 var breakCount = 0; // keep track of how many individual breaks have been created, used to fetch the correct field values
 var featureLayer; // the active data overlay
 var diagramLayer; // the active clickable diagram layer
+var activeDiagramLayer = null;
+
 var map, queryTask, query, template, disconHandler;
 var attributeFields = ["Sterberate_2010.Gestorbene", "Kreisname", "Geburtenrate_2010.Lebendgeborene", "Demographie.Fortgezogene", "Katholisch", "Leistungsempfaenger_2005.Leistungsempfänger_Pflegeversicherung_I"]; // used fields from the raw data 
 var diagramFields = new Array(attributeFields.length);
@@ -212,11 +215,7 @@ function initOperationalLayer() {
     featureLayer.setSelectionSymbol(new esri.symbol.SimpleFillSymbol());
     map.addLayers([featureLayer]);
 
-
     console.log("layerIds:" + map.graphicsLayerIds);
-
-
-
 }
 
 /**
@@ -230,7 +229,7 @@ function initDiagramLayer() {
         opacity: .0
     });
     diagramLayer.setSelectionSymbol(new esri.symbol.SimpleFillSymbol());
-    map.addLayers([diagramLayer]);
+    map.addLayers([diagramLayer]);    
 }
 
 /**
@@ -264,7 +263,16 @@ function connectDiagramFunc(layerNr) {
             }
         }]
     });
+}
 
+function addDiagramLayer(layerNr){
+	if (layerNr == 4){
+		activeDiagramLayer = new esri.layers.ArcGISDynamicMapServiceLayer("http://giv-learn2.uni-muenster.de/ArcGIS/rest/services/LWL/diagramme_religion/MapServer");
+	}
+	if (layerNr == 5){
+		activeDiagramLayer = new esri.layers.ArcGISDynamicMapServiceLayer("http://giv-learn2.uni-muenster.de/ArcGIS/rest/services/LWL/diagramme_pflegehilfe/MapServer");
+	}
+	map.addLayer(activeDiagramLayer);
 }
 
 /**
@@ -324,6 +332,8 @@ function layerChange(layerNr) {
         dojo.disconnect(disconHandler);
         map.removeLayer(diagramLayer);
         diagramLayer = null;
+        map.removeLayer(activeDiagramLayer);
+        activeDiagramLayer = null;
     } else if (layerNr == 4 && document.getElementById("religionChk").checked) {
         dojo.disconnect(disconHandler);
         connectDiagramFunc(layerNr);
@@ -333,10 +343,13 @@ function layerChange(layerNr) {
             diagramLayer = null;
         }
         initDiagramLayer();
+        addDiagramLayer(layerNr);
     } else if (layerNr == 5 && !(document.getElementById("pflegehilfeChk").checked)) {
         dojo.disconnect(disconHandler);
         map.removeLayer(diagramLayer);
         diagramLayer = null;
+        map.removeLayer(activeDiagramLayer);
+        activeDiagramLayer = null;
     } else if (layerNr == 5 && document.getElementById("pflegehilfeChk").checked) {
         dojo.disconnect(disconHandler);
         connectDiagramFunc(layerNr);
@@ -346,6 +359,7 @@ function layerChange(layerNr) {
             diagramLayer = null;
         }
         initDiagramLayer();
+        addDiagramLayer(layerNr);
         //handling checkbox for the basemap
     } else if (layerNr == 50 && !(document.getElementById("baseMapChk").checked)) {
     	map.removeLayer(osmLayer);
