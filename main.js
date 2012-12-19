@@ -156,7 +156,13 @@ function init() {
     //Baselayer
     tiledMapServiceLayer = new esri.layers.ArcGISTiledMapServiceLayer("http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer");
     osmLayer = new esri.layers.OpenStreetMapLayer();
+    
+    var labelLayer = new esri.layers.ArcGISDynamicMapServiceLayer("http://giv-learn2.uni-muenster.de/ArcGIS/rest/services/LWL/kreisnamen/MapServer");
+    
     map.addLayer(osmLayer);
+    
+    map.addLayer(labelLayer);
+    
     map.removeLayer(osmLayer);
     
     onLoadCheck();
@@ -273,6 +279,7 @@ function addDiagramLayer(layerNr){
 		activeDiagramLayer = new esri.layers.ArcGISDynamicMapServiceLayer("http://giv-learn2.uni-muenster.de/ArcGIS/rest/services/LWL/diagramme_pflegehilfe/MapServer");
 	}
 	map.addLayer(activeDiagramLayer);
+	map.reorderLayer(activeDiagramLayer,0);
 }
 
 /**
