@@ -230,12 +230,39 @@
   </div>
   
   <!-- Export -->
-  <a href="#" class="icons" id="slideAwayButton_export" style="position: absolute; right:0px; top:290px; z-index: 4;">
-  	<!-- <img src="images/download.png">
-  		<div id="labelExport" style="position: absolute; right:4px; top:35px; z-index:5; font-size:xx-small;">
-  			Export
-  		</div> -->
+  
+  <a href="#" class="icons" id="slideAwayButton_export" style="position: absolute; right:0px; top:290px; z-index: 2;">
+    <img id="exportBtnImg" src="images/download.png">
+    <div id="labelExport" style="position: absolute; right:0px; top:35px; z-index:50; font-size:xx-small;">
+	Download
+	</div>
   </a>
+  <div id="slideTarget_export" class="wipe-menu slide chain" style="position: absolute; top:100px; z-index: 2; height: 200px; max-height:250px;">
+    
+    <a href="#" id="slideBackButton_export" style="position: absolute; top:10px; right:12px; z-index: 4;">
+      <img src="images/close12.png">
+    </a>
+    
+    <div title="Exportieren" style="width:180px; height:230px; max-height=230px; overflow:auto;">
+      <p>
+        <b>
+          Karte exportieren:
+        </b>
+      </p>
+      Titel: <input type="text" id="mapExportTitle">
+      <br>
+      Autor: <input type="text" id="mapExportAuthor">
+      <br>
+      <input type="button" id="mapExportChange" onclick="exportChangeValues();" value="Übernehmen">
+      <div id="exportWarning"></div>
+      <a href="#" id="printButton">
+      </a>
+      <img src="images/loading.gif" id="loadingImage" alt="loading" />
+    </div>
+  </div>
+  
+  
+  <!--<a href="#" class="icons" id="printButton" style="position: absolute; right:0px; top:290px; z-index: 4;"></a>-->
   
   
   <div dojotype="dijit.layout.BorderContainer" design="headline" gutters="false"

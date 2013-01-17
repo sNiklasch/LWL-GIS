@@ -58,6 +58,14 @@ var minValues = [1382, 0, 1031, 3432];
  */
 var counter = 0;
 
+/**
+ *variables for the map export
+ */
+var exportTitle = "kein Titel";
+var exportAuthor = "kein Autor";
+
+var printer;
+
 function init() {
     addTooltips(); //the mouse-over tooltips are created programmatically
     initDiagramFields(); //initialize which fields should be used for which diagram layer
@@ -133,25 +141,7 @@ function init() {
         });
         dojo.connect(dijit.byId('map'), 'resize', map, map.resize);
     });
-    
-    //printer:
-    var printer = new esri.dijit.Print({
-          map: map,
-          templates: [{
-    label: "PDF",
-    format: "PDF",
-    layout: "A4 Portrait",
-    layoutOptions: {
-      titleText: "Titel",
-      authorText: "LWL & ifgi",
-      copyrightText: "",
-      scalebarUnit: "Kilometers",
-    }
-  }],
-          url: "http://giv-learn2.uni-muenster.de/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task/"
-        }, dojo.byId("slideAwayButton_export"));
         
-        printer.startup();
     
     //Baselayer
     tiledMapServiceLayer = new esri.layers.ArcGISTiledMapServiceLayer("http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer");
@@ -177,6 +167,48 @@ function init() {
 
 	initialColorization();
 }
+
+
+/**
+ * function to set title and author of the map and export it
+ */        
+function exportChangeValues(){
+    exportTitle = document.getElementById("mapExportTitle").value;
+    exportAuthor = document.getElementById("mapExportAuthor").value;
+    
+    //printer
+    if(printer != undefined){
+    	printer.destroy();
+    }
+    printer = new esri.dijit.Print({
+          map: map,
+          templates: [{
+			    label: "PDF",
+			    format: "PDF",
+			    layout: "A4 Portrait",
+			    layoutOptions: {
+			      titleText: exportTitle,
+			      authorText: exportAuthor,
+			      copyrightText: "",
+			      scalebarUnit: "Kilometers",
+			    }
+			  }],
+         url: "http://giv-learn2.uni-muenster.de/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task/"
+         }, dojo.byId("printButton"));
+    document.getElementById("exportWarning").innerHTML = "Achtung: Das exportieren der Karte kann einige Sekunden in Anspruch nehmen.";
+    printer.startup();
+    
+    dojo.connect(printer,'onPrintStart',function(){
+    	console.log('The print operation has started');
+    	document.getElementById("loadingImage").style.visibility = "visible";
+    });
+    
+    dojo.connect(printer,'onPrintComplete',function(value){
+    	console.log('The url to the print image is : ' + value.url);
+    	document.getElementById("loadingImage").style.visibility = "hidden";
+    });
+}
+
 
 /*
 function createBasemapGallery() {

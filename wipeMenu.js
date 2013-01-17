@@ -18,6 +18,10 @@ dojo.ready(function () {
         slideAwayButton_legend = dojo.byId("slideAwayButton_legend"),
         slideBackButton_legend = dojo.byId("slideBackButton_legend"),
         slideTarget_legend = dojo.byId("slideTarget_legend"),
+
+        slideAwayButton_export = dojo.byId("slideAwayButton_export"),
+        slideBackButton_export = dojo.byId("slideBackButton_export"),
+        slideTarget_export = dojo.byId("slideTarget_export"),
         
         slideAwayButton_split = dojo.byId("slideAwayButton_split");
 
@@ -145,6 +149,51 @@ dojo.ready(function () {
         })]).play();
         legendBtnClicked = false;
     });
+
+
+	var exportBtnClicked = false;
+	dojo.connect(slideAwayButton_export, "onclick", function (evt) {
+        if (!exportBtnClicked) {
+            dojo.fx.combine([
+            dojo.fadeIn({
+                node: slideTarget_export
+            }),
+            dojo.fx.slideTo({
+                node: slideTarget_export,
+                left: map.width - 450,
+                top: "250"
+            })]).play();
+            exportBtnClicked = true;
+        } else {
+            dojo.fx.combine([
+            dojo.fx.slideTo({
+                node: slideTarget_export,
+                left: map.width + 50,
+                top: "250"
+            }),
+            dojo.fadeOut({
+                node: slideTarget_export
+            })]).play();
+            exportBtnClicked = false;
+        }
+    });
+    
+    dojo.connect(slideBackButton_export, "onclick", function (evt) {
+		console.log("click export");
+        dojo.fx.combine([
+        dojo.fx.slideTo({
+            node: slideTarget_export,
+            left: map.width + 50,
+            top: "250"
+        }),
+        dojo.fadeOut({
+            node: slideTarget_export
+        })]).play();
+        legendBtnClicked = false;
+    });
+    
+    
+    
     var dualView = false;
     dojo.connect(slideAwayButton_split, "onclick", function (evt) {
         if (dualView) {
