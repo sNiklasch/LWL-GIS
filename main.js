@@ -50,8 +50,8 @@ var legend;
  * this is not a good approach, they should be obtained directly from the data on the server
  * please change this! 
  */
-var maxValues = [0, 5107, 7552, 23852];  
-var minValues = [0, 1031, 1382, 3432];
+var maxValues = [7560, 0, 5107, 23853];  
+var minValues = [1382, 0, 1031, 3432];
 /**
  * due to a bug in ArcGIS where invoking any method that re-centers the map a onPan() event is fired,
  * this counter is used to prevent an infinite loop of re-centering between the two maps in split-mode.
