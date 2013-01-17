@@ -219,7 +219,7 @@ function initOperationalLayer() {
         opacity: .50
     });
     featureLayer.setSelectionSymbol(new esri.symbol.SimpleFillSymbol());
-    map.addLayer(featureLayer);
+    map.addLayers([featureLayer]);
 
     console.log("layerIds:" + map.graphicsLayerIds);
 }
@@ -235,7 +235,7 @@ function initDiagramLayer() {
         opacity: .0
     });
     diagramLayer.setSelectionSymbol(new esri.symbol.SimpleFillSymbol());
-    map.addLayer(diagramLayer);    
+    map.addLayers([diagramLayer]);    
 }
 
 /**
@@ -279,7 +279,7 @@ function addDiagramLayer(layerNr){
 		activeDiagramLayer = new esri.layers.ArcGISDynamicMapServiceLayer("http://giv-learn2.uni-muenster.de/ArcGIS/rest/services/LWL/diagramme_pflegehilfe/MapServer");
 	}
 	map.addLayer(activeDiagramLayer);
-	map.reorderLayer(activeDiagramLayer,0);
+	//map.reorderLayer(activeDiagramLayer,0);
 }
 
 /**
