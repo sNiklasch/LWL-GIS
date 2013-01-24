@@ -73,9 +73,17 @@ function init() {
 
     esri.config.defaults.io.proxyUrl = "/arcgisserver/apis/javascript/proxy/proxy.ashx";
 
-    var extent = new esri.geometry.Extent(413447, 6487669, 1269542, 7099165, new esri.SpatialReference({
-        wkid: 102100
-    })); //initial map extent
+    var lods = [ {"level" : 8, "resolution" : 152.8740565701464*4, "scale" : 577790.554288*4},
+    		 {"level" : 9, "resolution" : 152.8740565701464*2, "scale" : 577790.554288*2},
+    		 {"level" : 10, "resolution" : 152.8740565701464, "scale" : 577790.554288},
+    		 {"level" : 11, "resolution" : 76.4370282850732, "scale" : 288895.277144},
+    		 {"level" : 12, "resolution" : 38.2185141425366, "scale" : 144447.638572},
+    		 {"level" : 13, "resolution" : 19.1092570712683, "scale" : 72223.819286},
+			 {"level" : 14, "resolution" : 9.55462853563415, "scale" : 36111.909643},
+			 {"level" : 15, "resolution" : 4.77731426794937, "scale" : 18055.954822},
+			 {"level" : 16, "resolution" : 2.38865713397468, "scale" : 9027.977411}];
+
+    var extent = new esri.geometry.Extent(413447, 6487669, 1269542, 7099165, new esri.SpatialReference({wkid: 102100})); //initial map extent
     
     for (var i = 0; i < parent.frames.length; i++) {
         if (parent.frames[i].name != self.name) {
@@ -85,6 +93,7 @@ function init() {
 
     map = new esri.Map("map", {
         extent: extent,
+        lods: lods,
         infoWindow: popup,
         slider: true
     });
