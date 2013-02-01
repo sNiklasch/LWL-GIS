@@ -39,7 +39,7 @@ var featureLayer; // the active data overlay
 var diagramLayer; // the active clickable diagram layer
 var activeDiagramLayer = null;
 
-var map, queryTask, query, template, disconHandler;
+var map, queryTask, query, template, disconHandler, initExtent, maxExtent, labelLayer;
 var attributeFields = ["Sterberate_2010.Gestorbene", "Kreisname", "Geburtenrate_2010.Lebendgeborene", "Demographie.Fortgezogene", "Katholisch", "Leistungsempfaenger_2005.Leistungsempfänger_Pflegeversicherung_I"]; // used fields from the raw data 
 var diagramFields = new Array(attributeFields.length);
 
@@ -73,18 +73,31 @@ function init() {
 
     esri.config.defaults.io.proxyUrl = "/arcgisserver/apis/javascript/proxy/proxy.ashx";
 
-    var extent = new esri.geometry.Extent(413447, 6487669, 1269542, 7099165, new esri.SpatialReference({
+    initExtent = new esri.geometry.Extent(413447, 6487669, 1269542, 7099165, new esri.SpatialReference({
         wkid: 102100
     })); //initial map extent
     
+    maxExtent = initExtent;
+    
     for (var i = 0; i < parent.frames.length; i++) {
         if (parent.frames[i].name != self.name) {
-            extent = parent.frames[i].map.extent; //in split-mode get extent from other map
+            initExtent = parent.frames[i].map.extent; //in split-mode get extent from other map
         }
     }
-
+    /*
+    var lods = [ {"level" : 8, "resolution" : 152.8740565701464*4, "scale" : 577790.554288*4},
+ 		   		 {"level" : 9, "resolution" : 152.8740565701464*2, "scale" : 577790.554288*2},
+ 		   		 {"level" : 10, "resolution" : 152.8740565701464, "scale" : 577790.554288},
+ 		   		 {"level" : 11, "resolution" : 76.4370282850732, "scale" : 288895.277144},
+ 		   		 {"level" : 12, "resolution" : 38.2185141425366, "scale" : 144447.638572},
+ 		   		 {"level" : 13, "resolution" : 19.1092570712683, "scale" : 72223.819286},
+ 		   		 {"level" : 14, "resolution" : 9.55462853563415, "scale" : 36111.909643},
+ 		   		 {"level" : 15, "resolution" : 4.77731426794937, "scale" : 18055.954822},
+ 		   		 {"level" : 16, "resolution" : 2.38865713397468, "scale" : 9027.977411}];
+ 	*/
     map = new esri.Map("map", {
-        extent: extent,
+        extent: initExtent,
+        //lods: lods,
         infoWindow: popup,
         slider: true
     });
@@ -95,6 +108,7 @@ function init() {
     dojo.connect(map, "onLoad", initOperationalLayer);
     
     //various map events
+    dojo.connect(map, "onExtentChange", showExtent);
     dojo.connect(map, "onPanEnd", reLocate);
     dojo.connect(map, "onZoomEnd", reLocate); 
 
@@ -147,7 +161,7 @@ function init() {
     tiledMapServiceLayer = new esri.layers.ArcGISTiledMapServiceLayer("http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer");
     osmLayer = new esri.layers.OpenStreetMapLayer();
     
-    var labelLayer = new esri.layers.ArcGISDynamicMapServiceLayer("http://giv-learn2.uni-muenster.de/ArcGIS/rest/services/LWL/kreisnamen/MapServer");
+    labelLayer = new esri.layers.ArcGISDynamicMapServiceLayer("http://giv-learn2.uni-muenster.de/ArcGIS/rest/services/LWL/kreisnamen/MapServer");
     
     map.addLayer(osmLayer);
     
@@ -168,6 +182,42 @@ function init() {
 	initialColorization();
 }
 
+
+function showExtent(extent, delta, levelChange, lod) {
+		//In javascript, object passes byref. so it's not correct to difine new extent using
+		//"var adjustedEx = extent;"
+		var adjustedEx = new esri.geometry.Extent(extent.xmin, extent.ymin, extent.xmax, extent.ymax);
+		var flag = false;	
+		//set a buffer to make the max extent a slightly bigger to void minor differences
+		//the map unit for this case is meter. 
+		var buffer = 10;
+		console.log(extent.xmin + "," + maxExtent.xmin);
+		    if(extent.xmin < maxExtent.xmin-buffer) {
+				adjustedEx.xmin = maxExtent.xmin;
+				adjustedEx.xmax = Math.abs(extent.xmin - maxExtent.xmin) + extent.xmax;
+                flag = true;
+            }
+			if(extent.ymin < maxExtent.ymin-buffer) {
+			    adjustedEx.ymin = maxExtent.ymin;
+			    adjustedEx.ymax = Math.abs(extent.ymin - maxExtent.ymin) + extent.ymax;
+                flag = true;
+            }
+			if(extent.xmax-buffer > maxExtent.xmax) {
+			    adjustedEx.xmax = maxExtent.xmax;
+			    adjustedEx.xmin =extent.xmin - Math.abs(extent.xmax - maxExtent.xmax);
+                flag = true;
+            }
+			if(extent.ymax-buffer > maxExtent.ymax) {
+			    adjustedEx.ymax = maxExtent.ymax;
+			    adjustedEx.ymin =extent.ymin - Math.abs(extent.ymax - maxExtent.ymax);
+                flag = true;
+            }
+			if (flag === true) {
+				map.setExtent(adjustedEx);				
+			}
+			flag = false;
+			
+      }
 
 /**
  * function to set title and author of the map and export it
