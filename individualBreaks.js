@@ -3,21 +3,11 @@ function addIndivBreakField() {
     var initialTo = maxValues[activeLayer];
 
     if (breakCount > 0) {
+    	//Wenn ein Feld exisitert, wird in die Grenzen des neuen Feldes die obere Grenze eingetragen:
         initialFrom = document.getElementById("breakTo" + (breakCount)).value;
-        initialTo = parseInt(document.getElementById("breakTo" + (breakCount)).value);
-
-        var d = document.getElementById("td" + breakCount);
-        var olddiv = document.getElementById("addBtn" + breakCount);
-        d.removeChild(olddiv);
-
-        var rembtn = document.createElement("input");
-        rembtn.setAttribute("type", "image");
-        rembtn.setAttribute("id", "rembtn" + (breakCount));
-        rembtn.setAttribute("onclick", "remIndivBreakField(" + breakCount + ")");
-        rembtn.setAttribute("src", "images/close20.png");
-        d.appendChild(rembtn);
+        //initialTo = parseInt(document.getElementById("breakTo" + (breakCount)).value);
     }
-
+    
     breakCount++;
     var breaksList = document.getElementById("Breaks");
 
@@ -42,26 +32,20 @@ function addIndivBreakField() {
 
     var breakColor = document.createElement("td");
     var idField = 'cp' + breakCount
-    breakColor.innerHTML = '<input class="color" id="' + idField + '" onchange="colorChange(' + breakCount + ')" style="width:32px;">';
+    var valueField = 'myValue' + breakCount;
+    breakColor.innerHTML = '<input class="color {valueElement:' + valueField + '}" id="' + idField + '" style="width:32px;" value="Farbe">';
     breakEntry.appendChild(breakColor);
-/*
+
     var breakColorUnvis = document.createElement("td");
-    var idField = 'cp' + breakCount
-    breakColorUnvis.innerHTML = '<input id="' + idField + '" style="width:0px; visibility:hidden;">';
+    breakColorUnvis.innerHTML = '<input id="' + valueField + '" style="width:0px; visibility:hidden;">';
     breakEntry.appendChild(breakColorUnvis);
-    */
-    /*
-    var apply = document.createElement("td");
-    apply.setAttribute("id", "td" + breakCount);
-    apply.innerHTML = '<input type="Button" id="applyBtn' + breakCount + '" value="OK" onclick="colorChange(' + breakCount + ')" >';
-    breakEntry.appendChild(apply);
-    */
-    
-    var addBreak = document.createElement("td");
-    addBreak.setAttribute("id", "td" + breakCount);
-    addBreak.innerHTML = '<input type="image" src="images/plus20.png" id="addBtn' + breakCount + '" onclick="addIndivBreakField()" >';
-    breakEntry.appendChild(addBreak);
-    
+        
+    var rembtn = document.createElement("input");
+    rembtn.setAttribute("type", "image");
+    rembtn.setAttribute("id", "rembtn" + (breakCount));
+    rembtn.setAttribute("onclick", "remIndivBreakField(" + breakCount + ")");
+    rembtn.setAttribute("src", "images/close20.png");
+    breakEntry.appendChild(rembtn);
 
     breaksList.appendChild(breakEntry);
 
@@ -75,5 +59,6 @@ function remIndivBreakField(count) {
     var d = document.getElementById("Breaks");
     var olddiv = document.getElementById("tr" + count);
     d.removeChild(olddiv);
+    breakCount--;
 
 }

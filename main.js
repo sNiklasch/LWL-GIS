@@ -84,20 +84,20 @@ function init() {
             initExtent = parent.frames[i].map.extent; //in split-mode get extent from other map
         }
     }
-    /*
-    var lods = [ {"level" : 8, "resolution" : 152.8740565701464*4, "scale" : 577790.554288*4},
- 		   		 {"level" : 9, "resolution" : 152.8740565701464*2, "scale" : 577790.554288*2},
- 		   		 {"level" : 10, "resolution" : 152.8740565701464, "scale" : 577790.554288},
- 		   		 {"level" : 11, "resolution" : 76.4370282850732, "scale" : 288895.277144},
- 		   		 {"level" : 12, "resolution" : 38.2185141425366, "scale" : 144447.638572},
- 		   		 {"level" : 13, "resolution" : 19.1092570712683, "scale" : 72223.819286},
- 		   		 {"level" : 14, "resolution" : 9.55462853563415, "scale" : 36111.909643},
- 		   		 {"level" : 15, "resolution" : 4.77731426794937, "scale" : 18055.954822},
- 		   		 {"level" : 16, "resolution" : 2.38865713397468, "scale" : 9027.977411}];
- 	*/
+    
+    var lods = [ {level: 8, scale: 2311162.217155, resolution: 611.49622628138},
+ 		   		 {level: 9, scale: 1155581.108577, resolution: 305.748113140558},
+ 		   		 {level: 10, scale: 577790.554289, resolution: 152.874056570411},
+ 		   		 {level: 11, scale: 288895.277144, resolution: 76.4370282850732},
+ 		   		 {level: 12, scale: 144447.638572, resolution: 38.2185141425366},
+ 		   		 {level: 13, scale: 72223.819286, resolution: 19.1092570712683},
+ 		   		 {level: 14, scale: 36111.909643, resolution: 9.55462853563415},
+ 		   		 {level: 15, scale: 18055.954822, resolution: 4.77731426794937},
+ 		   		 {level: 16, scale: 9027.977411, resolution: 2.38865713397468}];
+ 	
     map = new esri.Map("map", {
         extent: initExtent,
-        //lods: lods,
+        lods: lods,
         infoWindow: popup,
         slider: true
     });
@@ -164,10 +164,11 @@ function init() {
     labelLayer = new esri.layers.ArcGISDynamicMapServiceLayer("http://giv-learn2.uni-muenster.de/ArcGIS/rest/services/LWL/kreisnamen/MapServer");
     
     map.addLayer(osmLayer);
-    
-    map.addLayer(labelLayer);
-    
     map.removeLayer(osmLayer);
+    
+    //Set labels visible on load:
+    document.getElementById("labelChk").checked = true;
+    layerChange(60);
     
     dojo.connect(map, "onZoomEnd", function() { 
     						featureLayer.setMaxAllowableOffset(maxOffset(map,1));
@@ -310,7 +311,6 @@ function initOperationalLayer() {
     });
     featureLayer.setSelectionSymbol(new esri.symbol.SimpleFillSymbol());
     map.addLayers([featureLayer]);
-
     console.log("layerIds:" + map.graphicsLayerIds);
 }
 
@@ -369,14 +369,14 @@ function addDiagramLayer(layerNr){
 		activeDiagramLayer = new esri.layers.ArcGISDynamicMapServiceLayer("http://giv-learn2.uni-muenster.de/ArcGIS/rest/services/LWL/diagramme_pflegehilfe/MapServer");
 	}
 	map.addLayer(activeDiagramLayer);
-	//map.reorderLayer(activeDiagramLayer,0);
+	map.reorderLayer(activeDiagramLayer,0);
 }
 
 /**
  * This method can assign a new color scheme to a layer
  * as used for individual breaks
  */
-function colorChange(count) {
+function colorChange() {
 
     symbol = new esri.symbol.SimpleFillSymbol();
     symbol.setColor(new dojo.Color([150, 150, 150, 0.75]));
@@ -386,7 +386,7 @@ function colorChange(count) {
         if (element) {
             renderer.addBreak(document.getElementById("breakFrom" + i).value,
             document.getElementById("breakTo" + i).value,
-            new esri.symbol.SimpleFillSymbol().setColor(new dojo.Color("#" + document.getElementById("cp" + i).value)));
+            new esri.symbol.SimpleFillSymbol().setColor(new dojo.Color("#" + document.getElementById("myValue" + i).value)));
         }
     }
 
@@ -470,6 +470,11 @@ function layerChange(layerNr) {
     	map.removeLayer(osmLayer);
     } else if (layerNr == 50 && (document.getElementById("baseMapChk").checked)) {
     	map.addLayer(osmLayer);
+        //handling checkbox for the labelLayer
+    } else if (layerNr == 60 && (document.getElementById("labelChk").checked)) {
+    	map.addLayer(labelLayer);
+    } else if (layerNr == 60 && !(document.getElementById("labelChk").checked)) {
+    	map.removeLayer(labelLayer);
     } else {
 		//following applies if only a 'normal' layer change happens
         activeLayer = layerNr; //setting the new layer

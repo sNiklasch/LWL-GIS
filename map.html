@@ -120,6 +120,9 @@
          <div id="basemapGallery" >
          </div>
        </div>-->
+       <br>
+       <input type="checkbox" id="labelChk" name="Layer" value="Label" onchange="layerChange(60)">
+	     		Beschriftungen einblenden
      </div>
      
   </div>
@@ -144,11 +147,12 @@
     </p>
     <!-- Individual classes -->
     <div id="breaksPane" dojoType="dijit.TitlePane" title="Individuell" open="true" style="width:280px; overflow:auto; max-height:230px;">
+      <table id="Breaks">
+      </table>
       <a href="javascript:addIndivBreakField()">
         <img src="images/plus20.png">
       </a>
-      <table id="Breaks">
-      </table>
+      <input id="indivBreaksApply" type="button" onclick="colorChange()" value="Anwenden">
     </div>
     <!-- Automatic classes (equal breaks) -->
     <div dojoType="dijit.TitlePane" title="Automatisch" open="false" style="width:280px; overflow:auto;">
