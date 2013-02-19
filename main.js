@@ -510,7 +510,7 @@ function addEqualBreaks(number, colorStart, colorEnd) {
     var renderer = new esri.renderer.ClassBreaksRenderer(symbol, attributeFields[activeLayer]);
     
     for (var i = 0; i <= number; i++) {
-        renderer.addBreak(Math.round((minValues[activeLayer] + i * breakStep) / 10) * 10,
+        renderer.addBreak((Math.round((minValues[activeLayer] + i * breakStep) / 10) * 10 + 1),
         Math.round((minValues[activeLayer] + (i + 1) * breakStep) / 10) * 10,
         new esri.symbol.SimpleFillSymbol().setColor(dojo.colorFromHex('#' + colorArray[i])));
     }
