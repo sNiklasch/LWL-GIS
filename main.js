@@ -171,7 +171,7 @@ function init() {
     layerChange(60);
     
     dojo.connect(map, "onZoomEnd", function() { 
-    						featureLayer.setMaxAllowableOffset(maxOffset(map,1));
+    						featureLayer.setMaxAllowableOffset(maxOffset(map,2));
     										});
     // The offset is calculated as approximately 1 vertex per pixel: 
     
