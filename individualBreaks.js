@@ -4,7 +4,8 @@ function addIndivBreakField() {
 
     if (breakCount > 0) {
     	//Wenn ein Feld exisitert, wird in die Grenzen des neuen Feldes die obere Grenze eingetragen:
-        initialFrom = document.getElementById("breakTo" + (breakCount)).value + 1;
+        initialFrom = new Number(document.getElementById("breakTo" + (breakCount)).value);
+        initialFrom++;
         //initialTo = parseInt(document.getElementById("breakTo" + (breakCount)).value);
     }
     

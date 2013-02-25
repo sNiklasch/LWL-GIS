@@ -76,3 +76,8 @@ max-height: 100px;
 	visibility: hidden;
 	width: 50px;
 }
+
+#indivBreaksApply{
+	position: absolute;
+	roght: 50%;
+}

@@ -478,7 +478,7 @@ function layerChange(layerNr) {
     } else {
 		//following applies if only a 'normal' layer change happens
         activeLayer = layerNr; //setting the new layer
-        var d = document.getElementById("breaksPane_pane");
+        var d = document.getElementById("breaksTable");
         var olddiv = document.getElementById("Breaks");
         d.removeChild(olddiv); //remove previously made class breaks
         var addBreaksTable = document.createElement("table");
