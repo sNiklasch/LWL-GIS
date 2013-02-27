@@ -68,16 +68,16 @@ var printer;
 
 function init() {
     addTooltips(); //the mouse-over tooltips are created programmatically
-    initDiagramFields(); //initialize which fields should be used for which diagram layer
     var popup = new esri.dijit.Popup(null, dojo.create("div")); //ini popups for diagrams
 
     esri.config.defaults.io.proxyUrl = "/arcgisserver/apis/javascript/proxy/proxy.ashx";
 
+    /* mit 3.3 kaputt */
     initExtent = new esri.geometry.Extent(413447, 6487669, 1269542, 7099165, new esri.SpatialReference({
         wkid: 102100
     })); //initial map extent
     
-    maxExtent = initExtent;
+    maxExtent = initExtent;/**/
     
     for (var i = 0; i < parent.frames.length; i++) {
         if (parent.frames[i].name != self.name) {
@@ -94,21 +94,30 @@ function init() {
  		   		 {level: 14, scale: 36111.909643, resolution: 9.55462853563415},
  		   		 {level: 15, scale: 18055.954822, resolution: 4.77731426794937},
  		   		 {level: 16, scale: 9027.977411, resolution: 2.38865713397468}];
- 	
+    
+ 	/*alter Map-Konstruktor: (v2.6)
     map = new esri.Map("map", {
         extent: initExtent,
         lods: lods,
         infoWindow: popup,
         slider: true
     });
-
+    */
+    
+    map = new esri.Map("map", {
+    	lods: lods,
+    	extent: initExtent,
+      	sliderStyle: "large",
+      	basemap: "osm"
+    });
+    
     //createBasemapGallery();
 
     //add Layer overlay
     dojo.connect(map, "onLoad", initOperationalLayer);
-    
+        
     //various map events
-    dojo.connect(map, "onExtentChange", showExtent);
+    //dojo.connect(map, "onExtentChange", showExtent);
     dojo.connect(map, "onPanEnd", reLocate);
     dojo.connect(map, "onZoomEnd", reLocate); 
 
@@ -158,32 +167,43 @@ function init() {
         
     
     //Baselayer
-    tiledMapServiceLayer = new esri.layers.ArcGISTiledMapServiceLayer("http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer");
-    osmLayer = new esri.layers.OpenStreetMapLayer();
-    
-    labelLayer = new esri.layers.ArcGISDynamicMapServiceLayer("http://giv-learn2.uni-muenster.de/ArcGIS/rest/services/LWL/kreisnamen/MapServer");
+    //tiledMapServiceLayer = new esri.layers.ArcGISTiledMapServiceLayer("http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer");
+    osmLayer = new esri.layers.OpenStreetMapLayer({
+	    id: "osmLayer",
+    });
     
     map.addLayer(osmLayer);
     map.removeLayer(osmLayer);
     
-    //Set labels visible on load:
-    document.getElementById("labelChk").checked = true;
-    layerChange(60);
-    
     dojo.connect(map, "onZoomEnd", function() { 
-    						featureLayer.setMaxAllowableOffset(maxOffset(map,2));
+    						featureLayer.setMaxAllowableOffset(maxOffset(map,10));
     										});
     // The offset is calculated as approximately 1 vertex per pixel: 
-    
     var maxOffset = function maxOffset(map, pixelTolerance) { return Math.floor(map.extent.getWidth() / map.width) * pixelTolerance; };
     
-    
+    //Check if split-screen is active:
     onLoadCheck();
 
+	//set Colorizationfor the startup-Layer
 	initialColorization();
+	
+    initDiagramFields(); //initialize which fields should be used for which diagram layer
+	
+	initLabels();
 }
 
+function logText(text){
+	console.log(text);
+}
 
+function initLabels(){    
+    //Set labels visible on load:
+    labelLayer = new esri.layers.ArcGISDynamicMapServiceLayer("http://giv-learn2.uni-muenster.de/ArcGIS/rest/services/LWL/kreisnamen/MapServer");
+    document.getElementById("labelChk").checked = true;
+    map.addLayer(labelLayer);
+    logText("labels");
+}
+/*
 function showExtent(extent, delta, levelChange, lod) {
 		//In javascript, object passes byref. so it's not correct to difine new extent using
 		//"var adjustedEx = extent;"
@@ -219,7 +239,7 @@ function showExtent(extent, delta, levelChange, lod) {
 			flag = false;
 			
       }
-
+*/
 /**
  * function to set title and author of the map and export it
  */        
@@ -311,7 +331,7 @@ function initOperationalLayer() {
     });
     featureLayer.setSelectionSymbol(new esri.symbol.SimpleFillSymbol());
     map.addLayers([featureLayer]);
-    console.log("layerIds:" + map.graphicsLayerIds);
+    console.log("layerIds:" + map.graphicsLayerIds);    
 }
 
 /**
@@ -368,7 +388,7 @@ function addDiagramLayer(layerNr){
 	if (layerNr == 5){
 		activeDiagramLayer = new esri.layers.ArcGISDynamicMapServiceLayer("http://giv-learn2.uni-muenster.de/ArcGIS/rest/services/LWL/diagramme_pflegehilfe/MapServer");
 	}
-	map.addLayer(activeDiagramLayer);
+	map.addLayers([activeDiagramLayer]);
 	map.reorderLayer(activeDiagramLayer,0);
 }
 
@@ -414,10 +434,10 @@ function initialColorization(){
     renderer.addBreak(3405,5107,new esri.symbol.SimpleFillSymbol().setColor(new dojo.Color("#00FF00")));
             
     featureLayer.setRenderer(renderer);
-    featureLayer.refresh();
+    //featureLayer.refresh();
 
-    legend.refresh();
-	
+    //legend.refresh();
+	logText("color");
 }
 
 /**
@@ -445,6 +465,11 @@ function layerChange(layerNr) {
         }
         initDiagramLayer();
         addDiagramLayer(layerNr);
+        //legend.destroy();
+        var legendDiv = document.getElementById("legendDiv");
+        var leg = document.createElement("div");
+        leg.setAttribute("id", "legend");
+        legendDiv.appendChild(leg);
     } else if (layerNr == 5 && !(document.getElementById("pflegehilfeChk").checked)) {
         dojo.disconnect(disconHandler);
         map.removeLayer(diagramLayer);
@@ -465,6 +490,11 @@ function layerChange(layerNr) {
         }
         initDiagramLayer();
         addDiagramLayer(layerNr);
+        //legend.destroy();
+        var legendDiv = document.getElementById("legendDiv");
+        var leg = document.createElement("div");
+        leg.setAttribute("id", "legend");
+        legendDiv.appendChild(leg);
         //handling checkbox for the basemap
     } else if (layerNr == 50 && !(document.getElementById("baseMapChk").checked)) {
     	map.removeLayer(osmLayer);
