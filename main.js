@@ -95,20 +95,11 @@ function init() {
  		   		 {level: 15, scale: 18055.954822, resolution: 4.77731426794937},
  		   		 {level: 16, scale: 9027.977411, resolution: 2.38865713397468}];
     
- 	/*alter Map-Konstruktor: (v2.6)
-    map = new esri.Map("map", {
-        extent: initExtent,
-        lods: lods,
-        infoWindow: popup,
-        slider: true
-    });
-    */
-    
     map = new esri.Map("map", {
     	lods: lods,
     	extent: initExtent,
-      	sliderStyle: "large",
-      	basemap: "osm"
+    	infoWindow: popup,
+      	sliderStyle: "large"
     });
     
     //createBasemapGallery();
@@ -117,7 +108,7 @@ function init() {
     dojo.connect(map, "onLoad", initOperationalLayer);
         
     //various map events
-    //dojo.connect(map, "onExtentChange", showExtent);
+    //dojo.connect(map, "onExtentChange", reLocate);
     dojo.connect(map, "onPanEnd", reLocate);
     dojo.connect(map, "onZoomEnd", reLocate); 
 
@@ -133,7 +124,8 @@ function init() {
             parent.frames[i].counter = 0;
         }
     });
-
+    
+    //Preparing the Legend:
     dojo.connect(map, 'onLayersAddResult', function (results) {
         var layerInfo = dojo.map(results, function (layer, index) {
             return {
@@ -189,7 +181,9 @@ function init() {
 	
     initDiagramFields(); //initialize which fields should be used for which diagram layer
 	
-	initLabels();
+	dojo.connect(featureLayer, "onUpdateEnd", initLabels());
+	
+	map.reorderLayer(labelLayer, 0);
 }
 
 function logText(text){
@@ -203,6 +197,7 @@ function initLabels(){
     map.addLayer(labelLayer);
     logText("labels");
 }
+
 /*
 function showExtent(extent, delta, levelChange, lod) {
 		//In javascript, object passes byref. so it's not correct to difine new extent using
@@ -240,6 +235,7 @@ function showExtent(extent, delta, levelChange, lod) {
 			
       }
 */
+
 /**
  * function to set title and author of the map and export it
  */        
@@ -389,7 +385,6 @@ function addDiagramLayer(layerNr){
 		activeDiagramLayer = new esri.layers.ArcGISDynamicMapServiceLayer("http://giv-learn2.uni-muenster.de/ArcGIS/rest/services/LWL/diagramme_pflegehilfe/MapServer");
 	}
 	map.addLayers([activeDiagramLayer]);
-	map.reorderLayer(activeDiagramLayer,0);
 }
 
 /**
@@ -465,11 +460,6 @@ function layerChange(layerNr) {
         }
         initDiagramLayer();
         addDiagramLayer(layerNr);
-        //legend.destroy();
-        var legendDiv = document.getElementById("legendDiv");
-        var leg = document.createElement("div");
-        leg.setAttribute("id", "legend");
-        legendDiv.appendChild(leg);
     } else if (layerNr == 5 && !(document.getElementById("pflegehilfeChk").checked)) {
         dojo.disconnect(disconHandler);
         map.removeLayer(diagramLayer);
@@ -490,11 +480,6 @@ function layerChange(layerNr) {
         }
         initDiagramLayer();
         addDiagramLayer(layerNr);
-        //legend.destroy();
-        var legendDiv = document.getElementById("legendDiv");
-        var leg = document.createElement("div");
-        leg.setAttribute("id", "legend");
-        legendDiv.appendChild(leg);
         //handling checkbox for the basemap
     } else if (layerNr == 50 && !(document.getElementById("baseMapChk").checked)) {
     	map.removeLayer(osmLayer);

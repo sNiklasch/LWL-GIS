@@ -17,8 +17,8 @@ text-decoration:none;
 background-color:#dbdbdb;
 
 }.icons:active {
-position:right;
-top:1px;
+	position: right;
+	top:1px;
 }
 
 .wipe-menu {
@@ -79,10 +79,5 @@ max-height: 100px;
 
 #indivBreaksApply{
 	position: absolute;
-	roght: 50%;
-}
-
-#map_zoom_slider{
-	height: 150px;
-	margin: 10px;
+	right: 50%;
 }
