@@ -40,7 +40,9 @@ var diagramLayer; // the active clickable diagram layer
 var activeDiagramLayer = null;
 
 var map, queryTask, query, template, disconHandler, initExtent, maxExtent, labelLayer;
+
 var attributeFields = ["Sterberate_2010.Gestorbene", "Kreisname", "Geburtenrate_2010.Lebendgeborene", "Demographie.Fortgezogene", "Katholisch", "Leistungsempfaenger_2005.Leistungsempfänger_Pflegeversicherung_I"]; // used fields from the raw data 
+
 var diagramFields = new Array(attributeFields.length);
 
 var activeLayer = 2; // which layer is active at the beginning
@@ -146,7 +148,7 @@ function init() {
 
     //resize the map when the browser resizes
     dojo.connect(dijit.byId('map'), 'resize', map, map.resize);
-
+    
     //Scalebar
     dojo.connect(map, 'onLoad', function (theMap) {
         var scalebar = new esri.dijit.Scalebar({
@@ -183,7 +185,7 @@ function init() {
 	
 	dojo.connect(featureLayer, "onUpdateEnd", initLabels());
 	
-	map.reorderLayer(labelLayer, 0);
+	map.reorderLayer(labelLayer, 5);
 }
 
 function logText(text){
