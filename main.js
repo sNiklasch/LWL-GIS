@@ -138,8 +138,8 @@ function init() {
 
         //add the legend 
         legend = new esri.dijit.Legend({
-            map: map,
-            layerInfos: layerInfo
+            map: map
+            //layerInfos: layerInfo
         }, "legend");
         legend.startup();
     });
@@ -386,7 +386,10 @@ function addDiagramLayer(layerNr){
 	if (layerNr == 5){
 		activeDiagramLayer = new esri.layers.ArcGISDynamicMapServiceLayer("http://giv-learn2.uni-muenster.de/ArcGIS/rest/services/LWL/diagramme_pflegehilfe/MapServer");
 	}
+	
 	map.addLayers([activeDiagramLayer]);
+	//legend.destroy();
+	legend.refresh();
 }
 
 /**
@@ -458,7 +461,7 @@ function layerChange(layerNr) {
         }
         if (activeDiagramLayer != null) {
             map.removeLayer(activeDiagramLayer);
-            diagramLayer = null;
+            activeDiagramLayer = null;
         }
         initDiagramLayer();
         addDiagramLayer(layerNr);
@@ -478,7 +481,7 @@ function layerChange(layerNr) {
         }
         if (activeDiagramLayer != null) {
             map.removeLayer(activeDiagramLayer);
-            diagramLayer = null;
+            activeDiagramLayer = null;
         }
         initDiagramLayer();
         addDiagramLayer(layerNr);
