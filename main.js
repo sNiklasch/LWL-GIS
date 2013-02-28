@@ -188,6 +188,19 @@ function init() {
 	map.reorderLayer(labelLayer, 5);
 }
 
+function initLegend(layer){
+    //Preparing the Legend:
+        var layerInfo = [{layer: layer.layer, title: layer.layer.name}];
+        
+
+        //add the legend 
+        legend = new esri.dijit.Legend({
+            map: map,
+            layerInfos: layerInfo
+        }, "legend");
+        legend.startup();
+}
+
 function logText(text){
 	console.log(text);
 }
@@ -388,8 +401,7 @@ function addDiagramLayer(layerNr){
 	}
 	
 	map.addLayers([activeDiagramLayer]);
-	//legend.destroy();
-	legend.refresh();
+	initLegend(activeDiagramLayer);
 }
 
 /**

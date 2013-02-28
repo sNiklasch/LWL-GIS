@@ -69,6 +69,13 @@ font-weight:bold;
 max-height: 100px;
 }
 
+#legend_layer1 {
+	visibility: hidden;
+	height: 0px;
+	padding: 0px;
+	margin: 0px;
+}
+
 #loadingImage{
 	position: absolute;
 	bottom: 0%;
