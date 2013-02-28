@@ -272,7 +272,7 @@ function exportChangeValues(){
 			      titleText: exportTitle,
 			      authorText: exportAuthor,
 			      copyrightText: "",
-			      scalebarUnit: "Kilometers",
+			      scalebarUnit: "Kilometers"
 			    }
 			  }],
          url: "http://giv-learn2.uni-muenster.de/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task/"
