@@ -41,6 +41,9 @@ var activeDiagramLayer = null;
 
 var map, queryTask, query, template, disconHandler, initExtent, maxExtent, labelLayer;
 
+//the MapServer for the whole app:
+var mapServer = "http://giv-learn2.uni-muenster.de/ArcGIS/rest/services/LWL/lwl_collection_neu/MapServer";
+
 var attributeFields = ["Sterberate_2010.Gestorbene", "Kreisname", "Geburtenrate_2010.Lebendgeborene", "Demographie.Fortgezogene", "Katholisch", "Leistungsempfaenger_2005.Leistungsempfänger_Pflegeversicherung_I"]; // used fields from the raw data 
 
 var diagramFields = new Array(attributeFields.length);
@@ -207,9 +210,10 @@ function logText(text){
 
 function initLabels(){    
     //Set labels visible on load:
-    labelLayer = new esri.layers.ArcGISDynamicMapServiceLayer("http://giv-learn2.uni-muenster.de/ArcGIS/rest/services/LWL/kreisnamen/MapServer");
+    labelLayer = new esri.layers.ArcGISDynamicMapServiceLayer(mapServer, { "id": "collection" });
     document.getElementById("labelChk").checked = true;
     map.addLayer(labelLayer);
+    labelLayer.setVisibleLayers([1]);
     logText("labels");
 }
 
