@@ -36,9 +36,11 @@ dojo.require("dijit.Tooltip");
 
 
 var breakCount = 0; // keep track of how many individual breaks have been created, used to fetch the correct field values
+var featureLayer; // the active data overlay
 var diagramLayer; // the active clickable diagram layer
+var activeDiagramLayer = null;
 
-var map, queryTask, query, template, disconHandler, initExtent, maxExtent, operationalLayer;
+var map, queryTask, query, template, disconHandler, initExtent, maxExtent, labelLayer;
 
 //the MapServer for the whole app:
 var mapServer = "http://giv-learn2.uni-muenster.de/ArcGIS/rest/services/LWL/lwl_collection_neu/MapServer";
@@ -48,9 +50,6 @@ var attributeFields = ["Sterberate_2010.Gestorbene", "Kreisname", "Geburtenrate_
 var diagramFields = new Array(attributeFields.length);
 
 var activeLayer = 2; // which layer is active at the beginning
-var activeDiagramLayer = 0;
-var labelVisibility = true;
-
 var legend;
 /**
  * at this point the min and max values have to be entered manually for each layer.
@@ -110,6 +109,9 @@ function init() {
     });
     
     //createBasemapGallery();
+
+    //add Layer overlay
+    dojo.connect(map, "onLoad", initOperationalLayer);
         
     //various map events
     //dojo.connect(map, "onExtentChange", reLocate);
@@ -129,19 +131,22 @@ function init() {
         }
     });
     
-    //Initialize the Legend:
-        dojo.connect(map,'onLayersAddResult',function(results){
-          var layerInfo = dojo.map(results, function(layer,index){
-            return {layer:layer.layer,title:layer.layer.name};
-          });
-          if(layerInfo.length > 0){
-            legend = new esri.dijit.Legend({
-              map:map,
-              layerInfos:layerInfo
-            },"legend");
-            legend.startup();
-          }
+    //Preparing the Legend:
+    dojo.connect(map, 'onLayersAddResult', function (results) {
+        var layerInfo = dojo.map(results, function (layer, index) {
+            return {
+                layer: layer.layer,
+                title: layer.layer.name
+            };
         });
+
+        //add the legend 
+        legend = new esri.dijit.Legend({
+            map: map
+            //layerInfos: layerInfo
+        }, "legend");
+        legend.startup();
+    });
 
 
 
@@ -169,16 +174,35 @@ function init() {
     map.removeLayer(osmLayer);
     
     dojo.connect(map, "onZoomEnd", function() { 
-    						operationalLayer.setMaxAllowableOffset(maxOffset(map,10));
+    						featureLayer.setMaxAllowableOffset(maxOffset(map,10));
     										});
     // The offset is calculated as approximately 1 vertex per pixel: 
     var maxOffset = function maxOffset(map, pixelTolerance) { return Math.floor(map.extent.getWidth() / map.width) * pixelTolerance; };
     
     //Check if split-screen is active:
     onLoadCheck();
+
+	//set Colorizationfor the startup-Layer
+	initialColorization();
 	
     initDiagramFields(); //initialize which fields should be used for which diagram layer
-	initLabels();
+	
+	dojo.connect(featureLayer, "onUpdateEnd", initLabels());
+	
+	map.reorderLayer(labelLayer, 5);
+}
+
+function initLegend(layer){
+    //Preparing the Legend:
+        var layerInfo = [{layer: layer.layer, title: layer.layer.name}];
+        
+
+        //add the legend 
+        legend = new esri.dijit.Legend({
+            map: map,
+            layerInfos: layerInfo
+        }, "legend");
+        legend.startup();
 }
 
 function logText(text){
@@ -187,10 +211,10 @@ function logText(text){
 
 function initLabels(){    
     //Set labels visible on load:
-    operationalLayer = new esri.layers.ArcGISDynamicMapServiceLayer(mapServer, { "id": "collection" });
+    labelLayer = new esri.layers.ArcGISDynamicMapServiceLayer(mapServer, { "id": "collection" });
     document.getElementById("labelChk").checked = true;
-    map.addLayers([operationalLayer]);
-    operationalLayer.setVisibleLayers([1, 2]);
+    map.addLayer(labelLayer);
+    labelLayer.setVisibleLayers([1, 2]);
     logText("labels");
 }
 
@@ -273,12 +297,29 @@ function exportChangeValues(){
 }
 
 
-/**
- * opacity for OperationalLayer
+/*
+function createBasemapGallery() {
+    //add the basemap gallery, in this case we'll display maps from ArcGIS.com including bing maps
+    var basemapGallery = new esri.dijit.BasemapGallery({
+        showArcGISBasemaps: true,
+        bingMapsKey: 'Enter Bing Maps Key',
+        map: map
+    }, "basemapGallery");
+
+    basemapGallery.startup();
+
+    dojo.connect(basemapGallery, "onError", function (msg) {
+        console.log(msg)
+    });
+}
 */
+
+/**
+ * opacity für FeatureLayer
+ */
 function setFeatureLayerOpacity(opacity) {
-    operationalLayer.setOpacity(opacity);
-} 
+    featureLayer.setOpacity(opacity);
+}
 
 
 function initDiagramFields() {
@@ -293,7 +334,21 @@ function initDiagramFields() {
     diagramFields[5][3] = "'2005$'.Leistungsempfänger Pflegeversicherung III";
 }
 
+/**
+ * FeatureLayer Overlay
+ */
+function initOperationalLayer() {
 
+
+    featureLayer = new esri.layers.FeatureLayer("http://giv-learn2.uni-muenster.de/ArcGIS/rest/services/LWL/lwl_collection/MapServer/" + activeLayer, {
+        mode: esri.layers.FeatureLayer.MODE_ONDEMAND,
+        outFields: ["*"], //use all available fields in the data
+        opacity: .50
+    });
+    featureLayer.setSelectionSymbol(new esri.symbol.SimpleFillSymbol());
+    map.addLayers([featureLayer]);
+    console.log("layerIds:" + map.graphicsLayerIds);    
+}
 
 /**
  * additionally to the standard overlay, this can add an invisible,
@@ -342,6 +397,17 @@ function connectDiagramFunc(layerNr) {
     });
 }
 
+function addDiagramLayer(layerNr){
+	if (layerNr == 4){
+		activeDiagramLayer = new esri.layers.ArcGISDynamicMapServiceLayer("http://giv-learn2.uni-muenster.de/ArcGIS/rest/services/LWL/diagramme_religion/MapServer");
+	}
+	if (layerNr == 5){
+		activeDiagramLayer = new esri.layers.ArcGISDynamicMapServiceLayer("http://giv-learn2.uni-muenster.de/ArcGIS/rest/services/LWL/diagramme_pflegehilfe/MapServer");
+	}
+	
+	map.addLayers([activeDiagramLayer]);
+	initLegend(activeDiagramLayer);
+}
 
 /**
  * This method can assign a new color scheme to a layer
@@ -365,12 +431,36 @@ function colorChange() {
     var drawingOptions = new esri.layers.LayerDrawingOptions();
     drawingOptions.renderer = renderer;
     optionsArray[activeLayer] = drawingOptions;
-    operationalLayer.setLayerDrawingOptions(optionsArray);
+    labelLayer.setLayerDrawingOptions(optionsArray);
+    
+    featureLayer.setRenderer(renderer);
+    featureLayer.refresh();
 
     legend.refresh();
 }
 
 
+/**
+ * This method is used to initially set classes - only used at startup! 
+ */
+function initialColorization(){
+	symbol = new esri.symbol.SimpleFillSymbol();
+    symbol.setColor(new dojo.Color([150, 150, 150, 0.75]));
+    var renderer = new esri.renderer.ClassBreaksRenderer(symbol, attributeFields[activeLayer]);
+    
+    //the values are layer dependent, so if another initial layer is chosen, these values MUST be changed
+    renderer.addBreak(0,1702,new esri.symbol.SimpleFillSymbol().setColor(new dojo.Color("#FF0000")));
+            
+    renderer.addBreak(1703,3404,new esri.symbol.SimpleFillSymbol().setColor(new dojo.Color("#FFFF00")));
+            
+    renderer.addBreak(3405,5107,new esri.symbol.SimpleFillSymbol().setColor(new dojo.Color("#00FF00")));
+            
+    featureLayer.setRenderer(renderer);
+    //featureLayer.refresh();
+
+    //legend.refresh();
+	logText("color");
+}
 
 /**
  * Method for changing the active overlay layer
@@ -381,8 +471,8 @@ function layerChange(layerNr) {
         dojo.disconnect(disconHandler);
         map.removeLayer(diagramLayer);
         diagramLayer = null;
-        activeDiagramLayer = 0;
-        updateLayerVisibility();
+        map.removeLayer(activeDiagramLayer);
+        activeDiagramLayer = null;
     } else if (layerNr == 4 && document.getElementById("religionChk").checked) {
         dojo.disconnect(disconHandler);
         connectDiagramFunc(layerNr);
@@ -391,15 +481,18 @@ function layerChange(layerNr) {
             map.removeLayer(diagramLayer);
             diagramLayer = null;
         }
+        if (activeDiagramLayer != null) {
+            map.removeLayer(activeDiagramLayer);
+            activeDiagramLayer = null;
+        }
         initDiagramLayer();
-        activeDiagramLayer = layerNr;
-        updateLayerVisibility();
+        addDiagramLayer(layerNr);
     } else if (layerNr == 5 && !(document.getElementById("pflegehilfeChk").checked)) {
         dojo.disconnect(disconHandler);
         map.removeLayer(diagramLayer);
         diagramLayer = null;
-        activeDiagramLayer = 0;
-        updateLayerVisibility();
+        map.removeLayer(activeDiagramLayer);
+        activeDiagramLayer = null;
     } else if (layerNr == 5 && document.getElementById("pflegehilfeChk").checked) {
         dojo.disconnect(disconHandler);
         connectDiagramFunc(layerNr);
@@ -408,21 +501,22 @@ function layerChange(layerNr) {
             map.removeLayer(diagramLayer);
             diagramLayer = null;
         }
+        if (activeDiagramLayer != null) {
+            map.removeLayer(activeDiagramLayer);
+            activeDiagramLayer = null;
+        }
         initDiagramLayer();
-        activeDiagramLayer = layerNr;
-        updateLayerVisibility();
+        addDiagramLayer(layerNr);
         //handling checkbox for the basemap
     } else if (layerNr == 50 && !(document.getElementById("baseMapChk").checked)) {
     	map.removeLayer(osmLayer);
     } else if (layerNr == 50 && (document.getElementById("baseMapChk").checked)) {
     	map.addLayer(osmLayer);
-        //handling checkbox for the operationalLayer
+        //handling checkbox for the labelLayer
     } else if (layerNr == 60 && (document.getElementById("labelChk").checked)) {
-    	labelVisibility = true;
-        updateLayerVisibility();
+    	map.addLayer(labelLayer);
     } else if (layerNr == 60 && !(document.getElementById("labelChk").checked)) {
-    	labelVisibility = false;
-        updateLayerVisibility();
+    	map.removeLayer(labelLayer);
     } else {
 		//following applies if only a 'normal' layer change happens
         activeLayer = layerNr; //setting the new layer
@@ -433,11 +527,15 @@ function layerChange(layerNr) {
         addBreaksTable.setAttribute("id", "Breaks");
         d.appendChild(addBreaksTable);
         breakCount = 0;
+        legend.destroy();
         var legendDiv = document.getElementById("legendDiv");
         var leg = document.createElement("div");
         leg.setAttribute("id", "legend");
         legendDiv.appendChild(leg);
-        updateLayerVisibility();
+
+        map.removeLayer(featureLayer);
+        featureLayer = null;
+        initOperationalLayer();
     }
 }
 
@@ -467,30 +565,12 @@ function addEqualBreaks(number, colorStart, colorEnd) {
     var drawingOptions = new esri.layers.LayerDrawingOptions();
     drawingOptions.renderer = renderer;
     optionsArray[activeLayer] = drawingOptions;
-    operationalLayer.setLayerDrawingOptions(optionsArray);
+    labelLayer.setLayerDrawingOptions(optionsArray);
+    
+    featureLayer.setRenderer(renderer);
+    featureLayer.refresh();
 
     legend.refresh();
-}
-
-function updateLayerVisibility(){
-	if (labelVisibility == true) {
-		if (activeDiagramLayer == 0){
-			operationalLayer.setVisibleLayers([1, activeLayer]);
-		}
-		else {
-			operationalLayer.setVisibleLayers([1, activeLayer, activeDiagramLayer]);
-		}
-		
-	}
-	else {
-		if (activeDiagramLayer == 0){
-			operationalLayer.setVisibleLayers([activeLayer]);
-		}
-		else {
-			operationalLayer.setVisibleLayers([activeLayer, activeDiagramLayer]);
-		}
-	}
-	legend.refresh();
 }
 
 
