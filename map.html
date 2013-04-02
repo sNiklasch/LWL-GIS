@@ -43,6 +43,21 @@
     <!-- Map init() Method and other important functions -->
     <script type="text/javascript" src="main.js">
     </script>
+    <!-- Google Analytics Script: -->
+    <script type="text/javascript">
+
+	  var _gaq = _gaq || [];
+	  _gaq.push(['_setAccount', 'UA-39681097-1']);
+	  _gaq.push(['_setDomainName', 'webgis-westfalen.de']);
+	  _gaq.push(['_trackPageview']);
+	
+	  (function() {
+	    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	  })();
+	
+	</script>
   </head>
   
   <body onload="" class="tundra">
@@ -310,26 +325,29 @@
   
   <!--<a href="#" class="icons" id="printButton" style="position: absolute; right:0px; top:290px; z-index: 4;"></a>-->
   
-  <div dojotype="dijit.layout.BorderContainer" design="headline" gutters="false" style="background-color: #fff; width: auto; height: 100%; margin: 0; padding-top:62px; padding-bottom: 102px; margin-left: 10px; margin-right: 10px;">
+  <div dojotype="dijit.layout.BorderContainer" design="headline" gutters="false" style="background-color: #fff; width: auto; height: 100%; margin: 0; padding-top:62px; padding-bottom: 0px; margin-left: 10px; margin-right: 10px;">
     <div id="map" dojotype="dijit.layout.ContentPane" region="center" style="overflow:hidden; z-index: 1;">
     </div>
   </div>
   
   <!-- Ifgi and LWL logo -->
-  <!--<a href="http://www.lwl.org/LWL/Kultur/geko/" target="_blank" id="lwl_logo_map" style="position: absolute; right:120px; bottom:107px; z-index: 2; opacity: 0.5; height:35px;">
-    <img src="images/lwl_logo_map.png">
+  <!--<a href="http://www.lwl.org/LWL/Kultur/geko/" target="_blank" id="lwl_logo_map" style="position: absolute; right:120px; bottom: 0px; z-index: 2; opacity: 0.5; height: 25px;">-->
+  	<div id="copyrightLwl">
+  	&copy; Landschaftsverband Westfalen-Lippe (LWL), 48133 M&uuml;nster
+  	</div>
+    <!--<img src="images/lwl_logo_map.png">
   </a>-->
-  <a href="http://ifgi.uni-muenster.de/" target="_blank" id="ifgi_logo_map" style="position: absolute; right:80px; bottom:102px; z-index: 2; height:45px;">
+  <a href="http://ifgi.uni-muenster.de/" target="_blank" id="ifgi_logo_map" style="position: absolute; right:80px; bottom:2px; z-index: 2; height:45px;">
     <img src="images/ifgi_logo_map.png">
   </a>
-  
+  <!--
   <div id="footer" class="lwl-cd">
-  <div id="footercontent">
-    <ul id="imprint">
-      <li class="first"><span>&copy; Landschaftsverband Westfalen-Lippe (LWL), 48133 M&uuml;nster</span></li>
-    </ul>
-  </div>
-  </div>
+  	<div id="footercontent">
+   	 <ul id="imprint">
+   	   <li class="first"><span>&copy; Landschaftsverband Westfalen-Lippe (LWL), 48133 M&uuml;nster</span></li>
+     </ul>
+	</div>
+  </div>-->
   
 </body>
 </html>

@@ -148,3 +148,13 @@ font-weight:bold;
 	display: inline-block;
 	font: 0.6875em/1.5 sans-serif;
 }
+
+#copyrightLwl {
+	font-size: 11px;
+	position: absolute;
+	right:120px;
+	bottom: 0px;
+	z-index: 2;
+	opacity: 0.5;
+	height: 25px;
+}

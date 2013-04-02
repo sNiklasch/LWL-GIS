@@ -118,8 +118,8 @@ dojo.ready(function () {
             }),
             dojo.fx.slideTo({
                 node: slideTarget_legend,
-                left: 35,
-                top: 0
+                left: "40",
+                top: "50"
             })]).play();
             legendBtnClicked = true;
         } else {
@@ -127,7 +127,7 @@ dojo.ready(function () {
             dojo.fx.slideTo({
                 node: slideTarget_legend,
                 left: - 50,
-                top: 0
+                top: "50"
             }),
             dojo.fadeOut({
                 node: slideTarget_legend
