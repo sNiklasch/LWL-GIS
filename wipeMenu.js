@@ -36,7 +36,7 @@ dojo.ready(function () {
             dojo.fx.slideTo({
                 node: slideTarget_layer,
                 left: map.width - 450,
-                top: "0"
+                top: "50"
             })]).play();
             layerBtnClicked = true;
         } else {
@@ -44,7 +44,7 @@ dojo.ready(function () {
             dojo.fx.slideTo({
                 node: slideTarget_layer,
                 left: map.width + 50,
-                top: "0"
+                top: "50"
             }),
             dojo.fadeOut({
                 node: slideTarget_layer

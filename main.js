@@ -188,7 +188,7 @@ function logText(text){
 function initLabels(){    
     //Set labels visible on load:
     operationalLayer = new esri.layers.ArcGISDynamicMapServiceLayer(mapServer, { "id": "collection" });
-    document.getElementById("labelChk").checked = true;
+    //document.getElementById("labelChk").checked = true;
     map.addLayers([operationalLayer]);
     operationalLayer.setVisibleLayers([1, 2]);
     logText("labels");
@@ -566,6 +566,9 @@ function reCenterAndZoom(center, zoom, extent, frameNr) {
  * if it is then the split-button is removed on the newly created frame
  */
 function onLoadCheck() {
+	if (self.name == "frame1") {
+        document.getElementById("welcome").style.visibility = 'visible';
+	}
     if (self.name == "frame2") {
         document.getElementById("splitDiv").removeChild(document.getElementById("slideAwayButton_split"));
         if(map != null){
