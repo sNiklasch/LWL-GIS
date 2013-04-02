@@ -80,7 +80,7 @@ function init() {
     esri.config.defaults.io.proxyUrl = "/arcgisserver/apis/javascript/proxy/proxy.ashx";
 
     /* mit 3.3 kaputt */
-    initExtent = new esri.geometry.Extent(413447, 6487669, 1269542, 7099165, new esri.SpatialReference({
+    initExtent = new esri.geometry.Extent(518012, 6573584, 1286052, 6898288, new esri.SpatialReference({
         wkid: 102100
     })); //initial map extent
     
