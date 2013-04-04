@@ -70,7 +70,6 @@ var counter = 0;
  */
 var exportTitle = "kein Titel";
 var exportAuthor = "kein Autor";
-
 var printer;
 
 function init() {
@@ -79,12 +78,12 @@ function init() {
 
     esri.config.defaults.io.proxyUrl = "/arcgisserver/apis/javascript/proxy/proxy.ashx";
 
-    /* mit 3.3 kaputt */
+    
     initExtent = new esri.geometry.Extent(518012, 6573584, 1286052, 6898288, new esri.SpatialReference({
         wkid: 102100
     })); //initial map extent
     
-    maxExtent = initExtent;/**/
+    maxExtent = initExtent;
     
     for (var i = 0; i < parent.frames.length; i++) {
         if (parent.frames[i].name != self.name) {
@@ -112,7 +111,7 @@ function init() {
     //createBasemapGallery();
         
     //various map events
-    //dojo.connect(map, "onExtentChange", reLocate);
+    dojo.connect(map, "onExtentChange", showExtent);
     dojo.connect(map, "onPanEnd", reLocate);
     dojo.connect(map, "onZoomEnd", reLocate); 
 
@@ -152,7 +151,7 @@ function init() {
     dojo.connect(map, 'onLoad', function (theMap) {
         var scalebar = new esri.dijit.Scalebar({
             map: map,
-            scalebarUnit: 'metric',
+            scalebarUnit: "metric",
             attachTo: "bottom-left"
         });
         dojo.connect(dijit.byId('map'), 'resize', map, map.resize);
@@ -194,34 +193,36 @@ function initLabels(){
     logText("labels");
 }
 
-/*
+
 function showExtent(extent, delta, levelChange, lod) {
 		//In javascript, object passes byref. so it's not correct to difine new extent using
 		//"var adjustedEx = extent;"
-		var adjustedEx = new esri.geometry.Extent(extent.xmin, extent.ymin, extent.xmax, extent.ymax);
+		var adjustedEx = new esri.geometry.Extent(extent.xmin, extent.ymin, extent.xmax, extent.ymax, extent.spatialReference);
 		var flag = false;	
 		//set a buffer to make the max extent a slightly bigger to void minor differences
 		//the map unit for this case is meter. 
-		var buffer = 10;
-		console.log(extent.xmin + "," + maxExtent.xmin);
-		    if(extent.xmin < maxExtent.xmin-buffer) {
+				console.log(extent.ymin - maxExtent.ymin);
+		    if(extent.xmin < maxExtent.xmin-500) {
 				adjustedEx.xmin = maxExtent.xmin;
 				adjustedEx.xmax = Math.abs(extent.xmin - maxExtent.xmin) + extent.xmax;
+				
                 flag = true;
             }
-			if(extent.ymin < maxExtent.ymin-buffer) {
+			if(extent.ymin < maxExtent.ymin-500) {
 			    adjustedEx.ymin = maxExtent.ymin;
 			    adjustedEx.ymax = Math.abs(extent.ymin - maxExtent.ymin) + extent.ymax;
+			    
                 flag = true;
             }
-			if(extent.xmax-buffer > maxExtent.xmax) {
+			if(extent.xmax > maxExtent.xmax+500) {
 			    adjustedEx.xmax = maxExtent.xmax;
 			    adjustedEx.xmin =extent.xmin - Math.abs(extent.xmax - maxExtent.xmax);
-                flag = true;
-            }
-			if(extent.ymax-buffer > maxExtent.ymax) {
+			    
+                flag = true;            }
+			if(extent.ymax > maxExtent.ymax+500) {
 			    adjustedEx.ymax = maxExtent.ymax;
 			    adjustedEx.ymin =extent.ymin - Math.abs(extent.ymax - maxExtent.ymax);
+			    
                 flag = true;
             }
 			if (flag === true) {
@@ -230,7 +231,7 @@ function showExtent(extent, delta, levelChange, lod) {
 			flag = false;
 			
       }
-*/
+
 
 /**
  * function to set title and author of the map and export it
@@ -247,12 +248,12 @@ function exportChangeValues(){
           map: map,
           templates: [{
 			    label: "PDF",
-			    format: "PDF",
+			    format: "PNG32",
 			    layout: "A4 Portrait",
 			    layoutOptions: {
 			      titleText: exportTitle,
 			      authorText: exportAuthor,
-			      copyrightText: "",
+			      copyrightText: "© Landschaftsverband Westfalen-Lippe (LWL), 48133 Münster",
 			      scalebarUnit: "Kilometers"
 			    }
 			  }],
@@ -348,16 +349,17 @@ function connectDiagramFunc(layerNr) {
  * as used for individual breaks
  */
 function colorChange() {
-
+	//Set the default symbol, which is used for unmatched values
     symbol = new esri.symbol.SimpleFillSymbol();
     symbol.setColor(new dojo.Color([150, 150, 150, 0.75]));
+    
     var renderer = new esri.renderer.ClassBreaksRenderer(symbol, attributeFields[activeLayer]);
     for (var i = 1; i <= breakCount; i++) {
         var element = document.getElementById("breakFrom" + i);
         if (element) {
             renderer.addBreak(document.getElementById("breakFrom" + i).value,
-            document.getElementById("breakTo" + i).value,
-            new esri.symbol.SimpleFillSymbol().setColor(new dojo.Color("#" + document.getElementById("myValue" + i).value)));
+            	document.getElementById("breakTo" + i).value,
+            	new esri.symbol.SimpleFillSymbol().setColor(new dojo.Color("#" + document.getElementById("myValue" + i).value)));
         }
     }
     
@@ -415,7 +417,7 @@ function layerChange(layerNr) {
     } else if (layerNr == 50 && !(document.getElementById("baseMapChk").checked)) {
     	map.removeLayer(osmLayer);
     } else if (layerNr == 50 && (document.getElementById("baseMapChk").checked)) {
-    	map.addLayer(osmLayer);
+    	map.addLayer(osmLayer, 0);
         //handling checkbox for the operationalLayer
     } else if (layerNr == 60 && (document.getElementById("labelChk").checked)) {
     	labelVisibility = true;
