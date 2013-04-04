@@ -111,8 +111,8 @@ function init() {
     //createBasemapGallery();
         
     //various map events
-    dojo.connect(map, "onExtentChange", showExtent);
-    dojo.connect(map, "onPanEnd", reLocate);
+    dojo.connect(map, "onPanEnd", showExtent);
+    //dojo.connect(map, "onPanEnd", reLocate);
     dojo.connect(map, "onZoomEnd", reLocate); 
 
     dojo.connect(map, "onMouseDown", function () {
@@ -167,11 +167,11 @@ function init() {
     map.addLayer(osmLayer);
     map.removeLayer(osmLayer);
     
-    dojo.connect(map, "onZoomEnd", function() { 
-    						operationalLayer.setMaxAllowableOffset(maxOffset(map,10));
-    										});
+    //dojo.connect(map, "onZoomEnd", function() { 
+    //						operationalLayer.setMaxAllowableOffset(maxOffset(map,10));
+    //										});
     // The offset is calculated as approximately 1 vertex per pixel: 
-    var maxOffset = function maxOffset(map, pixelTolerance) { return Math.floor(map.extent.getWidth() / map.width) * pixelTolerance; };
+    //var maxOffset = function maxOffset(map, pixelTolerance) { return Math.floor(map.extent.getWidth() / map.width) * pixelTolerance; };
     
     //Check if split-screen is active:
     onLoadCheck();
@@ -195,9 +195,11 @@ function initLabels(){
 
 
 function showExtent(extent, delta, levelChange, lod) {
+	
 		//In javascript, object passes byref. so it's not correct to difine new extent using
 		//"var adjustedEx = extent;"
 		var adjustedEx = new esri.geometry.Extent(extent.xmin, extent.ymin, extent.xmax, extent.ymax, extent.spatialReference);
+		if (self.name == "frame1"){
 		var flag = false;	
 		//set a buffer to make the max extent a slightly bigger to void minor differences
 		//the map unit for this case is meter. 
@@ -226,11 +228,11 @@ function showExtent(extent, delta, levelChange, lod) {
                 flag = true;
             }
 			if (flag === true) {
-				map.setExtent(adjustedEx);				
+				map.setExtent(adjustedEx);
 			}
-			flag = false;
-			
-      }
+			flag = false;}
+			reLocate(adjustedEx);
+}
 
 
 /**
@@ -530,10 +532,10 @@ function executeQueryTask(evt) {
 /**
  * called if in split mode one map is panned
  */
-function reLocate() {
+function reLocate(extent) {
 	for (var i = 0; i < parent.frames.length; i++) { //go through all frames and re-center
 		if (parent.frames[i].name != self.name) {
-			parent.frames[i].reCenterAndZoom(map.extent.getCenter(), map.getLevel(), map.extent, i);
+			parent.frames[i].reCenterAndZoom(extent.getCenter(), map.getLevel(), extent, i);
 		}
 	}
 }
