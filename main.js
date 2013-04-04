@@ -448,6 +448,11 @@ function layerChange(layerNr) {
  */
 function addEqualBreaks(number, colorStart, colorEnd) {
 
+	if (number > 11){
+		number = 11;
+		document.getElementById("equalBreaksText").value = 12;
+	}
+
     var breakStep = (maxValues[activeLayer] - minValues[activeLayer]) / (number + 1);
     var colorArray = generateColor(colorStart, colorEnd, number);
 
