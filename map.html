@@ -59,7 +59,7 @@
 	
 	</script>
   </head>
-  
+  <!-- LWL-Header -->
   <body onload="" class="tundra">
   <div id="header" class="lwl-cd">
   <div id="headercontent">
@@ -83,7 +83,21 @@
     </div></div>
  </div>
   
-  
+  <!-- Timeslider -->
+  <div id="timesliderValue">2010</div>
+  <div id="timeslider" data-dojo-type="dijit.form.HorizontalSlider" data-dojo-props='
+    name:"horizontal1", 
+    onChange:function(val){ yearChange(val) }, 
+    value:2010, 
+    minimum:2009, 
+    maximum:2011, 
+    discreteValues:3,
+    showButtons:true, 
+    intermediateChanges:true, 
+    slideDuration:0, 
+    style:{width:"20%", height:"20px"} 
+    '></div>
+
     <!-- Layer selection menu -->
     <div id="content1" style="position: absolute; width: 100%; height: 100%;">
       <a href="#" class="icons" id="slideAwayButton_layer" style="position: absolute; right:10px; top:72px; z-index: 4;">
@@ -146,7 +160,7 @@
            <img src="images/Help_sm.png">
          </a>
        </form>
-       <div id="slider1" data-dojo-type="dijit.form.HorizontalSlider" data-dojo-props='name:"horizontal1", onChange:function(val){ setFeatureLayerOpacity(val) }, value:0.5, maximum:1, minimum:0, pageIncrement:100, showButtons:true, intermediateChanges:true, slideDuration:500, style:{width:"50%", height:"20px"} '>
+       <div id="slider1" data-dojo-type="dijit.form.HorizontalSlider" data-dojo-props='name:"horizontal1", onChange:function(val){ setFeatureLayerOpacity(val) }, value:1, maximum:1, minimum:0, pageIncrement:100, showButtons:true, intermediateChanges:true, slideDuration:500, style:{width:"50%", height:"20px"} '>
 	       <div align="center" style="font-size:0.75em">
 		       Transparenz
 		   </div>

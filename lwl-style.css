@@ -116,6 +116,23 @@ font-weight:bold;
 	top: 22.5px;
 }
 
+#timeslider {
+	position: absolute;
+	z-index: 5;
+	top: 35px;
+	left: 40%;
+}
+
+#timesliderValue {
+	position: absolute;
+	z-index: 5;
+	top: 10px;
+	width: 50px;
+	left: 50%;
+	margin-left: -25px;
+	text-align: center;
+}
+
 #footer{
 	position: relative;
 	margin: 0px 10px 0px 10px;

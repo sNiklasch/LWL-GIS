@@ -38,7 +38,7 @@ dojo.require("dijit.Tooltip");
 var breakCount = 0; // keep track of how many individual breaks have been created, used to fetch the correct field values
 var diagramLayer; // the active clickable diagram layer
 
-var map, queryTask, query, template, disconHandler, initExtent, maxExtent, operationalLayer;
+var map, queryTask, query, template, disconHandler, initExtent, maxExtent, operationalLayer, year;
 
 //the MapServer for the whole app:
 var mapServer = "http://giv-learn2.uni-muenster.de/ArcGIS/rest/services/LWL/lwl_collection_neu/MapServer";
@@ -443,6 +443,10 @@ function layerChange(layerNr) {
         legendDiv.appendChild(leg);
         updateLayerVisibility();
     }
+}
+
+function yearChange(year){
+    document.getElementById("timesliderValue").innerHTML = year;
 }
 
 /**
