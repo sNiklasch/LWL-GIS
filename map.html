@@ -88,10 +88,10 @@
   <div id="timeslider" data-dojo-type="dijit.form.HorizontalSlider" data-dojo-props='
     name:"horizontal1", 
     onChange:function(val){ yearChange(val) }, 
-    value:2010, 
-    minimum:2009, 
-    maximum:2011, 
-    discreteValues:3,
+    value:initYear, 
+    minimum:years[0], 
+    maximum:years[years.length-1], 
+    discreteValues:years.length,
     showButtons:true, 
     intermediateChanges:true, 
     slideDuration:0, 
@@ -121,19 +121,19 @@
                   Klassifizierbar:
                 </b>
               </div>
-              <input type="radio" id="gebCheck" name="Layer" value="Geburtenrate" checked=true onchange="layerChange(2)">
+              <input type="radio" id="gebCheck" name="Layer" value="Geburtenrate" checked=true onchange="layerChange(fIDgeburten)">
               Geburtenrate 
               <a id="geburtenrateInfo" style="cursor: help;">
                 <img src="images/Help_sm.png">
               </a>
               <br>
-              <input type="radio" name="Layer" value="Sterberate" onchange="layerChange(0)">
+              <input type="radio" name="Layer" value="Sterberate" onchange="layerChange(fIDsterberate)">
               Sterberate 
               <a id="sterberateInfo" style="cursor: help;">
                 <img src="images/Help_sm.png">
               </a>
               <br>
-              <input type="radio" name="Layer" value="Demographie" onchange="layerChange(3)">
+              <input type="radio" name="Layer" value="Demographie" onchange="layerChange(fIDdemographie)">
               Demographie 
               <a id="demographieInfo" style="cursor: help;">
                 <img src="images/Help_sm.png">
@@ -148,13 +148,13 @@
              	Nur Diagramme:
             </b>
          </div>
-         <input type="checkbox" id="religionChk" name="Layer" value="Religion" onchange="layerChange(4)">
+         <input type="checkbox" id="religionChk" name="Layer" value="Religion" onchange="layerChange(fIDreligion)">
          Religion 
          <a id="religionInfo" style="cursor: help;">
            <img src="images/Help_sm.png">
          </a>
          <br>
-         <input type="checkbox" id="pflegehilfeChk" name="Layer" value="Pflegehilfe" onchange="layerChange(5)">
+         <input type="checkbox" id="pflegehilfeChk" name="Layer" value="Pflegehilfe" onchange="layerChange(fIDleistungsempfaenger)">
          Pflegehilfe 
          <a id="pflegehilfeInfo" style="cursor: help;">
            <img src="images/Help_sm.png">

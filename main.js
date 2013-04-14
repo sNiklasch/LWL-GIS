@@ -41,24 +41,39 @@ var diagramLayer; // the active clickable diagram layer
 var map, queryTask, query, template, disconHandler, initExtent, maxExtent, operationalLayer, year;
 
 //the MapServer for the whole app:
-var mapServer = "http://giv-learn2.uni-muenster.de/ArcGIS/rest/services/LWL/lwl_collection_neu/MapServer";
+var mapServer = "http://giv-learn2.uni-muenster.de/ArcGIS/rest/services/LWL/Atlas/MapServer";
+var fIDkreisnamen = 0;
+var fIDgeburten = 1;
+var fIDsterberate = 2;
+var fIDdemographie = 3;
+var fIDreligion = 4;
+var fIDleistungsempfaenger = 5;
 
-var attributeFields = ["Sterberate_2010.Gestorbene", "Kreisname", "Geburtenrate_2010.Lebendgeborene", "Demographie.Fortgezogene", "Katholisch", "Leistungsempfaenger_2005.Leistungsempfänger_Pflegeversicherung_I"]; // used fields from the raw data 
+var attributeFields = ["Kreisname", "geburten_.geb", "gestorbene_.gest", "demographie_.dem", "Katholisch", "Leistungsempfaenger_2005.Leistungsempfänger_Pflegeversicherung_I"]; // used fields from the raw data 
 
 var diagramFields = new Array(attributeFields.length);
 
-var activeLayer = 2; // which layer is active at the beginning
+var years = [2009, 2010, 2011];
+var initYear = 2010;
+var currentYear = initYear;
+
+var activeLayer = fIDgeburten; // which layer is active at the beginning
 var activeDiagramLayer = 0;
 var labelVisibility = true;
+var equalBreaksOptions = [  [2, "FFFFFF", "FFFFFF"],
+                            [3, "FF0000", "00FF00"],
+                            [3, "00FF00", "FF0000"],
+                            [3, "00FF00", "FF0000"]];
+var activeClassification = 0;
 
 var legend;
 /**
  * at this point the min and max values have to be entered manually for each layer.
  * this is not a good approach, they should be obtained directly from the data on the server
  * please change this! 
- */
-var maxValues = [7560, 0, 5107, 23860];  
-var minValues = [1382, 0, 1031, 3432];
+ */ 
+var minValues = [0, 832, 1000, 3432];
+var maxValues = [0, 5306, 8000, 23860]; 
 /**
  * due to a bug in ArcGIS where invoking any method that re-centers the map a onPan() event is fired,
  * this counter is used to prevent an infinite loop of re-centering between the two maps in split-mode.
@@ -180,17 +195,13 @@ function init() {
 	initLabels();
 }
 
-function logText(text){
-	console.log(text);
-}
-
 function initLabels(){    
     //Set labels visible on load:
     operationalLayer = new esri.layers.ArcGISDynamicMapServiceLayer(mapServer, { "id": "collection" });
     //document.getElementById("labelChk").checked = true;
     map.addLayers([operationalLayer]);
-    operationalLayer.setVisibleLayers([1, 2]);
-    logText("labels");
+    operationalLayer.setVisibleLayers([fIDkreisnamen, activeLayer]);
+    window.setTimeout("addEqualBreaks(equalBreaksOptions[activeLayer][0], equalBreaksOptions[activeLayer][1], equalBreaksOptions[activeLayer][2])", 1000);
 }
 
 
@@ -351,17 +362,21 @@ function connectDiagramFunc(layerNr) {
  * as used for individual breaks
  */
 function colorChange() {
+    activeClassification = 1;
 	//Set the default symbol, which is used for unmatched values
     symbol = new esri.symbol.SimpleFillSymbol();
     symbol.setColor(new dojo.Color([150, 150, 150, 0.75]));
     
-    var renderer = new esri.renderer.ClassBreaksRenderer(symbol, attributeFields[activeLayer]);
+    var renderer = new esri.renderer.ClassBreaksRenderer(symbol, attributeFields[activeLayer] + currentYear);
     for (var i = 1; i <= breakCount; i++) {
         var element = document.getElementById("breakFrom" + i);
         if (element) {
-            renderer.addBreak(document.getElementById("breakFrom" + i).value,
-            	document.getElementById("breakTo" + i).value,
-            	new esri.symbol.SimpleFillSymbol().setColor(new dojo.Color("#" + document.getElementById("myValue" + i).value)));
+            renderer.addBreak({
+                minValue: document.getElementById("breakFrom" + i).value,
+            	maxValue: document.getElementById("breakTo" + i).value,
+            	symbol: new esri.symbol.SimpleFillSymbol().setColor(new dojo.Color("#" + document.getElementById("myValue" + i).value)),
+                label: document.getElementById("breakFrom" + i).value + " - " + document.getElementById("breakTo" + i).value
+            });
         }
     }
     
@@ -381,13 +396,15 @@ function colorChange() {
  */
 function layerChange(layerNr) {
 	//disconnect and connect click handlers for diagrams based on checkboxes
-    if (layerNr == 4 && !(document.getElementById("religionChk").checked)) {
+    if (layerNr == fIDreligion && !(document.getElementById("religionChk").checked)) {
+        console.log("entferne religion");
         dojo.disconnect(disconHandler);
         map.removeLayer(diagramLayer);
         diagramLayer = null;
         activeDiagramLayer = 0;
         updateLayerVisibility();
-    } else if (layerNr == 4 && document.getElementById("religionChk").checked) {
+    } else if (layerNr == fIDreligion && document.getElementById("religionChk").checked) {
+        console.log("aktiviere religion");
         dojo.disconnect(disconHandler);
         connectDiagramFunc(layerNr);
         document.getElementById("pflegehilfeChk").checked = false;
@@ -398,13 +415,15 @@ function layerChange(layerNr) {
         initDiagramLayer();
         activeDiagramLayer = layerNr;
         updateLayerVisibility();
-    } else if (layerNr == 5 && !(document.getElementById("pflegehilfeChk").checked)) {
+    } else if (layerNr == fIDleistungsempfaenger && !(document.getElementById("pflegehilfeChk").checked)) {
+        console.log("entferne leistungsempf");
         dojo.disconnect(disconHandler);
         map.removeLayer(diagramLayer);
         diagramLayer = null;
         activeDiagramLayer = 0;
         updateLayerVisibility();
-    } else if (layerNr == 5 && document.getElementById("pflegehilfeChk").checked) {
+    } else if (layerNr == fIDleistungsempfaenger && document.getElementById("pflegehilfeChk").checked) {
+        console.log("aktiviere leistungsempf");
         dojo.disconnect(disconHandler);
         connectDiagramFunc(layerNr);
         document.getElementById("religionChk").checked = false;
@@ -428,6 +447,8 @@ function layerChange(layerNr) {
     	labelVisibility = false;
         updateLayerVisibility();
     } else {
+        activeClassification = 0;
+        window.setTimeout("addEqualBreaks(equalBreaksOptions[activeLayer][0], equalBreaksOptions[activeLayer][1], equalBreaksOptions[activeLayer][2])", 1000);
 		//following applies if only a 'normal' layer change happens
         activeLayer = layerNr; //setting the new layer
         var d = document.getElementById("breaksTable");
@@ -446,13 +467,29 @@ function layerChange(layerNr) {
 }
 
 function yearChange(year){
-    document.getElementById("timesliderValue").innerHTML = year;
+    if (activeClassification == 1){
+        document.getElementById("timesliderValue").innerHTML = year;
+        currentYear = year;
+        colorChange();
+    }
+    else {
+        document.getElementById("timesliderValue").innerHTML = year;
+        currentYear = year;
+        console.log(equalBreaksOptions[activeLayer][0]);
+        console.log(equalBreaksOptions[activeLayer][1]);
+        console.log(equalBreaksOptions[activeLayer][2]);
+        addEqualBreaks(equalBreaksOptions[activeLayer][0], equalBreaksOptions[activeLayer][1], equalBreaksOptions[activeLayer][2]);
+    }
 }
 
 /**
  * method for automatic (equal) breaks
  */
 function addEqualBreaks(number, colorStart, colorEnd) {
+    equalBreaksOptions[activeLayer][0] = number;
+    equalBreaksOptions[activeLayer][1] = colorStart;
+    equalBreaksOptions[activeLayer][2] = colorEnd;
+    activeClassification = 2;
 
 	if (number > 11){
 		number = 11;
@@ -464,12 +501,17 @@ function addEqualBreaks(number, colorStart, colorEnd) {
 
     symbol = new esri.symbol.SimpleFillSymbol();
     symbol.setColor(new dojo.Color([150, 150, 150, 0.75]));
-    var renderer = new esri.renderer.ClassBreaksRenderer(symbol, attributeFields[activeLayer]);
+    var renderer = new esri.renderer.ClassBreaksRenderer(symbol, attributeFields[activeLayer] + currentYear);
     
     for (var i = 0; i <= number; i++) {
-        renderer.addBreak((Math.round((minValues[activeLayer] + i * breakStep) / 10) * 10 + 1),
-        Math.round((minValues[activeLayer] + (i + 1) * breakStep) / 10) * 10,
-        new esri.symbol.SimpleFillSymbol().setColor(dojo.colorFromHex('#' + colorArray[i])));
+        var min = Math.round((minValues[activeLayer] + i * breakStep) / 10) * 10 + 1;
+        var max = Math.round((minValues[activeLayer] + (i + 1) * breakStep) / 10) * 10;
+        renderer.addBreak({
+            minValue: min,
+            maxValue: max,
+            symbol: new esri.symbol.SimpleFillSymbol().setColor(dojo.colorFromHex('#' + colorArray[i])),
+            label: min + " - " + max
+        });
     }
 
 	var breaksList = document.getElementById("Breaks");
@@ -488,10 +530,10 @@ function addEqualBreaks(number, colorStart, colorEnd) {
 function updateLayerVisibility(){
 	if (labelVisibility == true) {
 		if (activeDiagramLayer == 0){
-			operationalLayer.setVisibleLayers([1, activeLayer]);
+			operationalLayer.setVisibleLayers([fIDkreisnamen, activeLayer]);
 		}
 		else {
-			operationalLayer.setVisibleLayers([1, activeLayer, activeDiagramLayer]);
+			operationalLayer.setVisibleLayers([fIDkreisnamen, activeLayer, activeDiagramLayer]);
 		}
 		
 	}
