@@ -88,6 +88,7 @@ var exportAuthor = "kein Autor";
 var printer;
 
 function init() {
+    //$("#menuPane-classes").show(); kann geloescht werden
     addTooltips(); //the mouse-over tooltips are created programmatically
     var popup = new esri.dijit.Popup(null, dojo.create("div")); //ini popups for diagrams
 
@@ -126,7 +127,7 @@ function init() {
     //createBasemapGallery();
         
     //various map events
-    dojo.connect(map, "onPanEnd", showExtent);
+    //dojo.connect(map, "onPanEnd", showExtent);
     //dojo.connect(map, "onPanEnd", reLocate);
     dojo.connect(map, "onZoomEnd", reLocate); 
 
@@ -245,6 +246,9 @@ function showExtent(extent, delta, levelChange, lod) {
 			reLocate(adjustedEx);
 }
 
+function fullExtent(){
+    map.setExtent(maxExtent);
+}
 
 /**
  * function to set title and author of the map and export it

@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="http://serverapi.arcgisonline.com/jsapi/arcgis/3.4/js/esri/dijit/css/Popup.css">
     <!-- Main style file-->
     <link rel="stylesheet" href="lwl-style.css">
+    <link rel="stylesheet" href="css/menuPane.css">
 	
 	<!--dojo config settings-->
 	<script type="text/javascript">
@@ -29,6 +30,9 @@
     </script>
     <!-- Menu behaviour (icons, sliding etc.) -->
     <script src="wipeMenu.js" type="text/javascript">
+    </script>
+    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+    <script src="js/wipeMenuPane.js" type="text/javascript">
     </script>
     <!-- -->
     <script src="individualBreaks.js" type="text/javascript">
@@ -100,20 +104,27 @@
 
     <!-- Layer selection menu -->
     <div id="content1" style="position: absolute; width: 100%; height: 100%;">
-      <a href="#" class="icons" id="slideAwayButton_layer" style="position: absolute; right:10px; top:72px; z-index: 4;">
+      
+      <!-- Layer Button -->
+      <a href="#" class="icons" id="slideAwayButton_layer" onclick="showPane('menuPane-layer')" style="position: absolute; right:10px; top:72px; z-index: 4;">
         <img src="images/layers_map.png">
         <div id="labelLayer" style="position: absolute; right:1px; top:35px; z-index:5; font-size:xx-small;">
 	      Themen
 	    </div>    
       </a>
-      <div id="slideTarget_layer" class="wipe-menu slide chain" style="position: absolute; top:5000px; z-index: 4;">
-        <a href="#" id="slideBackButton_layer" style="position: absolute; top:10px; right:12px; z-index: 4;">
+
+      <!-- Layer Pane -->
+      <div id="menuPane-layer" class="menuPane">
+        <a href="#" id="hideButton_layer" onclick="hidePane('#menuPane-layer')" style="position: absolute; top:5px; right:7px; z-index: 4;">
           <img src="images/close12.png">
         </a>
-        <a id="themenauswahlInfo" style="position: absolute; top:10px; right:26px; z-index: 4; cursor: help;">
+        <a id="themenauswahlInfo" style="position: absolute; top:5px; right:21px; z-index: 4; cursor: help;">
           <img src="images/Help_sm.png">
         </a>
-        <div dojoType="dijit.TitlePane" title="Themenauswahl" open="true" style="width:280px; overflow:auto;">
+        <div class="menuPane-head">
+          Themenauswahl
+        </div>
+        <div class="menuPaneContent">
           <p>
             <form name="form1" id="form1" method="post" autocomplete="off">
               <div align="left" style="font-size:1em">
@@ -139,146 +150,177 @@
                 <img src="images/Help_sm.png">
               </a>
               <br>
-		  </form>
-       </p>
-       <form>
-         <div align="left" style="font-size:1em">
-         	<br>
-         	<b>
-             	Nur Diagramme:
-            </b>
-         </div>
-         <input type="checkbox" id="religionChk" name="Layer" value="Religion" onchange="layerChange(fIDreligion)">
-         Religion 
-         <a id="religionInfo" style="cursor: help;">
-           <img src="images/Help_sm.png">
-         </a>
-         <br>
-         <input type="checkbox" id="pflegehilfeChk" name="Layer" value="Pflegehilfe" onchange="layerChange(fIDleistungsempfaenger)">
-         Pflegehilfe 
-         <a id="pflegehilfeInfo" style="cursor: help;">
-           <img src="images/Help_sm.png">
-         </a>
-       </form>
-       <div id="slider1" data-dojo-type="dijit.form.HorizontalSlider" data-dojo-props='name:"horizontal1", onChange:function(val){ setFeatureLayerOpacity(val) }, value:1, maximum:1, minimum:0, pageIncrement:100, showButtons:true, intermediateChanges:true, slideDuration:500, style:{width:"50%", height:"20px"} '>
-	       <div align="center" style="font-size:0.75em">
-		       Transparenz
-		   </div>
-       </div>
-		   <form>
-		   		<div align="left" style="font-size:1em">
-		   			<br>
-		   			<b>
-		   				Zusätzliche Ebenen:
-		   			</b>
-		   			<br>
-		   			<input type="checkbox" id="baseMapChk" name="Layer" value="Basemap" onchange="layerChange(50)">
-		     			Hintergrundkarte einblenden
-		     		<br>
-		     		<input type="checkbox" id="labelChk" name="Layer" value="Label" onchange="layerChange(60)" checked="checked">
-		     			Beschriftungen einblenden
-		     	</div>
-		   </form>
-	</div>
-     
-  </div>
-  
-  <!-- Classes -->
-  <a href="#" class="icons" id="slideAwayButton_classes" style="position: absolute; right:10px; top:142px; z-index: 3;">
-    <img id="classesBtnImg" src="images/classes.png">
-    <div id="labelClass" style="position: absolute; right:2px; top:35px; z-index:5; font-size:xx-small;">
-	      Klassen
-	    </div>
-  </a>
-  <div id="slideTarget_classes" class="wipe-menu slide chain" style="position: absolute; top:5000px; z-index: 3;">
-    
-    <a href="#" id="slideBackButton_classes" style="position: absolute; top:10px; right:12px; z-index: 4;">
-      <img src="images/close12.png">
-    </a>
-    <a id="klasseneinteilungInfo" style="position: absolute; top:10px; right:26px; z-index: 4; cursor: help;">
-      <img src="images/Help_sm.png">
-    </a>
-    <p>
-      Klasseneinteilung:
-    </p>
-    <!-- Individual classes -->
-    <div id="breaksPane" dojoType="dijit.TitlePane" title="Individuell" open="true" style="width:280px; overflow:auto; max-height:230px;">
-    <div id="breaksTable">
-      <table id="Breaks">
-      </table>
-    </div>
-      <a href="javascript:addIndivBreakField()">
-        <img src="images/plus20.png">
-      </a>
-      <input id="indivBreaksApply" type="button" onclick="colorChange()" value="Anwenden">
-    </div>
-    <!-- Automatic classes (equal breaks) -->
-    <div dojoType="dijit.TitlePane" title="Automatisch" open="false" style="width:280px; overflow:auto;">
-      <table border="0">
-        <tr>
-          <td>
-            <b>
-              Farbskala von/bis: 
-            </b>
-          </td>
-          <td>
-            <input class="color {valueElement:'colorPickerValueOne'}" id="eqBrStartColor" style="width:30px;" value="Farbe">
-            <b>
-              /
+            </form>
+          </p>
+          <form>
+            <div align="left" style="font-size:1em">
+              <br>
               <b>
-                <input class="color {valueElement:'colorPickerValueTwo'}" id="eqBrEndColor" style="width:30px;" value="Farbe">
-                <br>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <b>
-                  Anzahl der Klassen: 
-                </b>
-              </td>
-              <td>
-                <input type="text" id="equalBreaksText" value="4" style="width:50px;">
-              </td>
-            </tr>
-          </table>
-        <input type="button" onclick="javascript:addEqualBreaks(parseInt(document.getElementById('equalBreaksText').value)-1, 
-        		document.getElementById('colorPickerValueOne').value, document.getElementById('colorPickerValueTwo').value)" value="Anwenden">
-        <input id="colorPickerValueOne" style="width:0px; visibility:hidden;">
-        <input id="colorPickerValueTwo" style="width:0px; visibility:hidden;">
-        <table id="Breaks">
-        </table>
-      </div>
-    </div>  
-  </div>
-  
-  
-  
-  
-  <!-- Legend -->
-  <a href="#" class="icons" id="slideAwayButton_legend" style="position: absolute; right:10px; top:212px; z-index: 2;">
-    <img id="legendBtnImg" src="images/legend.png">
-    <div id="labelLegend" style="position: absolute; right:0px; top:35px; z-index:50; font-size:xx-small;">
-	Legende
-	</div>
-  </a>
-  <div id="slideTarget_legend" class="wipe-menu slide chain" style="position: absolute; top:3000px; z-index: 2; max-height:100%;">
-    
-    <a href="#" id="slideBackButton_legend" style="position: absolute; top:10px; right:12px; z-index: 4;">
-      <img src="images/close12.png">
-    </a>
-    
-    <div title="Legende" style="width:180px; max-height=100%; bottom:0px; overflow:auto;">
-      <p>
-        <b>
-          Legende:
-        </b>
-      </p>
-      <div id="legendDiv">
-        <div id="legend">
+                Nur Diagramme:
+              </b>
+            </div>
+            <input type="checkbox" id="religionChk" name="Layer" value="Religion" onchange="layerChange(fIDreligion)">
+            Religion 
+            <a id="religionInfo" style="cursor: help;">
+              <img src="images/Help_sm.png">
+            </a>
+            <br>
+            <input type="checkbox" id="pflegehilfeChk" name="Layer" value="Pflegehilfe" onchange="layerChange(fIDleistungsempfaenger)">
+            Pflegehilfe 
+            <a id="pflegehilfeInfo" style="cursor: help;">
+              <img src="images/Help_sm.png">
+            </a>
+          </form>
+          <br>
+          <div id="slider1" data-dojo-type="dijit.form.HorizontalSlider" data-dojo-props='name:"horizontal1", onChange:function(val){ setFeatureLayerOpacity(val) }, value:1, maximum:1, minimum:0, pageIncrement:100, showButtons:true, intermediateChanges:true, slideDuration:500, style:{width:"50%", height:"20px"} '>
+            <div align="center" style="font-size:0.75em">
+              Transparenz
+            </div>
+          </div>
+          <form>
+            <div align="left" style="font-size:1em">
+              <br>
+              <b>
+                Zusätzliche Ebenen:
+              </b>
+              <br>
+              <input type="checkbox" id="baseMapChk" name="Layer" value="Basemap" onchange="layerChange(50)">
+              Hintergrundkarte einblenden
+              <br>
+              <input type="checkbox" id="labelChk" name="Layer" value="Label" onchange="layerChange(60)" checked="checked">
+              Beschriftungen einblenden
+            </div>
+          </form>
         </div>
       </div>
-    </div>
-  </div>
+
+      <!-- Classes Button-->
+      <a href="#" class="icons" id="slideAwayButton_classes" onclick="showPane('menuPane-classes')" style="position: absolute; right:10px; top:142px; z-index: 3;">
+        <img id="classesBtnImg" src="images/classes.png">
+        <div id="labelClass" style="position: absolute; right:2px; top:35px; z-index:5; font-size:xx-small;">
+          Klassen
+        </div>
+      </a>
+  
+      <!-- Classes Pane -->
+      <div id="menuPane-classes" class="menuPane">
+        <a href="#" id="hideButton_classes" onclick="hidePane('#menuPane-classes')" style="position: absolute; top:5px; right:7px; z-index: 4;">
+          <img src="images/close12.png">
+        </a>
+        <a id="klasseneinteilungInfo" style="position: absolute; top:5px; right:21px; z-index: 4; cursor: help;">
+          <img src="images/Help_sm.png">
+        </a>
+        <div class="menuPane-head">
+          Klasseneinteilung
+        </div>
+        <div>
+          <div class="menuPane-head subMenuPane" onClick="switchClassificationPane('manual')" style="font-style:italic;">
+            <img id="arrowManual" class="submenuArrow" src="images/arrow20.png">
+            Individuell
+          </div>
+          <div id="individualClassesPane" class="menuPaneContent">
+            <div id="breaksTable">
+              <table id="Breaks"></table>
+            </div>
+            <a href="javascript:addIndivBreakField()">
+              <img src="images/plus20.png">
+            </a>
+            <input id="indivBreaksApply" type="button" onclick="colorChange()" value="Anwenden">
+            </div>
+          <div class="menuPane-head subMenuPane" onClick="switchClassificationPane('automatic')" style="font-style:italic;">
+            <img id="arrowAutomatic" class="submenuArrow" src="images/arrow20.png">
+            Automatisch
+          </div>
+          <div id="automaticClassesPane" class="menuPaneContent">
+            <table border="0">
+              <tr>
+                <td>
+                  <b>
+                    Farbskala von/bis: 
+                  </b>
+                </td>
+                <td>
+                  <input class="color {valueElement:'colorPickerValueOne'}" id="eqBrStartColor" style="width:30px;" value="Farbe">
+                  <b>
+                  /
+                  <b>
+                  <input class="color {valueElement:'colorPickerValueTwo'}" id="eqBrEndColor" style="width:30px;" value="Farbe">
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <b>
+                    Anzahl der Klassen: 
+                  </b>
+                </td>
+                <td>
+                  <input type="text" id="equalBreaksText" value="4" style="width:50px;">
+                </td>
+              </tr>
+            </table>
+            <input type="button" onclick="javascript:addEqualBreaks(parseInt(document.getElementById('equalBreaksText').value)-1, 
+            document.getElementById('colorPickerValueOne').value, document.getElementById('colorPickerValueTwo').value)" value="Anwenden">
+            <input id="colorPickerValueOne" style="width:0px; visibility:hidden;">
+            <input id="colorPickerValueTwo" style="width:0px; visibility:hidden;">
+            <table id="Breaks">
+          </table>
+          </div>
+        </div>
+      </div>  
+  
+      <!-- Legend Button -->
+      <a href="#" class="icons" id="slideAwayButton_legend" onclick="showPane('menuPane-legend')" style="position: absolute; right:10px; top:212px; z-index: 2;">
+        <img id="legendBtnImg" src="images/legend.png">
+        <div id="labelLegend" style="position: absolute; right:0px; top:35px; z-index:50; font-size:xx-small;">
+          Legende
+        </div>
+      </a>
+  
+      <!-- Legend Pane -->
+      <div id="menuPane-legend" class="menuPane">
+        <a href="#" id="hideButton_legend" onclick="hidePane('#menuPane-legend')" style="position: absolute; top:5px; right:7px; z-index: 4;">
+          <img src="images/close12.png">
+        </a>
+        <div id="legendDiv">
+          <div id="legend">
+          </div>
+        </div>
+      </div>
+  
+      <!-- Export Button -->
+      <a href="#" class="icons" id="slideAwayButton_export" onclick="showPane('menuPane-export')" style="position: absolute; right:10px; top:352px; z-index: 2;">
+        <img id="exportBtnImg" src="images/download.png">
+        <div id="labelExport" style="position: absolute; right:0px; top:35px; z-index:50; font-size:xx-small;">
+          Download
+        </div>
+      </a>
+  
+      <!-- Export Pane -->
+      <div id="menuPane-export" class="menuPane" style="width: 200px;">
+        <a href="#" id="hideButton_export" onclick="hidePane('#menuPane-export')" style="position: absolute; top:5px; right:7px; z-index: 4;">
+          <img src="images/close12.png">
+        </a>
+        <div class="menuPane-head">
+          Karte exportieren:
+        </div>
+        <div class="menuPaneContent">
+          Titel: <input type="text" id="mapExportTitle">
+          <br>
+          Autor: <input type="text" id="mapExportAuthor">
+          <br>
+          <input type="button" id="mapExportChange" onclick="exportChangeValues();" value="Übernehmen">
+          <div id="exportWarning"></div>
+          <a href="#" id="printButton">
+          </a>
+          <img src="images/loading.gif" id="loadingImage" alt="loading" />
+        </div>
+      </div>
+
+      <!-- Full Extent Button -->
+      <a href="#" class="icons" id="fullExtentButton" onclick="fullExtent()" style="position: absolute; left: 34px; top: 72px; z-index: 2; padding: 2px;">
+        <img id="fullExtBtnImg" src="images/full_extent.png">
+      </a>
   
   
   <!-- Split Screen -->
@@ -290,38 +332,8 @@
 	    </div>
     </a>
   </div>
-  
-  <!-- Export -->
-  
-  <a href="#" class="icons" id="slideAwayButton_export" style="position: absolute; right:10px; top:352px; z-index: 2;">
-    <img id="exportBtnImg" src="images/download.png">
-    <div id="labelExport" style="position: absolute; right:0px; top:35px; z-index:50; font-size:xx-small;">
-	Download
-	</div>
-  </a>
-  <div id="slideTarget_export" class="wipe-menu slide chain" style="position: absolute; top:3000px; z-index: 2; height: 200px; max-height:250px;">
     
-    <a href="#" id="slideBackButton_export" style="position: absolute; top:10px; right:12px; z-index: 4;">
-      <img src="images/close12.png">
-    </a>
     
-    <div title="Exportieren" style="width:180px; height:230px; max-height=230px; overflow:auto;">
-      <p>
-        <b>
-          Karte exportieren:
-        </b>
-      </p>
-      Titel: <input type="text" id="mapExportTitle">
-      <br>
-      Autor: <input type="text" id="mapExportAuthor">
-      <br>
-      <input type="button" id="mapExportChange" onclick="exportChangeValues();" value="Übernehmen">
-      <div id="exportWarning"></div>
-      <a href="#" id="printButton">
-      </a>
-      <img src="images/loading.gif" id="loadingImage" alt="loading" />
-    </div>
-  </div>
   
   
   <!-- Welcome window -->
@@ -338,9 +350,13 @@
   
   
   <!--<a href="#" class="icons" id="printButton" style="position: absolute; right:0px; top:290px; z-index: 4;"></a>-->
-  
+  <!--
   <div dojotype="dijit.layout.BorderContainer" design="headline" gutters="false" style="background-color: #fff; width: auto; height: 100%; margin: 0; padding-top:62px; padding-bottom: 0px; margin-left: 10px; margin-right: 10px;">
     <div id="map" dojotype="dijit.layout.ContentPane" region="center" style="overflow:hidden; z-index: 1;">
+    </div>
+  </div>-->
+  <div style="background-color: #fff; width: auto; height: 100%; margin: 0; padding-top:62px; padding-bottom: 0px; margin-left: 10px; margin-right: 10px;">
+    <div id="map" region="center" style="overflow:hidden; z-index: 1; height: 100%;">
     </div>
   </div>
   
