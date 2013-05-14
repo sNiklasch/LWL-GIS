@@ -194,7 +194,8 @@ function initLabels(){
 
 function fullExtent(){
     map.setExtent(maxExtent);
-    reLocate();
+    reLocate(maxExtent);
+    syncZoom(maxExtent);
 }
 
 /**
