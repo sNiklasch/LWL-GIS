@@ -214,17 +214,28 @@ function exportChangeValues(){
     printer = new esri.dijit.Print({
           map: map,
           templates: [{
-			    label: "PNG Hochformat",
-			    format: "PNG32",
-			    layout: "A4 Portrait",
-			    layoutOptions: {
-			      titleText: exportTitle,
-			      authorText: exportAuthor,
+                label: "PNG Hochformat",
+                format: "PNG32",
+                layout: "A4 Portrait",
+                layoutOptions: {
+                  titleText: exportTitle,
+                  authorText: exportAuthor,
                   scalebarUnit: 'Kilometers',
                   legendLayers: [legendLayer],
-			      copyrightText: "© Landschaftsverband Westfalen-Lippe (LWL), 48133 Münster"
-			    }
-			  }],
+                  copyrightText: "© Landschaftsverband Westfalen-Lippe (LWL), 48133 Münster"
+                }
+              },{
+                label: "PNG Querformat",
+                format: "PNG32",
+                layout: "A4 Landscape",
+                layoutOptions: {
+                  titleText: exportTitle,
+                  authorText: exportAuthor,
+                  scalebarUnit: 'Kilometers',
+                  legendLayers: [legendLayer],
+                  copyrightText: "© Landschaftsverband Westfalen-Lippe (LWL), 48133 Münster"
+                }
+              }],
          url: "http://giv-learn2.uni-muenster.de/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task/"
          }, dojo.byId("printButton"));
     document.getElementById("exportWarning").innerHTML = "Achtung: Das exportieren der Karte kann einige Sekunden in Anspruch nehmen.";
