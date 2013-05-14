@@ -41,7 +41,7 @@ var diagramLayer; // the active clickable diagram layer
 var map, queryTask, query, template, disconHandler, initExtent, maxExtent, operationalLayer, year;
 
 //the MapServer for the whole app:
-var mapServer = "http://giv-learn2.uni-muenster.de/ArcGIS/rest/services/LWL/Atlas/MapServer";
+var mapServer = "http://giv-learn2.uni-muenster.de/ArcGIS/rest/services/LWL/Legende/MapServer";
 var fIDkreisnamen = 0;
 var fIDgeburten = 1;
 var fIDsterberate = 2;
@@ -113,12 +113,10 @@ function init() {
     	infoWindow: popup,
       	sliderStyle: "large"
     });
-    
-    //createBasemapGallery();
         
     //various map events
-    //dojo.connect(map, "onZoom", reLocate);
     dojo.connect(map, "onExtentChange", reLocate);
+    dojo.connect(map, "onZoomEnd", syncZoom);
 
     dojo.connect(map, "onMouseDown", function () {
         for (var i = 0; i < parent.frames.length; i++) {
@@ -194,49 +192,9 @@ function initLabels(){
     window.setTimeout("addEqualBreaks(equalBreaksOptions[activeLayer][0], equalBreaksOptions[activeLayer][1], equalBreaksOptions[activeLayer][2])", 1000);
 }
 
-
-function showExtent(extent, delta, levelChange, lod) {
-	
-		//In javascript, object passes byref. so it's not correct to difine new extent using
-		//"var adjustedEx = extent;"
-		var adjustedEx = new esri.geometry.Extent(extent.xmin, extent.ymin, extent.xmax, extent.ymax, extent.spatialReference);
-		if (self.name == "frame1"){
-		var flag = false;	
-		//set a buffer to make the max extent a slightly bigger to void minor differences
-		//the map unit for this case is meter. 
-				console.log(extent.ymin - maxExtent.ymin);
-		    if(extent.xmin < maxExtent.xmin-500) {
-				adjustedEx.xmin = maxExtent.xmin;
-				adjustedEx.xmax = Math.abs(extent.xmin - maxExtent.xmin) + extent.xmax;
-				
-                flag = true;
-            }
-			if(extent.ymin < maxExtent.ymin-500) {
-			    adjustedEx.ymin = maxExtent.ymin;
-			    adjustedEx.ymax = Math.abs(extent.ymin - maxExtent.ymin) + extent.ymax;
-			    
-                flag = true;
-            }
-			if(extent.xmax > maxExtent.xmax+500) {
-			    adjustedEx.xmax = maxExtent.xmax;
-			    adjustedEx.xmin =extent.xmin - Math.abs(extent.xmax - maxExtent.xmax);
-			    
-                flag = true;            }
-			if(extent.ymax > maxExtent.ymax+500) {
-			    adjustedEx.ymax = maxExtent.ymax;
-			    adjustedEx.ymin =extent.ymin - Math.abs(extent.ymax - maxExtent.ymax);
-			    
-                flag = true;
-            }
-			if (flag === true) {
-				map.setExtent(adjustedEx);
-			}
-			flag = false;}
-			reLocate(adjustedEx);
-}
-
 function fullExtent(){
     map.setExtent(maxExtent);
+    reLocate();
 }
 
 /**
@@ -245,6 +203,8 @@ function fullExtent(){
 function exportChangeValues(){
     exportTitle = document.getElementById("mapExportTitle").value;
     exportAuthor = document.getElementById("mapExportAuthor").value;
+    var legendLayer = new esri.tasks.LegendLayer();
+    legendLayer.layerId = "collection";
     
     //printer
     if(printer != undefined){
@@ -253,14 +213,15 @@ function exportChangeValues(){
     printer = new esri.dijit.Print({
           map: map,
           templates: [{
-			    label: "PDF",
+			    label: "PNG Hochformat",
 			    format: "PNG32",
 			    layout: "A4 Portrait",
 			    layoutOptions: {
 			      titleText: exportTitle,
 			      authorText: exportAuthor,
-			      copyrightText: "© Landschaftsverband Westfalen-Lippe (LWL), 48133 Münster",
-			      scalebarUnit: "Kilometers"
+                  scalebarUnit: 'Kilometers',
+                  legendLayers: [legendLayer],
+			      copyrightText: "© Landschaftsverband Westfalen-Lippe (LWL), 48133 Münster"
 			    }
 			  }],
          url: "http://giv-learn2.uni-muenster.de/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task/"
@@ -320,7 +281,7 @@ function initDiagramLayer() {
  * Creates a QueryTask to show diagrams on certain layers onClick
  */
 function connectDiagramFunc(layerNr) {
-    disconHandler = dojo.connect(map, "onClick", executeQueryTask);
+    //disconHandler = dojo.connect(map, "onClick", executeQueryTask);
 
     queryTask = new esri.tasks.QueryTask("http://giv-learn.uni-muenster.de/ArcGIS/rest/services/LWL/lwl_collection/MapServer/" + layerNr);
 
@@ -544,7 +505,7 @@ function updateLayerVisibility(){
 
 /** 
  * executed onClick on a diagram layer
- */
+
 function executeQueryTask(evt) {
     query.geometry = evt.mapPoint;
 
@@ -566,7 +527,7 @@ function executeQueryTask(evt) {
     // array of features.
     map.infoWindow.setFeatures([deferred]);
     map.infoWindow.show(evt.mapPoint);
-}
+} */
 
 /**
  * called if in split mode one map is panned
