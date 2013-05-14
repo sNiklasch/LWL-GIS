@@ -127,9 +127,8 @@ function init() {
     //createBasemapGallery();
         
     //various map events
-    //dojo.connect(map, "onPanEnd", showExtent);
-    //dojo.connect(map, "onPanEnd", reLocate);
-    dojo.connect(map, "onZoomEnd", reLocate); 
+    //dojo.connect(map, "onZoom", reLocate);
+    dojo.connect(map, "onExtentChange", reLocate);
 
     dojo.connect(map, "onMouseDown", function () {
         for (var i = 0; i < parent.frames.length; i++) {
