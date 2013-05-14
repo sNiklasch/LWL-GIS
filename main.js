@@ -107,18 +107,8 @@ function init() {
         }
     }
     
-    var lods = [ {level: 8, scale: 2311162.217155, resolution: 611.49622628138},
- 		   		 {level: 9, scale: 1155581.108577, resolution: 305.748113140558},
- 		   		 {level: 10, scale: 577790.554289, resolution: 152.874056570411},
- 		   		 {level: 11, scale: 288895.277144, resolution: 76.4370282850732},
- 		   		 {level: 12, scale: 144447.638572, resolution: 38.2185141425366},
- 		   		 {level: 13, scale: 72223.819286, resolution: 19.1092570712683},
- 		   		 {level: 14, scale: 36111.909643, resolution: 9.55462853563415},
- 		   		 {level: 15, scale: 18055.954822, resolution: 4.77731426794937},
- 		   		 {level: 16, scale: 9027.977411, resolution: 2.38865713397468}];
-    
     map = new esri.Map("map", {
-    	lods: lods,
+        minZoom: 8,
     	extent: initExtent,
     	infoWindow: popup,
       	sliderStyle: "large"
@@ -176,7 +166,7 @@ function init() {
     //Baselayer
     //tiledMapServiceLayer = new esri.layers.ArcGISTiledMapServiceLayer("http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer");
     osmLayer = new esri.layers.OpenStreetMapLayer({
-	    id: "osmLayer",
+	    id: "osmLayer"
     });
     
     map.addLayer(osmLayer);
