@@ -40,42 +40,105 @@ var diagramLayer; // the active clickable diagram layer
 var map, queryTask, query, template, disconHandler, initExtent, maxExtent, operationalLayer, year;
 
 //the MapServer for the whole app:
-var mapServer = "http://giv-learn2.uni-muenster.de/ArcGIS/rest/services/LWL/Legende/MapServer";
-var fIDkreisnamen = 0;
-var fIDgeburten = 1;
-var fIDsterberate = 2;
-var fIDdemographie = 3;
-var fIDreligion = 4;
-var fIDleistungsempfaenger = 5;
+var mapServer = "http://giv-learn2.uni-muenster.de/ArcGIS/rest/services/LWL/Legende_neu/MapServer";
 
-var activeLayer = fIDgeburten; // which layer is active at the beginning
-var currentLayer = 1;
+//LayerIDs:
+var fIDkreisnamen = 0;
+var fIDeinwohner = 2;
+var fIDeinwohner_entwicklung = 3;
+var fIDbevoelkerungsdichte = 4;
+var fIDaltersgruppen = 5;
+var fIDaltersgruppen_diagramme_2011 = 6;
+var fIDgeburtenrate = 7;
+var fIDsterberate = 8;
+var fIDmigrationen_gesamt = 9;
+var fIDmigrationen_nichtdeutsch = 10;
+var fIDpflegebeduerftige = 12;
+var fIDpflegeeinrichtungen = 13;
+var fIDhaushaltsgroessen = 14;
+var fIDsingle_haushalte = 15;
+var fIDnichtdeutsche = 16;
+var fIDmigrationshintergrund = 17;
+var fIDeinkommen = 18;
+var fIDkonfessionen = 19;
+var fIDkonfessionen_diagramme_20082010 = 20;
+
+var activeLayer = fIDeinwohner; // which layer is active at the beginning
+var currentLayer = 2;
 
 //Attributfeldnamen der einzelnen Layer:
 var attributeFields = [ "Kreisname", 
-                        "geburten_.geb", 
-                        "gestorbene_.gest", 
-                        "demographie_.dem", 
-                        "Katholisch", 
-                        "Leistungsempfaenger_2005.Leistungsempfänger_Pflegeversicherung_I"]; // used fields from the raw data 
+                        "", 
+                        "einwohner_.einwohner", 
+                        "einwohner_entwicklung_.einwohnerentwicklung", 
+                        "bevoelkerungsdichte_.bevölkerungsdichte",
+                        "altersgruppen_._",
+                        "",
+                        "geburtenrate_.geburtenrate",
+                        "sterberate_.sterberate",
+                        "migration_gesamt_.migrationengesamt",
+                        "migration_nichtdeutsch_.migrationennichtdeutsche",
+                        "",
+                        "pflegebeduerftige_.pflegebeduerftige",
+                        "pflegeeinrichtungen_.pflegeeinrichtungen",
+                        "haushaltsgroesse.haushaltsgroesse",
+                        "single_haushalte_.single_Haushalte",
+                        "nichtdeutsche_.nichtdeutsche",
+                        "migranten_.migranten",
+                        "einkommen_.einkommen",
+                        "konfessionen_.",
+                        ""
+                        ]; // used fields from the raw data 
 
 var diagramFields = new Array(attributeFields.length);
 
 //Für die verschiedenen Layer verfügbare Jahreswerte:
-var years = [   [2009, 2010, 2011],
-                [2009, 2010, 2011],
-                [10, 11, 12, 13, 14],
+var years = [   [], 
+                [], 
+                [1990, 2012, "prognose2030"], 
+                ["19902012", "20122030"], 
+                [2012],
+                [182011, 302011, 652011, 2011],
+                [],
+                ["20072011"],
+                ["20072011"],
+                ["20072011"],
+                ["20072011"],
+                [],
+                [2011],
+                [2009],
+                ["2010_1"],
                 [2010],
-                [2009, 2010, 2011],
-                [2009, 2010, 2011]];
+                [2011],
+                [2008],
+                [2009],
+                ["römisch_katholisch2008_2010", "evangelisch2008_2010", "andere_konfessionslos2008_2010"],
+                []
+            ];
 
 //Jahreswerte, welche beim Layerwechsel als erstes angezeigt werden sollen:
-var initYearValues = [  1,
+var initYearValues = [  0, 
+                        0, 
+                        1, 
+                        0, 
                         0,
                         0,
                         0,
-                        1,
-                        1];
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0
+                    ];
 
 var initYearValue = 1;
 var currentYear = years[currentLayer][initYearValues[currentLayer]];
@@ -90,8 +153,10 @@ var legend;
  * this is not a good approach, they should be obtained directly from the data on the server
  * please change this! 
  */ 
-var minValues = [0, 832, 1000, 3432];
-var maxValues = [0, 5306, 8000, 23860]; 
+var minValues = [0, 0, 107124, -15,  121, 12, 0, 7,  8, -6, 0, 0, 18, 3844, 1.86, 29,  4,  8, 15905,  9, 0];
+var maxValues = [0, 0, 651588,  21, 3187, 50, 0, 9, 13, 13, 3, 0, 39, 7375, 2.38, 49, 16, 34, 24771,  72, 0]; 
+
+
 /**
  * due to a bug in ArcGIS where invoking any method that re-centers the map a onPan() event is fired,
  * this counter is used to prevent an infinite loop of re-centering between the two maps in split-mode.
@@ -318,40 +383,41 @@ function colorChange() {
  */
 function layerChange(layerNr) {
 	//disconnect and connect click handlers for diagrams based on checkboxes
-    if (layerNr == fIDreligion && !(document.getElementById("religionChk").checked)) {
-        console.log("entferne religion");
-        dojo.disconnect(disconHandler);
-        diagramLayer = null;
-        activeDiagramLayer = 0;
-        updateLayerVisibility();
-    } else if (layerNr == fIDreligion && document.getElementById("religionChk").checked) {
-        console.log("aktiviere religion");
-        dojo.disconnect(disconHandler);
-        document.getElementById("pflegehilfeChk").checked = false;
-        if (diagramLayer != null) {
-            map.removeLayer(diagramLayer);
-            diagramLayer = null;
-        }
-        activeDiagramLayer = layerNr;
-        updateLayerVisibility();
-    } else if (layerNr == fIDleistungsempfaenger && !(document.getElementById("pflegehilfeChk").checked)) {
-        console.log("entferne leistungsempf");
-        dojo.disconnect(disconHandler);
-        diagramLayer = null;
-        activeDiagramLayer = 0;
-        updateLayerVisibility();
-    } else if (layerNr == fIDleistungsempfaenger && document.getElementById("pflegehilfeChk").checked) {
-        console.log("aktiviere leistungsempf");
-        dojo.disconnect(disconHandler);
-        document.getElementById("religionChk").checked = false;
-        if (diagramLayer != null) {
-            map.removeLayer(diagramLayer);
-            diagramLayer = null;
-        }
-        activeDiagramLayer = layerNr;
-        updateLayerVisibility();
-        //handling checkbox for the basemap
-    } else if (layerNr == 50 && !(document.getElementById("baseMapChk").checked)) {
+    // if (layerNr == fIDreligion && !(document.getElementById("religionChk").checked)) {
+    //     console.log("entferne religion");
+    //     dojo.disconnect(disconHandler);
+    //     diagramLayer = null;
+    //     activeDiagramLayer = 0;
+    //     updateLayerVisibility();
+    // } else if (layerNr == fIDreligion && document.getElementById("religionChk").checked) {
+    //     console.log("aktiviere religion");
+    //     dojo.disconnect(disconHandler);
+    //     document.getElementById("pflegehilfeChk").checked = false;
+    //     if (diagramLayer != null) {
+    //         map.removeLayer(diagramLayer);
+    //         diagramLayer = null;
+    //     }
+    //     activeDiagramLayer = layerNr;
+    //     updateLayerVisibility();
+    // } else if (layerNr == fIDleistungsempfaenger && !(document.getElementById("pflegehilfeChk").checked)) {
+    //     console.log("entferne leistungsempf");
+    //     dojo.disconnect(disconHandler);
+    //     diagramLayer = null;
+    //     activeDiagramLayer = 0;
+    //     updateLayerVisibility();
+    // } else if (layerNr == fIDleistungsempfaenger && document.getElementById("pflegehilfeChk").checked) {
+    //     console.log("aktiviere leistungsempf");
+    //     dojo.disconnect(disconHandler);
+    //     document.getElementById("religionChk").checked = false;
+    //     if (diagramLayer != null) {
+    //         map.removeLayer(diagramLayer);
+    //         diagramLayer = null;
+    //     }
+    //     activeDiagramLayer = layerNr;
+    //     updateLayerVisibility();
+    //     //handling checkbox for the basemap
+    //} else 
+    if (layerNr == 50 && !(document.getElementById("baseMapChk").checked)) {
     	map.removeLayer(osmLayer);
     } else if (layerNr == 50 && (document.getElementById("baseMapChk").checked)) {
     	map.addLayer(osmLayer, 0);
@@ -398,6 +464,7 @@ function addEqualBreaks(number, colorStart, colorEnd) {
     equalBreaksOptions[2] = colorEnd;
     activeClassification = 2;
 
+    //maximal 12 Klassen:
 	if (number > 11){
 		number = 11;
 		document.getElementById("equalBreaksText").value = 12;
@@ -411,8 +478,8 @@ function addEqualBreaks(number, colorStart, colorEnd) {
     var renderer = new esri.renderer.ClassBreaksRenderer(symbol, attributeFields[activeLayer] + currentYear);
     
     for (var i = 0; i <= number; i++) {
-        var min = Math.round((minValues[activeLayer] + i * breakStep) / 10) * 10 + 1;
-        var max = Math.round((minValues[activeLayer] + (i + 1) * breakStep) / 10) * 10;
+        var min = minValues[activeLayer] + i * breakStep;
+        var max = minValues[activeLayer] + (i + 1) * breakStep;
         renderer.addBreak({
             minValue: min,
             maxValue: max,

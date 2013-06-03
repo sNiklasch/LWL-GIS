@@ -121,31 +121,117 @@
         <div class="menuPaneContent">
           <p>
             <form name="form1" id="form1" method="post" autocomplete="off">
-              <div align="left" style="font-size:1em">
-                <b>
-                  Klassifizierbar:
-                </b>
+              <div class="menuPane-head subMenuPane" onClick="switchLayerPane('demographisch')" style="font-style:italic;">
+                <img id="arrowDemographisch" class="submenuArrow" src="images/arrow20.png">
+                Demographische Daten
               </div>
-              <input type="radio" id="gebCheck" name="Layer" value="Geburtenrate" checked=true onchange="layerChange(fIDgeburten)">
-              Geburtenrate 
-              <a id="geburtenrateInfo" style="cursor: help;">
-                <img src="images/Help_sm.png">
-              </a>
-              <br>
-              <input type="radio" name="Layer" value="Sterberate" onchange="layerChange(fIDsterberate)">
-              Sterberate 
-              <a id="sterberateInfo" style="cursor: help;">
-                <img src="images/Help_sm.png">
-              </a>
-              <br>
-              <input type="radio" name="Layer" value="Demographie" onchange="layerChange(fIDdemographie)">
-              Demographie 
-              <a id="demographieInfo" style="cursor: help;">
-                <img src="images/Help_sm.png">
-              </a>
-              <br>
+              <div id="demographischPane" class="menuPaneContent">
+                  <input type="radio" id="einwohnerCheck" name="Layer" value="Einwohner" checked=true onchange="layerChange(fIDeinwohner)">
+                  Einwohner 
+                  <a id="einwohnerInfo" style="cursor: help;">
+                    <img src="images/Help_sm.png">
+                  </a>
+                <br>
+                  <input type="radio" id="einwohner_entwicklungCheck" name="Layer" value="Einwohner-Entwicklung" checked=true onchange="layerChange(fIDeinwohner_entwicklung)">
+                  Einwohner-Entwicklung 
+                  <a id="einwohner_entwicklungInfo" style="cursor: help;">
+                    <img src="images/Help_sm.png">
+                  </a>
+                <br>
+                  <input type="radio" id="bevoelkerungsdichteCheck" name="Layer" value="Bev&ouml;lkerungsdichte" checked=true onchange="layerChange(fIDbevoelkerungsdichte)">
+                  Bev&ouml;lkerungsdichte 
+                  <a id="bevoelkerungsdichteInfo" style="cursor: help;">
+                    <img src="images/Help_sm.png">
+                  </a>
+                <br>
+                  <input type="radio" id="altersgruppenCheck" name="Layer" value="Altersgruppen" checked=true onchange="layerChange(fIDaltersgruppen)">
+                  Altersgruppen 
+                  <a id="altersgruppenInfo" style="cursor: help;">
+                    <img src="images/Help_sm.png">
+                  </a>
+                <br>
+                  <input type="radio" id="geburtenrateCheck" name="Layer" value="Geburtenrate" checked=true onchange="layerChange(fIDgeburtenrate)">
+                  Geburtenrate 
+                  <a id="geburtenrateInfo" style="cursor: help;">
+                    <img src="images/Help_sm.png">
+                  </a>
+                <br>
+                  <input type="radio" id="sterberateCheck" name="Layer" value="Sterberate" checked=true onchange="layerChange(fIDsterberate)">
+                  Sterberate 
+                  <a id="sterberateInfo" style="cursor: help;">
+                    <img src="images/Help_sm.png">
+                  </a>
+                <br>
+                  <input type="radio" id="migrationen_gesamtCheck" name="Layer" value="Migrationen Gesamt" checked=true onchange="layerChange(fIDmigrationen_gesamt)">
+                  Migrationen Gesamt 
+                  <a id="migrationen_gesamtInfo" style="cursor: help;">
+                    <img src="images/Help_sm.png">
+                  </a>
+                <br>
+                  <input type="radio" id="migrationen_nichtdeutschCheck" name="Layer" value="Migrationen Nichtdeutsch" checked=true onchange="layerChange(fIDmigrationen_nichtdeutsch)">
+                  Migrationen Nichtdeutsch 
+                  <a id="migrationen_nichtdeutschInfo" style="cursor: help;">
+                    <img src="images/Help_sm.png">
+                  </a>
+                <br>
+                <br>
+              </div>
+              <div class="menuPane-head subMenuPane" onClick="switchLayerPane('soziographisch')" style="font-style:italic;">
+                <img id="arrowSoziographisch" class="submenuArrow" src="images/arrow20.png">
+                Soziographische Daten
+              </div>
+              <div id="soziographischPane" class="menuPaneContent">
+                  <input type="radio" id="pflegebeduerftigeCheck" name="Layer" value="Pflegebed&uuml;rftige" checked=true onchange="layerChange(fIDpflegebeduerftige)">
+                  Pflegebed&uuml;rftige 
+                  <a id="pflegebeduerftigeInfo" style="cursor: help;">
+                    <img src="images/Help_sm.png">
+                  </a>
+                <br>
+                  <input type="radio" id="pflegeeinrichtungenCheck" name="Layer" value="Pflegeeinrichtungen" checked=true onchange="layerChange(fIDpflegeeinrichtungen)">
+                  Pflegeeinrichtungen 
+                  <a id="pflegeeinrichtungenInfo" style="cursor: help;">
+                    <img src="images/Help_sm.png">
+                  </a>
+                <br>
+                  <input type="radio" id="haushaltsgroessenCheck" name="Layer" value="Haushaltsgr&ouml;ssen" checked=true onchange="layerChange(fIDhaushaltsgroessen)">
+                  Haushaltsgr&ouml;ssen 
+                  <a id="haushaltsgroessenInfo" style="cursor: help;">
+                    <img src="images/Help_sm.png">
+                  </a>
+                <br>
+                  <input type="radio" id="single_haushalteCheck" name="Layer" value="Single-Haushalte" checked=true onchange="layerChange(fIDsingle_haushalte)">
+                  Single-Haushalte 
+                  <a id="single_haushalteInfo" style="cursor: help;">
+                    <img src="images/Help_sm.png">
+                  </a>
+                <br>
+                  <input type="radio" id="nichtdeutscheCheck" name="Layer" value="Nichtdeutsche" checked=true onchange="layerChange(fIDnichtdeutsche)">
+                  Nichtdeutsche 
+                  <a id="nichtdeutscheInfo" style="cursor: help;">
+                    <img src="images/Help_sm.png">
+                  </a>
+                <br>
+                  <input type="radio" id="migrationshintergrundCheck" name="Layer" value="Migrationshintergrund" checked=true onchange="layerChange(fIDmigrationshintergrund)">
+                  Migrationshintergrund 
+                  <a id="migrationshintergrundInfo" style="cursor: help;">
+                    <img src="images/Help_sm.png">
+                  </a>
+                <br>
+                  <input type="radio" id="einkommenCheck" name="Layer" value="Einkommen" checked=true onchange="layerChange(fIDeinkommen)">
+                  Einkommen 
+                  <a id="einkommenInfo" style="cursor: help;">
+                    <img src="images/Help_sm.png">
+                  </a>
+                <br>
+                  <input type="radio" id="konfessionenCheck" name="Layer" value="Konfessionen" checked=true onchange="layerChange(fIDkonfessionen)">
+                  Konfessionen 
+                  <a id="konfessionenInfo" style="cursor: help;">
+                    <img src="images/Help_sm.png">
+                  </a>
+                <br>
+              </div>
             </form>
-          </p>
+          </p><!--
           <form>
             <div align="left" style="font-size:1em">
               <br>
@@ -164,7 +250,7 @@
             <a id="pflegehilfeInfo" style="cursor: help;">
               <img src="images/Help_sm.png">
             </a>
-          </form>
+          </form>-->
           <br>
           <div id="slider1" data-dojo-type="dijit.form.HorizontalSlider" data-dojo-props='name:"horizontal1", onChange:function(val){ setFeatureLayerOpacity(val) }, value:1, maximum:1, minimum:0, pageIncrement:100, showButtons:true, intermediateChanges:true, slideDuration:500, style:{width:"50%", height:"20px"} '>
             <div align="center" style="font-size:0.75em">
