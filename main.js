@@ -51,6 +51,7 @@ var fIDleistungsempfaenger = 5;
 var activeLayer = fIDgeburten; // which layer is active at the beginning
 var currentLayer = 1;
 
+//Attributfeldnamen der einzelnen Layer:
 var attributeFields = [ "Kreisname", 
                         "geburten_.geb", 
                         "gestorbene_.gest", 
@@ -60,16 +61,24 @@ var attributeFields = [ "Kreisname",
 
 var diagramFields = new Array(attributeFields.length);
 
+//Für die verschiedenen Layer verfügbare Jahreswerte:
 var years = [   [2009, 2010, 2011],
                 [2009, 2010, 2011],
-                [102, 103, 104, 105, 106],
-                "",
+                [10, 11, 12, 13, 14],
+                [2010],
                 [2009, 2010, 2011],
                 [2009, 2010, 2011]];
 
-//var years = [2009, 2010, 2011];
+//Jahreswerte, welche beim Layerwechsel als erstes angezeigt werden sollen:
+var initYearValues = [  1,
+                        0,
+                        0,
+                        0,
+                        1,
+                        1];
+
 var initYearValue = 1;
-var currentYear = years[currentLayer][initYearValue];
+var currentYear = years[currentLayer][initYearValues[currentLayer]];
 var activeDiagramLayer = 0;
 var labelVisibility = true;
 var equalBreaksOptions = [3, "FF0000", "00FF00"];
@@ -188,7 +197,6 @@ function init() {
     //Check if split-screen is active:
     onLoadCheck();
 	
-    initDiagramFields(); //initialize which fields should be used for which diagram layer
 	initLabels();
     createTimeslider();
 }
@@ -230,7 +238,7 @@ function exportChangeValues(){
                 layoutOptions: {
                   titleText: exportTitle,
                   authorText: exportAuthor,
-                  scalebarUnit: 'Kilometers',
+                  scalebarUnit: 'Kilometer',
                   legendLayers: [legendLayer],
                   copyrightText: "© Landschaftsverband Westfalen-Lippe (LWL), 48133 Münster"
                 }
@@ -241,7 +249,7 @@ function exportChangeValues(){
                 layoutOptions: {
                   titleText: exportTitle,
                   authorText: exportAuthor,
-                  scalebarUnit: 'Kilometers',
+                  scalebarUnit: 'Kilometer',
                   legendLayers: [legendLayer],
                   copyrightText: "© Landschaftsverband Westfalen-Lippe (LWL), 48133 Münster"
                 }
@@ -269,68 +277,6 @@ function exportChangeValues(){
 function setFeatureLayerOpacity(opacity) {
     operationalLayer.setOpacity(opacity);
 } 
-
-
-function initDiagramFields() {
-    diagramFields[4] = new Array(4);
-    diagramFields[4][1] = "Katholisch";
-    diagramFields[4][2] = "Evangelisc";
-    diagramFields[4][3] = "Andere";
-    diagramFields[4][4] = "Keine";
-    diagramFields[5] = new Array(3);
-    diagramFields[5][1] = "'2005$'.Leistungsempfänger Pflegeversicherung I";
-    diagramFields[5][2] = "'2005$'.Leistungsempfänger Pflegeversicherung II";
-    diagramFields[5][3] = "'2005$'.Leistungsempfänger Pflegeversicherung III";
-}
-
-
-
-/**
- * additionally to the standard overlay, this can add an invisible,
- * but clickable diagram layer
- */
-function initDiagramLayer() {
-    diagramLayer = new esri.layers.FeatureLayer("http://giv-learn2.uni-muenster.de/ArcGIS/rest/services/LWL/lwl_collection/MapServer/" + activeLayer, {
-        mode: esri.layers.FeatureLayer.MODE_ONDEMAND,
-        outFields: ["*"],
-        opacity: .0
-    });
-    diagramLayer.setSelectionSymbol(new esri.symbol.SimpleFillSymbol());
-    map.addLayers([diagramLayer]);    
-}
-
-/**
- * Creates a QueryTask to show diagrams on certain layers onClick
- */
-function connectDiagramFunc(layerNr) {
-    //disconHandler = dojo.connect(map, "onClick", executeQueryTask);
-
-    queryTask = new esri.tasks.QueryTask("http://giv-learn.uni-muenster.de/ArcGIS/rest/services/LWL/lwl_collection/MapServer/" + layerNr);
-
-    query = new esri.tasks.Query();
-    query.returnGeometry = true;
-    query.outFields = ["*"];
-    query.outSpatialReference = map.spatialReference;
-    query.spatialRelationship = esri.tasks.Query.SPATIAL_REL_INTERSECTS;
-
-    var diagramF = new Array(diagramFields[layerNr].length - 1);
-    for (i = 0; i < diagramFields[layerNr].length - 1; i++) {
-        diagramF[i] = diagramFields[layerNr][i + 1];
-
-    }
-
-    //Reference the chart theme here too
-    template = new esri.dijit.PopupTemplate({
-        title: "Verteilung in {Kreisname}",
-        mediaInfos: [{
-            type: "piechart",
-            value: {
-                fields: diagramF,
-                theme: "Julie"
-            }
-        }]
-    });
-}
 
 
 /**
@@ -375,39 +321,33 @@ function layerChange(layerNr) {
     if (layerNr == fIDreligion && !(document.getElementById("religionChk").checked)) {
         console.log("entferne religion");
         dojo.disconnect(disconHandler);
-        map.removeLayer(diagramLayer);
         diagramLayer = null;
         activeDiagramLayer = 0;
         updateLayerVisibility();
     } else if (layerNr == fIDreligion && document.getElementById("religionChk").checked) {
         console.log("aktiviere religion");
         dojo.disconnect(disconHandler);
-        connectDiagramFunc(layerNr);
         document.getElementById("pflegehilfeChk").checked = false;
         if (diagramLayer != null) {
             map.removeLayer(diagramLayer);
             diagramLayer = null;
         }
-        initDiagramLayer();
         activeDiagramLayer = layerNr;
         updateLayerVisibility();
     } else if (layerNr == fIDleistungsempfaenger && !(document.getElementById("pflegehilfeChk").checked)) {
         console.log("entferne leistungsempf");
         dojo.disconnect(disconHandler);
-        map.removeLayer(diagramLayer);
         diagramLayer = null;
         activeDiagramLayer = 0;
         updateLayerVisibility();
     } else if (layerNr == fIDleistungsempfaenger && document.getElementById("pflegehilfeChk").checked) {
         console.log("aktiviere leistungsempf");
         dojo.disconnect(disconHandler);
-        connectDiagramFunc(layerNr);
         document.getElementById("religionChk").checked = false;
         if (diagramLayer != null) {
             map.removeLayer(diagramLayer);
             diagramLayer = null;
         }
-        initDiagramLayer();
         activeDiagramLayer = layerNr;
         updateLayerVisibility();
         //handling checkbox for the basemap
@@ -424,21 +364,10 @@ function layerChange(layerNr) {
         updateLayerVisibility();
     } else {
         currentLayer = layerNr;
+        currentYear = years[currentLayer][initYearValues[currentLayer]];
         activeClassification = 0;
         window.setTimeout("addEqualBreaks(equalBreaksOptions[0], equalBreaksOptions[1], equalBreaksOptions[2])", 1000);
-		//following applies if only a 'normal' layer change happens
         activeLayer = layerNr; //setting the new layer
-        var d = document.getElementById("breaksTable");
-        var olddiv = document.getElementById("Breaks");
-        d.removeChild(olddiv); //remove previously made class breaks
-        var addBreaksTable = document.createElement("table");
-        addBreaksTable.setAttribute("id", "Breaks");
-        d.appendChild(addBreaksTable);
-        breakCount = 0;
-        var legendDiv = document.getElementById("legendDiv");
-        var leg = document.createElement("div");
-        leg.setAttribute("id", "legend");
-        legendDiv.appendChild(leg);
         updateLayerVisibility();
         updateTimeslider();
     }
@@ -527,32 +456,6 @@ function updateLayerVisibility(){
 }
 
 
-/** 
- * executed onClick on a diagram layer
-
-function executeQueryTask(evt) {
-    query.geometry = evt.mapPoint;
-
-    var deferred = queryTask.execute(query);
-
-    deferred.addCallback(function (response) {
-        // response is a FeatureSet
-        // Let's return an array of features.
-        return dojo.map(response.features, function (feature) {
-            feature.setInfoTemplate(template);
-            return feature;
-        });
-    });
-
-    // InfoWindow expects an array of features from each deferred
-    // object that you pass. If the response from the task execution 
-    // above is not an array of features, then you need to add a callback
-    // like the one above to post-process the response and return an
-    // array of features.
-    map.infoWindow.setFeatures([deferred]);
-    map.infoWindow.show(evt.mapPoint);
-} */
-
 /**
  * called if in split mode one map is panned
  */
@@ -609,54 +512,6 @@ function onLoadCheck() {
         }
     }
 
-}
-
-/**
- * programmatically add onMouseOver-tooltips
- */
-function addTooltips() {
-    //GeburtenRate Layer
-    new dijit.Tooltip({
-        connectId: ["geburtenrateInfo"],
-        label: "Diese Ebene zeit an wieviele <br>Geburten es im Jahr 2010 gab.<br><b>Einheit: </b>Anzahl der geborenen Babys",
-        showDelay: 0
-    });
-    //Demographie Layer
-    new dijit.Tooltip({
-        connectId: ["demographieInfo"],
-        label: "Diese Ebene zeigt an wieviele <br>Menschen aus den Bezirken im Jahr <br>2010 weggezogen sind.<br><b>Einheit: </b>Anzahl der Forgezogenen",
-        showDelay: 0
-    });
-    //Sterberate Layer
-    new dijit.Tooltip({
-        connectId: ["sterberateInfo"],
-        label: "Diese Ebene zeigt an wieviele <br>Verstorbene es im Jahr 2010 gab.<br><b>Einheit: </b>Anzahl der Verstorbenen",
-        showDelay: 0
-    });
-    //Religion Layer
-    new dijit.Tooltip({
-        connectId: ["religionInfo"],
-        label: "Diese Ebene zeigt die Religionszugehörigkeit an.<br><br><b>Diese Ebene kann nicht eingefärbt <br>(klassifiziert) werden, durch Klicken auf die <br>Bezirke können Diagramme angezeigt werden.</b>",
-        showDelay: 0
-    });
-    //Pflegehilfe Layer	
-    new dijit.Tooltip({
-        connectId: ["pflegehilfeInfo"],
-        label: "Diese Ebene zeigt an wieviele Leistungsempfänger <br>es in den Pflegestufen 1, 2 oder 3 gibt.<br><br><b>Diese Ebene kann nicht eingefärbt <br>(klassifiziert) werden, durch Klicken auf die <br>Bezirke können Diagramme angezeigt werden.</b>",
-        showDelay: 0
-    });
-    //Themenauswahl Menü
-    new dijit.Tooltip({
-        connectId: ["themenauswahlInfo"],
-        label: "In diesem Untermenü kannst du aussuchen,<br>welche Daten als Ebene über die Karte <br>gelegt werden können.",
-        showDelay: 0
-    });
-    //Klasseneinteilung Menü
-    new dijit.Tooltip({
-        connectId: ["klasseneinteilungInfo"],
-        label: "In diesem Untermenü kannst du <br>die Farbgebung der Karte anpassen.",
-        showDelay: 0
-    });
 }
 
 dojo.addOnLoad(init);
