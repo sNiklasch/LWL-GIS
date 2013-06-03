@@ -37,7 +37,7 @@ dojo.require("dijit.Tooltip");
 var breakCount = 0; // keep track of how many individual breaks have been created, used to fetch the correct field values
 var diagramLayer; // the active clickable diagram layer
 
-var map, queryTask, query, template, disconHandler, initExtent, maxExtent, operationalLayer, year;
+var map, queryTask, query, template, initExtent, maxExtent, operationalLayer, year;
 
 //the MapServer for the whole app:
 var mapServer = "http://giv-learn2.uni-muenster.de/ArcGIS/rest/services/LWL/Legende_neu/MapServer";
@@ -63,8 +63,8 @@ var fIDeinkommen = 18;
 var fIDkonfessionen = 19;
 var fIDkonfessionen_diagramme_20082010 = 20;
 
-var activeLayer = fIDeinwohner; // which layer is active at the beginning
-var currentLayer = 2;
+var activeLayer = 1; // which layer is active at the beginning
+var currentLayer = 1;
 
 //Attributfeldnamen der einzelnen Layer:
 var attributeFields = [ "Kreisname", 
@@ -140,12 +140,11 @@ var initYearValues = [  0,
                         0
                     ];
 
-var initYearValue = 1;
-var currentYear = years[currentLayer][initYearValues[currentLayer]];
-var activeDiagramLayer = 0;
-var labelVisibility = true;
-var equalBreaksOptions = [3, "FF0000", "00FF00"];
-var activeClassification = 0;
+var currentYear = years[currentLayer][initYearValues[currentLayer]]; //Aktuell angezeigtes Jahr
+var activeDiagramLayer = 0; //Aktuell angezeigter Diagrammlayer, 0=keiner
+var labelVisibility = true; //zum überprüfen, ob die Label angezeigt sind
+var equalBreaksOptions = [3, "FF0000", "00FF00"]; // Standard-Klassifikation
+var activeClassification = 0; // Gibt die zuletzt durchgeführte Klassifikation an. 0=keine, 1=manuell, 2=automatisch
 
 var legend;
 /**
@@ -171,7 +170,6 @@ var exportAuthor = "kein Autor";
 var printer;
 
 function init() {
-    //$("#menuPane-classes").show(); kann geloescht werden
     addTooltips(); //the mouse-over tooltips are created programmatically
     var popup = new esri.dijit.Popup(null, dojo.create("div")); //ini popups for diagrams
 
@@ -245,36 +243,37 @@ function init() {
         
     
     //Baselayer
-    //tiledMapServiceLayer = new esri.layers.ArcGISTiledMapServiceLayer("http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer");
     osmLayer = new esri.layers.OpenStreetMapLayer({
 	    id: "osmLayer"
     });
     
     map.addLayer(osmLayer);
     map.removeLayer(osmLayer);
-    
-    //dojo.connect(map, "onZoomEnd", function() { 
-    //						operationalLayer.setMaxAllowableOffset(maxOffset(map,10));
-    //										});
-    // The offset is calculated as approximately 1 vertex per pixel: 
-    //var maxOffset = function maxOffset(map, pixelTolerance) { return Math.floor(map.extent.getWidth() / map.width) * pixelTolerance; };
-    
+        
     //Check if split-screen is active:
     onLoadCheck();
 	
 	initLabels();
     createTimeslider();
+    updateTimeslider();
 }
 
+/**
+* Diese Funktion initialisiert den operationalLayer, welcher die gesamten Layer vom Server enthält.
+* Zusätzlich wird beim ausführen der Funktion der operationalLayer zur map hinzugefügt und der Layer mit den Kreisnamen auf sichtbar gestellt.
+*/
 function initLabels(){    
     //Set labels visible on load:
-    operationalLayer = new esri.layers.ArcGISDynamicMapServiceLayer(mapServer, { "id": "collection" });
+    operationalLayer = new esri.layers.ArcGISDynamicMapServiceLayer(mapServer, { "id": "layerCollection" });
     //document.getElementById("labelChk").checked = true;
     map.addLayers([operationalLayer]);
-    operationalLayer.setVisibleLayers([fIDkreisnamen, activeLayer]);
+    operationalLayer.setVisibleLayers([fIDkreisnamen]);
     window.setTimeout("addEqualBreaks(equalBreaksOptions[0], equalBreaksOptions[1], equalBreaksOptions[2])", 1000);
 }
 
+/**
+ * This function zooms back to the maximum Extent
+ */
 function fullExtent(){
     map.setExtent(maxExtent);
     reLocate(maxExtent);
@@ -288,7 +287,7 @@ function exportChangeValues(){
     exportTitle = document.getElementById("mapExportTitle").value;
     exportAuthor = document.getElementById("mapExportAuthor").value;
     var legendLayer = new esri.tasks.LegendLayer();
-    legendLayer.layerId = "collection";
+    legendLayer.layerId = "layerCollection"; // "layerCollection" is the id of the operationalLayer
     
     //printer
     if(printer != undefined){
@@ -385,13 +384,11 @@ function layerChange(layerNr) {
 	//disconnect and connect click handlers for diagrams based on checkboxes
     // if (layerNr == fIDreligion && !(document.getElementById("religionChk").checked)) {
     //     console.log("entferne religion");
-    //     dojo.disconnect(disconHandler);
     //     diagramLayer = null;
     //     activeDiagramLayer = 0;
     //     updateLayerVisibility();
     // } else if (layerNr == fIDreligion && document.getElementById("religionChk").checked) {
     //     console.log("aktiviere religion");
-    //     dojo.disconnect(disconHandler);
     //     document.getElementById("pflegehilfeChk").checked = false;
     //     if (diagramLayer != null) {
     //         map.removeLayer(diagramLayer);
@@ -401,13 +398,11 @@ function layerChange(layerNr) {
     //     updateLayerVisibility();
     // } else if (layerNr == fIDleistungsempfaenger && !(document.getElementById("pflegehilfeChk").checked)) {
     //     console.log("entferne leistungsempf");
-    //     dojo.disconnect(disconHandler);
     //     diagramLayer = null;
     //     activeDiagramLayer = 0;
     //     updateLayerVisibility();
     // } else if (layerNr == fIDleistungsempfaenger && document.getElementById("pflegehilfeChk").checked) {
     //     console.log("aktiviere leistungsempf");
-    //     dojo.disconnect(disconHandler);
     //     document.getElementById("religionChk").checked = false;
     //     if (diagramLayer != null) {
     //         map.removeLayer(diagramLayer);
@@ -501,6 +496,10 @@ function addEqualBreaks(number, colorStart, colorEnd) {
     legend.refresh();
 }
 
+/**
+ * function to update the visibility of the Layers
+ * should be called everytime, when "labelVisibility", "activeDiagramLayer" or "activeLayer" changes
+ */
 function updateLayerVisibility(){
 	if (labelVisibility == true) {
 		if (activeDiagramLayer == 0){

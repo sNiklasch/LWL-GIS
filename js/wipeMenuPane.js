@@ -1,3 +1,9 @@
+/***
+ *  this functions animate the menupanes in the webapp
+ *
+ */
+
+
 function hidePane(layer){
 	$(layer).hide('slow');
 }

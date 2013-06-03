@@ -1,5 +1,8 @@
 var timeslider;
 
+/**
+ * function to update the visibility and values of the timeslider if a Layer has changed
+ */
 function updateTimeslider(){	
 	if (years[currentLayer].length > 1){
 		document.getElementById("timesliderDiv").style.display = "block";
@@ -27,6 +30,9 @@ function updateTimeslider(){
 	}
 }
 
+/**
+ * function to create the timeslider on startup
+ */
 function createTimeslider(){
 	require(["dijit/form/HorizontalSlider", "dojo/domReady!"], function(HorizontalSlider){
 		timeslider = new HorizontalSlider({
