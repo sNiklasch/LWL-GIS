@@ -39,7 +39,44 @@ function switchClassificationPane(toClassPane){
 	rotateArrow(toClassPane);
 }
 
+function switchLayerPane(toClassPane){
+	if (toClassPane == 'demographisch'){
+		$("#demographischPane").slideDown('slow');
+		$("#soziographischPane").slideUp('slow');
+
+	}
+	if (toClassPane == 'soziographisch'){
+		$("#soziographischPane").slideDown('slow');
+		$("#demographischPane").slideUp('slow');
+	}
+	rotateArrow(toClassPane);
+}
+
 function rotateArrow(openDiv){
+	if (openDiv == "demographisch"){
+		document.getElementById("arrowDemographisch").style.MozTransform = "rotate(90deg)"; /* Firefox 3.6 Firefox 4 */
+		document.getElementById("arrowDemographisch").style.webkitTransform = "rotate(90deg)"; /* Safari */
+		document.getElementById("arrowDemographisch").style.oTransform = "rotate(90deg)"; /* Opera */
+		document.getElementById("arrowDemographisch").style.msTransform = "rotate(90deg)"; /* IE9 */
+		document.getElementById("arrowDemographisch").style.transform = "rotate(90deg)"; /* W3C */
+		document.getElementById("arrowSoziographisch").style.MozTransform = "rotate(0deg)"; /* Firefox 3.6 Firefox 4 */
+		document.getElementById("arrowSoziographisch").style.webkitTransform = "rotate(0deg)"; /* Safari */
+		document.getElementById("arrowSoziographisch").style.oTransform = "rotate(0deg)"; /* Opera */
+		document.getElementById("arrowSoziographisch").style.msTransform = "rotate(0deg)"; /* IE9 */
+		document.getElementById("arrowSoziographisch").style.transform = "rotate(0deg)"; /* W3C */
+	}
+	if (openDiv == "soziographisch"){
+		document.getElementById("arrowSoziographisch").style.MozTransform = "rotate(90deg)"; /* Firefox 3.6 Firefox 4 */
+		document.getElementById("arrowSoziographisch").style.webkitTransform = "rotate(90deg)"; /* Safari */
+		document.getElementById("arrowSoziographisch").style.oTransform = "rotate(90deg)"; /* Opera */
+		document.getElementById("arrowSoziographisch").style.msTransform = "rotate(90deg)"; /* IE9 */
+		document.getElementById("arrowSoziographisch").style.transform = "rotate(90deg)"; /* W3C */
+		document.getElementById("arrowDemographisch").style.MozTransform = "rotate(0deg)"; /* Firefox 3.6 Firefox 4 */
+		document.getElementById("arrowDemographisch").style.webkitTransform = "rotate(0deg)"; /* Safari */
+		document.getElementById("arrowDemographisch").style.oTransform = "rotate(0deg)"; /* Opera */
+		document.getElementById("arrowDemographisch").style.msTransform = "rotate(0deg)"; /* IE9 */
+		document.getElementById("arrowDemographisch").style.transform = "rotate(0deg)"; /* W3C */
+	}
 	if (openDiv == "automatic"){
 		document.getElementById("arrowAutomatic").style.MozTransform = "rotate(90deg)"; /* Firefox 3.6 Firefox 4 */
 		document.getElementById("arrowAutomatic").style.webkitTransform = "rotate(90deg)"; /* Safari */

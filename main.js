@@ -22,7 +22,6 @@ dojo.require("dojo.parser");
 dojo.require("dijit.form.DropDownButton");
 dojo.require("dijit.form.Button");
 dojo.require("dijit.form.Textarea");
-dojo.require("dijit.form.DropDownButton");
 dojo.require("dijit.form.TextBox");
 dojo.require("dijit.form.CheckBox");
 dojo.require("dijit.form.Slider");
@@ -49,21 +48,31 @@ var fIDdemographie = 3;
 var fIDreligion = 4;
 var fIDleistungsempfaenger = 5;
 
-var attributeFields = ["Kreisname", "geburten_.geb", "gestorbene_.gest", "demographie_.dem", "Katholisch", "Leistungsempfaenger_2005.Leistungsempfänger_Pflegeversicherung_I"]; // used fields from the raw data 
+var activeLayer = fIDgeburten; // which layer is active at the beginning
+var currentLayer = 1;
+
+var attributeFields = [ "Kreisname", 
+                        "geburten_.geb", 
+                        "gestorbene_.gest", 
+                        "demographie_.dem", 
+                        "Katholisch", 
+                        "Leistungsempfaenger_2005.Leistungsempfänger_Pflegeversicherung_I"]; // used fields from the raw data 
 
 var diagramFields = new Array(attributeFields.length);
 
-var years = [2009, 2010, 2011];
-var initYear = 2010;
-var currentYear = initYear;
+var years = [   [2009, 2010, 2011],
+                [2009, 2010, 2011],
+                [102, 103, 104, 105, 106],
+                "",
+                [2009, 2010, 2011],
+                [2009, 2010, 2011]];
 
-var activeLayer = fIDgeburten; // which layer is active at the beginning
+//var years = [2009, 2010, 2011];
+var initYearValue = 1;
+var currentYear = years[currentLayer][initYearValue];
 var activeDiagramLayer = 0;
 var labelVisibility = true;
-var equalBreaksOptions = [  [2, "FFFFFF", "FFFFFF"],
-                            [3, "FF0000", "00FF00"],
-                            [3, "00FF00", "FF0000"],
-                            [3, "00FF00", "FF0000"]];
+var equalBreaksOptions = [3, "FF0000", "00FF00"];
 var activeClassification = 0;
 
 var legend;
@@ -181,6 +190,7 @@ function init() {
 	
     initDiagramFields(); //initialize which fields should be used for which diagram layer
 	initLabels();
+    createTimeslider();
 }
 
 function initLabels(){    
@@ -189,7 +199,7 @@ function initLabels(){
     //document.getElementById("labelChk").checked = true;
     map.addLayers([operationalLayer]);
     operationalLayer.setVisibleLayers([fIDkreisnamen, activeLayer]);
-    window.setTimeout("addEqualBreaks(equalBreaksOptions[activeLayer][0], equalBreaksOptions[activeLayer][1], equalBreaksOptions[activeLayer][2])", 1000);
+    window.setTimeout("addEqualBreaks(equalBreaksOptions[0], equalBreaksOptions[1], equalBreaksOptions[2])", 1000);
 }
 
 function fullExtent(){
@@ -413,8 +423,9 @@ function layerChange(layerNr) {
     	labelVisibility = false;
         updateLayerVisibility();
     } else {
+        currentLayer = layerNr;
         activeClassification = 0;
-        window.setTimeout("addEqualBreaks(equalBreaksOptions[activeLayer][0], equalBreaksOptions[activeLayer][1], equalBreaksOptions[activeLayer][2])", 1000);
+        window.setTimeout("addEqualBreaks(equalBreaksOptions[0], equalBreaksOptions[1], equalBreaksOptions[2])", 1000);
 		//following applies if only a 'normal' layer change happens
         activeLayer = layerNr; //setting the new layer
         var d = document.getElementById("breaksTable");
@@ -429,22 +440,23 @@ function layerChange(layerNr) {
         leg.setAttribute("id", "legend");
         legendDiv.appendChild(leg);
         updateLayerVisibility();
+        updateTimeslider();
     }
 }
 
-function yearChange(year){
+function yearChange(value){
     if (activeClassification == 1){
-        document.getElementById("timesliderValue").innerHTML = year;
-        currentYear = year;
+        document.getElementById("timesliderValue").innerHTML = years[currentLayer][value];
+        currentYear = years[currentLayer][value];
         colorChange();
     }
     else {
-        document.getElementById("timesliderValue").innerHTML = year;
-        currentYear = year;
-        console.log(equalBreaksOptions[activeLayer][0]);
-        console.log(equalBreaksOptions[activeLayer][1]);
-        console.log(equalBreaksOptions[activeLayer][2]);
-        addEqualBreaks(equalBreaksOptions[activeLayer][0], equalBreaksOptions[activeLayer][1], equalBreaksOptions[activeLayer][2]);
+        document.getElementById("timesliderValue").innerHTML = years[currentLayer][value];
+        currentYear = years[currentLayer][value];
+        console.log(equalBreaksOptions[0]);
+        console.log(equalBreaksOptions[1]);
+        console.log(equalBreaksOptions[2]);
+        addEqualBreaks(equalBreaksOptions[0], equalBreaksOptions[1], equalBreaksOptions[2]);
     }
 }
 
@@ -452,9 +464,9 @@ function yearChange(year){
  * method for automatic (equal) breaks
  */
 function addEqualBreaks(number, colorStart, colorEnd) {
-    equalBreaksOptions[activeLayer][0] = number;
-    equalBreaksOptions[activeLayer][1] = colorStart;
-    equalBreaksOptions[activeLayer][2] = colorEnd;
+    equalBreaksOptions[0] = number;
+    equalBreaksOptions[1] = colorStart;
+    equalBreaksOptions[2] = colorEnd;
     activeClassification = 2;
 
 	if (number > 11){

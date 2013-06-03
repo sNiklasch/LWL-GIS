@@ -10,6 +10,8 @@
     <!-- Basic Interface Style -->
 	<link rel="stylesheet" href="http://serverapi.arcgisonline.com/jsapi/arcgis/3.4/js/dojo/dijit/themes/claro/claro.css">
 	<link rel="stylesheet" href="http://serverapi.arcgisonline.com/jsapi/arcgis/3.4/js/esri/css/esri.css">
+  <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
+  
     
 	<!-- Style for popups containing diagrams -->
     <link rel="stylesheet" href="http://serverapi.arcgisonline.com/jsapi/arcgis/3.4/js/esri/dijit/css/Popup.css">
@@ -32,7 +34,10 @@
     <script src="wipeMenu.js" type="text/javascript">
     </script>
     <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
     <script src="js/wipeMenuPane.js" type="text/javascript">
+    </script>
+    <script src="js/timeslider.js" type="text/javascript">
     </script>
     <!-- -->
     <script src="individualBreaks.js" type="text/javascript">
@@ -89,18 +94,8 @@
   
   <!-- Timeslider -->
   <div id="timesliderValue">2010</div>
-  <div id="timeslider" data-dojo-type="dijit.form.HorizontalSlider" data-dojo-props='
-    name:"horizontal1", 
-    onChange:function(val){ yearChange(val) }, 
-    value:initYear, 
-    minimum:years[0], 
-    maximum:years[years.length-1], 
-    discreteValues:years.length,
-    showButtons:true, 
-    intermediateChanges:true, 
-    slideDuration:0, 
-    style:{width:"20%", height:"20px"} 
-    '></div>
+  <div id="timesliderDiv"><div id="timeslider"></div>
+    </div>
 
     <!-- Layer selection menu -->
     <div id="content1" style="position: absolute; width: 100%; height: 100%;">
