@@ -281,7 +281,7 @@ function fullExtent(){
 }
 
 /**
- * function to set title and author of the map and export it
+ * function to set the printer, incl. title and author of the map and export it
  */        
 function exportChangeValues(){
     exportTitle = document.getElementById("mapExportTitle").value;
@@ -454,19 +454,19 @@ function yearChange(value){
  * method for automatic (equal) breaks
  */
 function addEqualBreaks(number, colorStart, colorEnd) {
-    equalBreaksOptions[0] = number;
+    equalBreaksOptions[0] = number; //number of breaks
     equalBreaksOptions[1] = colorStart;
     equalBreaksOptions[2] = colorEnd;
-    activeClassification = 2;
+    activeClassification = 2; // 2 = automatic
 
-    //maximal 12 Klassen:
+    //maximum of 12 classes:
 	if (number > 11){
 		number = 11;
 		document.getElementById("equalBreaksText").value = 12;
 	}
 
-    var breakStep = (maxValues[activeLayer] - minValues[activeLayer]) / (number + 1);
-    var colorArray = generateColor(colorStart, colorEnd, number);
+    var breakStep = (maxValues[activeLayer] - minValues[activeLayer]) / (number + 1); //size of one class
+    var colorArray = generateColor(colorStart, colorEnd, number); //generates an array of an color gradient
 
     symbol = new esri.symbol.SimpleFillSymbol();
     symbol.setColor(new dojo.Color([150, 150, 150, 0.75]));
@@ -483,10 +483,12 @@ function addEqualBreaks(number, colorStart, colorEnd) {
         });
     }
 
+    //delete the entrys of the manual classification:
 	var breaksList = document.getElementById("Breaks");
 	breaksList.innerHTML = '';
 	breakCount = 0;
     
+    //following from the ArcGIS Server JS-API:
     var optionsArray = [];
     var drawingOptions = new esri.layers.LayerDrawingOptions();
     drawingOptions.renderer = renderer;
