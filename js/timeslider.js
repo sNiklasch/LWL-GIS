@@ -19,6 +19,8 @@ function updateTimeslider(){
 	    	style:{width:"20%", height:"20px"} 
 		})
 		document.getElementById("timesliderValue").innerHTML = years[currentLayer][initYearValues[currentLayer]];
+		document.getElementById("timesliderMinLabel").innerHTML = timesliderMinLabelValues[currentLayer];
+		document.getElementById("timesliderMaxLabel").innerHTML = timesliderMaxLabelValues[currentLayer];
 	}
 	else if (years[currentLayer].length == 1){
 		document.getElementById("timesliderDiv").style.display = "none";

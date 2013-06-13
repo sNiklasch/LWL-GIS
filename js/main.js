@@ -37,7 +37,7 @@ dojo.require("dijit.Tooltip");
 var breakCount = 0; // keep track of how many individual breaks have been created, used to fetch the correct field values
 var diagramLayer; // the active clickable diagram layer
 
-var map, queryTask, query, template, initExtent, maxExtent, operationalLayer, year;
+var map, queryTask, query, template, initExtent, maxExtent, operationalLayer, year, currentYearLabel;
 
 //the MapServer for the whole app:
 var mapServer = "http://giv-learn2.uni-muenster.de/ArcGIS/rest/services/LWL/Legende/MapServer";
@@ -285,7 +285,12 @@ function fullExtent(){
  * function to set the printer, incl. title and author of the map and export it
  */        
 function exportChangeValues(){
-    exportTitle = document.getElementById("mapExportTitle").value + " (" + currentYear + ")";
+    if (currentYearLabel == "" || currentYearLabel == null){
+        exportTitle = document.getElementById("mapExportTitle").value;
+    }
+    else {
+        exportTitle = document.getElementById("mapExportTitle").value + " (" + currentYearLabel + ")";
+    }
     exportAuthor = document.getElementById("mapExportAuthor").value;
     var legendLayer = new esri.tasks.LegendLayer();
     legendLayer.layerId = "collection"; // "layerCollection" is the id of the operationalLayer
@@ -304,7 +309,7 @@ function exportChangeValues(){
                   titleText: exportTitle,
                   authorText: exportAuthor,
                   scalebarUnit: 'Kilometer',
-                  legendLayers: [legendLayer],
+                  legendLayers: [],
                   copyrightText: "© Landschaftsverband Westfalen-Lippe (LWL), 48133 Münster"
                 }
               },{
@@ -315,7 +320,7 @@ function exportChangeValues(){
                   titleText: exportTitle,
                   authorText: exportAuthor,
                   scalebarUnit: 'Kilometer',
-                  legendLayers: [legendLayer],
+                  legendLayers: [],
                   copyrightText: "© Landschaftsverband Westfalen-Lippe (LWL), 48133 Münster"
                 }
               }],
@@ -435,17 +440,13 @@ function layerChange(layerNr) {
 }
 
 function yearChange(value){
+    currentYearLabel = timesliderLabelValues[currentLayer][value];
+    document.getElementById("timesliderValue").innerHTML = currentYearLabel;
+    currentYear = years[currentLayer][value];
     if (activeClassification == 1){
-        document.getElementById("timesliderValue").innerHTML = years[currentLayer][value];
-        currentYear = years[currentLayer][value];
         colorChange();
     }
     else {
-        document.getElementById("timesliderValue").innerHTML = years[currentLayer][value];
-        currentYear = years[currentLayer][value];
-        console.log(equalBreaksOptions[0]);
-        console.log(equalBreaksOptions[1]);
-        console.log(equalBreaksOptions[2]);
         addEqualBreaks(equalBreaksOptions[0], equalBreaksOptions[1], equalBreaksOptions[2]);
     }
 }

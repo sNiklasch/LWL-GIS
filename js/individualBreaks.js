@@ -16,7 +16,7 @@ function addIndivBreakField() {
     breakEntry.setAttribute("id", "tr" + breakCount);
 
     var breakFieldFrom = document.createElement("td");
-    breakFieldFrom.innerHTML = '<input type="text" class="range" style="width:30px;" id="breakFrom' + breakCount + '" value="' + initialFrom + '"></input>';
+    breakFieldFrom.innerHTML = '<input type="text" class="range" style="width:50px;" id="breakFrom' + breakCount + '" value="' + initialFrom + '"></input>';
     breakEntry.appendChild(breakFieldFrom);
 
     var breakFieldFromLabel = document.createElement("td");
@@ -24,7 +24,7 @@ function addIndivBreakField() {
     breakEntry.appendChild(breakFieldFromLabel);
 
     var breakFieldTo = document.createElement("td");
-    breakFieldTo.innerHTML = '<input type="text" class="range" style="width:30px;" id="breakTo' + breakCount + '" value="' + initialTo + '"></input>';
+    breakFieldTo.innerHTML = '<input type="text" class="range" style="width:50px;" id="breakTo' + breakCount + '" value="' + initialTo + '"></input>';
     breakEntry.appendChild(breakFieldTo);
 
     var breakFieldToLabel = document.createElement("td");

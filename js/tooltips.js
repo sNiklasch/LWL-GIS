@@ -118,7 +118,7 @@ function addTooltips() {
     //Themenauswahl Menü
     new dijit.Tooltip({
         connectId: ["themenauswahlInfo"],
-        label: "In diesem Untermenü kannst du aussuchen,<br>welche Daten als Ebene über die Karte <br>gelegt werden können.",
+        label: "In diesem Untermenü kannst du aussuchen,<br>welche Daten als Ebene über die Karte <br>gelegt werden sollen.",
         showDelay: 0
     });
     //Klasseneinteilung Menü

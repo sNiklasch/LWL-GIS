@@ -127,10 +127,27 @@ font-weight:bold;
 	position: absolute;
 	z-index: 5;
 	top: 10px;
-	width: 50px;
+	width: 250px;
 	left: 50%;
-	margin-left: -25px;
+	margin-left: -125px;
 	text-align: center;
+	white-space: nowrap;
+}
+
+#timesliderMinLabel {
+	position: absolute;
+	z-index: 5;
+	top: 35px;
+	right: 60.5%;
+	font-size: small;
+}
+
+#timesliderMaxLabel {
+	position: absolute;
+	z-index: 5;
+	top: 35px;
+	left: 60.5%;
+	font-size: small;
 }
 
 .esriLargeSliderTL {
