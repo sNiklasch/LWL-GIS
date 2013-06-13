@@ -40,7 +40,7 @@ var diagramLayer; // the active clickable diagram layer
 var map, queryTask, query, template, initExtent, maxExtent, operationalLayer, year;
 
 //the MapServer for the whole app:
-var mapServer = "http://giv-learn2.uni-muenster.de/ArcGIS/rest/services/LWL/Legende_neu/MapServer";
+var mapServer = "http://giv-learn2.uni-muenster.de/ArcGIS/rest/services/LWL/Legende/MapServer";
 
 //LayerIDs:
 var fIDkreisnamen = 0;
@@ -81,7 +81,7 @@ var attributeFields = [ "Kreisname",
                         "",
                         "pflegebeduerftige_.pflegebeduerftige",
                         "pflegeeinrichtungen_.pflegeeinrichtungen",
-                        "haushaltsgroesse.haushaltsgroesse",
+                        "haush",
                         "single_haushalte_.single_Haushalte",
                         "nichtdeutsche_.nichtdeutsche",
                         "migranten_.migranten",
@@ -107,7 +107,7 @@ var years = [   [],
                 [],
                 [2011],
                 [2009],
-                ["2010_1"],
+                [2010],
                 [2010],
                 [2011],
                 [2008],
@@ -264,7 +264,8 @@ function init() {
 */
 function initLabels(){    
     //Set labels visible on load:
-    operationalLayer = new esri.layers.ArcGISDynamicMapServiceLayer(mapServer, { "id": "layerCollection" });
+    console.log("initLabels");
+    operationalLayer = new esri.layers.ArcGISDynamicMapServiceLayer(mapServer, { "id": "collection" });
     //document.getElementById("labelChk").checked = true;
     map.addLayers([operationalLayer]);
     operationalLayer.setVisibleLayers([fIDkreisnamen]);
@@ -284,10 +285,10 @@ function fullExtent(){
  * function to set the printer, incl. title and author of the map and export it
  */        
 function exportChangeValues(){
-    exportTitle = document.getElementById("mapExportTitle").value;
+    exportTitle = document.getElementById("mapExportTitle").value + " (" + currentYear + ")";
     exportAuthor = document.getElementById("mapExportAuthor").value;
     var legendLayer = new esri.tasks.LegendLayer();
-    legendLayer.layerId = "layerCollection"; // "layerCollection" is the id of the operationalLayer
+    legendLayer.layerId = "collection"; // "layerCollection" is the id of the operationalLayer
     
     //printer
     if(printer != undefined){
@@ -382,37 +383,36 @@ function colorChange() {
  */
 function layerChange(layerNr) {
 	//disconnect and connect click handlers for diagrams based on checkboxes
-    // if (layerNr == fIDreligion && !(document.getElementById("religionChk").checked)) {
-    //     console.log("entferne religion");
-    //     diagramLayer = null;
-    //     activeDiagramLayer = 0;
-    //     updateLayerVisibility();
-    // } else if (layerNr == fIDreligion && document.getElementById("religionChk").checked) {
-    //     console.log("aktiviere religion");
-    //     document.getElementById("pflegehilfeChk").checked = false;
-    //     if (diagramLayer != null) {
-    //         map.removeLayer(diagramLayer);
-    //         diagramLayer = null;
-    //     }
-    //     activeDiagramLayer = layerNr;
-    //     updateLayerVisibility();
-    // } else if (layerNr == fIDleistungsempfaenger && !(document.getElementById("pflegehilfeChk").checked)) {
-    //     console.log("entferne leistungsempf");
-    //     diagramLayer = null;
-    //     activeDiagramLayer = 0;
-    //     updateLayerVisibility();
-    // } else if (layerNr == fIDleistungsempfaenger && document.getElementById("pflegehilfeChk").checked) {
-    //     console.log("aktiviere leistungsempf");
-    //     document.getElementById("religionChk").checked = false;
-    //     if (diagramLayer != null) {
-    //         map.removeLayer(diagramLayer);
-    //         diagramLayer = null;
-    //     }
-    //     activeDiagramLayer = layerNr;
-    //     updateLayerVisibility();
-    //     //handling checkbox for the basemap
-    //} else 
-    if (layerNr == 50 && !(document.getElementById("baseMapChk").checked)) {
+    if (layerNr == fIDaltersgruppen_diagramme_2011 && !(document.getElementById("altersgruppenDiagramme2011Check").checked)) {
+        console.log("entferne religion");
+        diagramLayer = null;
+        activeDiagramLayer = 0;
+        updateLayerVisibility();
+    } else if (layerNr == fIDaltersgruppen_diagramme_2011 && document.getElementById("altersgruppenDiagramme2011Check").checked) {
+        console.log("aktiviere religion");
+        document.getElementById("konfessionenDiagramme2008Check").checked = false;
+        if (diagramLayer != null) {
+            map.removeLayer(diagramLayer);
+            diagramLayer = null;
+        }
+        activeDiagramLayer = layerNr;
+        updateLayerVisibility();
+    } else if (layerNr == fIDkonfessionen_diagramme_20082010 && !(document.getElementById("konfessionenDiagramme2008Check").checked)) {
+        console.log("entferne leistungsempf");
+        diagramLayer = null;
+        activeDiagramLayer = 0;
+        updateLayerVisibility();
+    } else if (layerNr == fIDkonfessionen_diagramme_20082010 && document.getElementById("konfessionenDiagramme2008Check").checked) {
+        console.log("aktiviere leistungsempf");
+        document.getElementById("altersgruppenDiagramme2011Check").checked = false;
+        if (diagramLayer != null) {
+            map.removeLayer(diagramLayer);
+            diagramLayer = null;
+        }
+        activeDiagramLayer = layerNr;
+        updateLayerVisibility();
+        //handling checkbox for the basemap
+    } else if (layerNr == 50 && !(document.getElementById("baseMapChk").checked)) {
     	map.removeLayer(osmLayer);
     } else if (layerNr == 50 && (document.getElementById("baseMapChk").checked)) {
     	map.addLayer(osmLayer, 0);
