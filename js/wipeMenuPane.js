@@ -33,79 +33,62 @@ function showPane(layer){
 }
 
 function switchClassificationPane(toClassPane){
-	if (toClassPane == 'automatic'){
+	if (toClassPane == 'automatic' && document.getElementById("automaticClassesPane").style.display == 'block') {
+		$("#automaticClassesPane").slideUp('slow');
+		closeArrow("arrowAutomatic");
+	}
+	else if (toClassPane == 'automatic'){
 		$("#automaticClassesPane").slideDown('slow');
 		$("#individualClassesPane").slideUp('slow');
-
+		openArrow("arrowAutomatic");
+		closeArrow("arrowManual");
 	}
-	if (toClassPane == 'manual'){
+	if (toClassPane == 'manual' && document.getElementById("individualClassesPane").style.display == 'block') {
+		$("#individualClassesPane").slideUp('slow');
+		closeArrow("arrowManual");
+	}
+	else if (toClassPane == 'manual'){
 		$("#individualClassesPane").slideDown('slow');
 		$("#automaticClassesPane").slideUp('slow');
+		openArrow("arrowManual");
+		closeArrow("arrowAutomatic");
 	}
-	rotateArrow(toClassPane);
 }
 
 function switchLayerPane(toClassPane){
-	if (toClassPane == 'demographisch'){
+	if (toClassPane == 'demographisch' && document.getElementById("demographischPane").style.display == 'block') {
+		$("#demographischPane").slideUp('slow');
+		closeArrow("arrowDemographisch");
+	}
+	else if (toClassPane == 'demographisch'){
 		$("#demographischPane").slideDown('slow');
 		$("#soziographischPane").slideUp('slow');
-
+		openArrow("arrowDemographisch");
+		closeArrow("arrowSoziographisch");
 	}
-	if (toClassPane == 'soziographisch'){
+	if (toClassPane == 'soziographisch' && document.getElementById("soziographischPane").style.display == 'block') {
+		$("#soziographischPane").slideUp('slow');
+		closeArrow("arrowSoziographisch");
+	}
+	else if (toClassPane == 'soziographisch'){
 		$("#soziographischPane").slideDown('slow');
 		$("#demographischPane").slideUp('slow');
+		openArrow("arrowSoziographisch");
+		closeArrow("arrowDemographisch");
 	}
-	rotateArrow(toClassPane);
 }
 
-function rotateArrow(openDiv){
-	if (openDiv == "demographisch"){
-		document.getElementById("arrowDemographisch").style.MozTransform = "rotate(90deg)"; /* Firefox 3.6 Firefox 4 */
-		document.getElementById("arrowDemographisch").style.webkitTransform = "rotate(90deg)"; /* Safari */
-		document.getElementById("arrowDemographisch").style.oTransform = "rotate(90deg)"; /* Opera */
-		document.getElementById("arrowDemographisch").style.msTransform = "rotate(90deg)"; /* IE9 */
-		document.getElementById("arrowDemographisch").style.transform = "rotate(90deg)"; /* W3C */
-		document.getElementById("arrowSoziographisch").style.MozTransform = "rotate(0deg)"; /* Firefox 3.6 Firefox 4 */
-		document.getElementById("arrowSoziographisch").style.webkitTransform = "rotate(0deg)"; /* Safari */
-		document.getElementById("arrowSoziographisch").style.oTransform = "rotate(0deg)"; /* Opera */
-		document.getElementById("arrowSoziographisch").style.msTransform = "rotate(0deg)"; /* IE9 */
-		document.getElementById("arrowSoziographisch").style.transform = "rotate(0deg)"; /* W3C */
-	}
-	if (openDiv == "soziographisch"){
-		document.getElementById("arrowSoziographisch").style.MozTransform = "rotate(90deg)"; /* Firefox 3.6 Firefox 4 */
-		document.getElementById("arrowSoziographisch").style.webkitTransform = "rotate(90deg)"; /* Safari */
-		document.getElementById("arrowSoziographisch").style.oTransform = "rotate(90deg)"; /* Opera */
-		document.getElementById("arrowSoziographisch").style.msTransform = "rotate(90deg)"; /* IE9 */
-		document.getElementById("arrowSoziographisch").style.transform = "rotate(90deg)"; /* W3C */
-		document.getElementById("arrowDemographisch").style.MozTransform = "rotate(0deg)"; /* Firefox 3.6 Firefox 4 */
-		document.getElementById("arrowDemographisch").style.webkitTransform = "rotate(0deg)"; /* Safari */
-		document.getElementById("arrowDemographisch").style.oTransform = "rotate(0deg)"; /* Opera */
-		document.getElementById("arrowDemographisch").style.msTransform = "rotate(0deg)"; /* IE9 */
-		document.getElementById("arrowDemographisch").style.transform = "rotate(0deg)"; /* W3C */
-	}
-	if (openDiv == "automatic"){
-		document.getElementById("arrowAutomatic").style.MozTransform = "rotate(90deg)"; /* Firefox 3.6 Firefox 4 */
-		document.getElementById("arrowAutomatic").style.webkitTransform = "rotate(90deg)"; /* Safari */
-		document.getElementById("arrowAutomatic").style.oTransform = "rotate(90deg)"; /* Opera */
-		document.getElementById("arrowAutomatic").style.msTransform = "rotate(90deg)"; /* IE9 */
-		document.getElementById("arrowAutomatic").style.transform = "rotate(90deg)"; /* W3C */
-		document.getElementById("arrowManual").style.MozTransform = "rotate(0deg)"; /* Firefox 3.6 Firefox 4 */
-		document.getElementById("arrowManual").style.webkitTransform = "rotate(0deg)"; /* Safari */
-		document.getElementById("arrowManual").style.oTransform = "rotate(0deg)"; /* Opera */
-		document.getElementById("arrowManual").style.msTransform = "rotate(0deg)"; /* IE9 */
-		document.getElementById("arrowManual").style.transform = "rotate(0deg)"; /* W3C */
-	}
-	if (openDiv == "manual"){
-		document.getElementById("arrowAutomatic").style.MozTransform = "rotate(0deg)"; /* Firefox 3.6 Firefox 4 */
-		document.getElementById("arrowAutomatic").style.webkitTransform = "rotate(0deg)"; /* Safari */
-		document.getElementById("arrowAutomatic").style.oTransform = "rotate(0deg)"; /* Opera */
-		document.getElementById("arrowAutomatic").style.msTransform = "rotate(0deg)"; /* IE9 */
-		document.getElementById("arrowAutomatic").style.transform = "rotate(0deg)"; /* W3C */
-		document.getElementById("arrowManual").style.MozTransform = "rotate(90deg)"; /* Firefox 3.6 Firefox 4 */
-		document.getElementById("arrowManual").style.webkitTransform = "rotate(90deg)"; /* Safari */
-		document.getElementById("arrowManual").style.oTransform = "rotate(90deg)"; /* Opera */
-		document.getElementById("arrowManual").style.msTransform = "rotate(90deg)"; /* IE9 */
-		document.getElementById("arrowManual").style.transform = "rotate(90deg)"; /* W3C */
-
-	}
+function closeArrow(div){
+	document.getElementById(div).style.MozTransform = "rotate(0deg)"; /* Firefox 3.6 Firefox 4 */
+	document.getElementById(div).style.webkitTransform = "rotate(0deg)"; /* Safari */
+	document.getElementById(div).style.oTransform = "rotate(0deg)"; /* Opera */
+	document.getElementById(div).style.msTransform = "rotate(0deg)"; /* IE9 */
+	document.getElementById(div).style.transform = "rotate(0deg)"; /* W3C */
+}
+function openArrow(div){
+	document.getElementById(div).style.MozTransform = "rotate(90deg)"; /* Firefox 3.6 Firefox 4 */
+	document.getElementById(div).style.webkitTransform = "rotate(90deg)"; /* Safari */
+	document.getElementById(div).style.oTransform = "rotate(90deg)"; /* Opera */
+	document.getElementById(div).style.msTransform = "rotate(90deg)"; /* IE9 */
+	document.getElementById(div).style.transform = "rotate(90deg)"; /* W3C */
 }

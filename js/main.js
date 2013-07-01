@@ -36,6 +36,7 @@ dojo.require("dijit.Tooltip");
 
 var breakCount = 0; // keep track of how many individual breaks have been created, used to fetch the correct field values
 var diagramLayer; // the active clickable diagram layer
+var printCounter = 0; //counter for the printer widget
 
 var map, queryTask, query, template, initExtent, maxExtent, operationalLayer, year, currentYearLabel;
 
@@ -65,80 +66,6 @@ var fIDkonfessionen_diagramme_20082010 = 20;
 
 var activeLayer = 1; // which layer is active at the beginning
 var currentLayer = 1;
-
-//Attributfeldnamen der einzelnen Layer:
-var attributeFields = [ "Kreisname", 
-                        "", 
-                        "einwohner_.einwohner", 
-                        "einwohner_entwicklung_.einwohnerentwicklung", 
-                        "bevoelkerungsdichte_.bevölkerungsdichte",
-                        "altersgruppen_._",
-                        "",
-                        "geburtenrate_.geburtenrate",
-                        "sterberate_.sterberate",
-                        "migration_gesamt_.migrationengesamt",
-                        "migration_nichtdeutsch_.migrationennichtdeutsche",
-                        "",
-                        "pflegebeduerftige_.pflegebeduerftige",
-                        "pflegeeinrichtungen_.pflegeeinrichtungen",
-                        "haush",
-                        "single_haushalte_.single_Haushalte",
-                        "nichtdeutsche_.nichtdeutsche",
-                        "migranten_.migranten",
-                        "einkommen_.einkommen",
-                        "konfessionen_.",
-                        ""
-                        ]; // used fields from the raw data 
-
-var diagramFields = new Array(attributeFields.length);
-
-//Für die verschiedenen Layer verfügbare Jahreswerte:
-var years = [   [], 
-                [], 
-                [1990, 2012, "prognose2030"], 
-                ["19902012", "20122030"], 
-                [2012],
-                [182011, 302011, 652011, 2011],
-                [],
-                ["20072011"],
-                ["20072011"],
-                ["20072011"],
-                ["20072011"],
-                [],
-                [2011],
-                [2009],
-                [2010],
-                [2010],
-                [2011],
-                [2008],
-                [2009],
-                ["römisch_katholisch2008_2010", "evangelisch2008_2010", "andere_konfessionslos2008_2010"],
-                []
-            ];
-
-//Jahreswerte, welche beim Layerwechsel als erstes angezeigt werden sollen:
-var initYearValues = [  0, 
-                        0, 
-                        1, 
-                        0, 
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0
-                    ];
 
 var currentYear = years[currentLayer][initYearValues[currentLayer]]; //Aktuell angezeigtes Jahr
 var activeDiagramLayer = 0; //Aktuell angezeigter Diagrammlayer, 0=keiner
@@ -199,6 +126,7 @@ function init() {
     dojo.connect(map, "onExtentChange", reLocate);
     dojo.connect(map, "onZoomEnd", syncZoom);
 
+
     dojo.connect(map, "onMouseDown", function () {
         for (var i = 0; i < parent.frames.length; i++) {
             parent.frames[i].counter = 0; //the counter is used if any pan related events occured onMouseDown
@@ -215,12 +143,16 @@ function init() {
     //Initialize the Legend:
         dojo.connect(map,'onLayersAddResult',function(results){
           var layerInfo = dojo.map(results, function(layer,index){
-            return {layer:layer.layer,title:layer.layer.name};
+            return {
+                layer:layer.layer,
+                title:layer.layer.name,
+                hideLayers:[0]
+                };
           });
           if(layerInfo.length > 0){
             legend = new esri.dijit.Legend({
               map:map,
-              layerInfos:layerInfo
+              layerInfos: layerInfo
             },"legend");
             legend.startup();
           }
@@ -264,9 +196,10 @@ function init() {
 */
 function initLabels(){    
     //Set labels visible on load:
-    console.log("initLabels");
     operationalLayer = new esri.layers.ArcGISDynamicMapServiceLayer(mapServer, { "id": "collection" });
     //document.getElementById("labelChk").checked = true;
+    dojo.connect(operationalLayer, "onUpdateStart", showLoadingIcon);
+    dojo.connect(operationalLayer, "onUpdateEnd", hideLoadingIcon);
     map.addLayers([operationalLayer]);
     operationalLayer.setVisibleLayers([fIDkreisnamen]);
     window.setTimeout("addEqualBreaks(equalBreaksOptions[0], equalBreaksOptions[1], equalBreaksOptions[2])", 1000);
@@ -284,7 +217,7 @@ function fullExtent(){
 /**
  * function to set the printer, incl. title and author of the map and export it
  */        
-function exportChangeValues(){
+function initPrinter(){
     if (currentYearLabel == "" || currentYearLabel == null){
         exportTitle = document.getElementById("mapExportTitle").value;
     }
@@ -298,6 +231,7 @@ function exportChangeValues(){
     //printer
     if(printer != undefined){
     	printer.destroy();
+        printCounter++;
     }
     printer = new esri.dijit.Print({
           map: map,
@@ -306,10 +240,10 @@ function exportChangeValues(){
                 format: "PNG32",
                 layout: "A4 Portrait",
                 layoutOptions: {
-                  titleText: exportTitle,
-                  authorText: exportAuthor,
+                  titleText: document.getElementById("mapExportTitle").value,
+                  authorText: document.getElementById("mapExportAuthor").value,
                   scalebarUnit: 'Kilometer',
-                  legendLayers: [],
+                  //legendLayers: [],
                   copyrightText: "© Landschaftsverband Westfalen-Lippe (LWL), 48133 Münster"
                 }
               },{
@@ -317,27 +251,30 @@ function exportChangeValues(){
                 format: "PNG32",
                 layout: "A4 Landscape",
                 layoutOptions: {
-                  titleText: exportTitle,
-                  authorText: exportAuthor,
+                  titleText: document.getElementById("mapExportTitle").value,
+                  authorText: document.getElementById("mapExportAuthor").value,
                   scalebarUnit: 'Kilometer',
-                  legendLayers: [],
+                  //legendLayers: [],
                   copyrightText: "© Landschaftsverband Westfalen-Lippe (LWL), 48133 Münster"
                 }
               }],
-         url: "http://giv-learn2.uni-muenster.de/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task/"
+         url: "http://giv-learn2.uni-muenster.de/arcgis/rest/services/ExportWebMap/GPServer/Export%20Web%20Map/"
          }, dojo.byId("printButton"));
-    document.getElementById("exportWarning").innerHTML = "Achtung: Das exportieren der Karte kann einige Sekunden in Anspruch nehmen.";
     printer.startup();
     
     dojo.connect(printer,'onPrintStart',function(){
     	console.log('The print operation has started');
-    	document.getElementById("loadingImage").style.visibility = "visible";
+        document.getElementById("exportWarning").innerHTML = '<img src="images/loading_small.gif" id="loadingImage" alt="loading" />';
     });
     
     dojo.connect(printer,'onPrintComplete',function(value){
     	console.log('The url to the print image is : ' + value.url);
     	document.getElementById("loadingImage").style.visibility = "hidden";
+        var resultWindow = open(value.url, "Ausdruck");
+        resultWindow.focus();
+        document.getElementById("exportWarning").innerHTML = '<a href="' + value.url + '" target="_blank">Link zum Dokument</a>';
     });
+    document.getElementById("dijit_form_ComboButton_" + printCounter + "_button").click();
 }
 
 
@@ -389,12 +326,10 @@ function colorChange() {
 function layerChange(layerNr) {
 	//disconnect and connect click handlers for diagrams based on checkboxes
     if (layerNr == fIDaltersgruppen_diagramme_2011 && !(document.getElementById("altersgruppenDiagramme2011Check").checked)) {
-        console.log("entferne religion");
         diagramLayer = null;
         activeDiagramLayer = 0;
         updateLayerVisibility();
     } else if (layerNr == fIDaltersgruppen_diagramme_2011 && document.getElementById("altersgruppenDiagramme2011Check").checked) {
-        console.log("aktiviere religion");
         document.getElementById("konfessionenDiagramme2008Check").checked = false;
         if (diagramLayer != null) {
             map.removeLayer(diagramLayer);
@@ -403,12 +338,10 @@ function layerChange(layerNr) {
         activeDiagramLayer = layerNr;
         updateLayerVisibility();
     } else if (layerNr == fIDkonfessionen_diagramme_20082010 && !(document.getElementById("konfessionenDiagramme2008Check").checked)) {
-        console.log("entferne leistungsempf");
         diagramLayer = null;
         activeDiagramLayer = 0;
         updateLayerVisibility();
     } else if (layerNr == fIDkonfessionen_diagramme_20082010 && document.getElementById("konfessionenDiagramme2008Check").checked) {
-        console.log("aktiviere leistungsempf");
         document.getElementById("altersgruppenDiagramme2011Check").checked = false;
         if (diagramLayer != null) {
             map.removeLayer(diagramLayer);

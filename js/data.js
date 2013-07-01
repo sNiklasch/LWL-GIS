@@ -1,3 +1,77 @@
+//Attributfeldnamen der einzelnen Layer:
+var attributeFields = [ "Kreisname", 
+                        "", 
+                        "einwohner_.einwohner", 
+                        "einwohner_entwicklung_.einwohnerentwicklung", 
+                        "bevoelkerungsdichte_.bevölkerungsdichte",
+                        "altersgruppen_._",
+                        "",
+                        "geburtenrate_.geburtenrate",
+                        "sterberate_.sterberate",
+                        "migration_gesamt_.migrationengesamt",
+                        "migration_nichtdeutsch_.migrationennichtdeutsche",
+                        "",
+                        "pflegebeduerftige_.pflegebeduerftige",
+                        "pflegeeinrichtungen_.pflegeeinrichtungen",
+                        "haush",
+                        "single_haushalte_.single_Haushalte",
+                        "nichtdeutsche_.nichtdeutsche",
+                        "migranten_.migranten",
+                        "einkommen_.einkommen",
+                        "konfessionen_.",
+                        ""
+                        ]; // used fields from the raw data 
+
+var diagramFields = new Array(attributeFields.length);
+
+//Für die verschiedenen Layer verfügbare Jahreswerte:
+var years = [   [], 
+                [], 
+                [1990, 2012, "prognose2030"], 
+                ["19902012", "20122030"], 
+                [2012],
+                [182011, 302011, 652011, 2011],
+                [],
+                ["20072011"],
+                ["20072011"],
+                ["20072011"],
+                ["20072011"],
+                [],
+                [2011],
+                [2009],
+                [2010],
+                [2010],
+                [2011],
+                [2008],
+                [2009],
+                ["römisch_katholisch2008_2010", "evangelisch2008_2010", "andere_konfessionslos2008_2010"],
+                []
+            ];
+
+//Jahreswerte, welche beim Layerwechsel als erstes angezeigt werden sollen:
+var initYearValues = [  0, 
+                        0, 
+                        1, 
+                        0, 
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0
+                    ];
+
 var timesliderLabelValues = [   [], 
 				                [], 
 				                ["1990", "2012", "2030 (Prognose)"], 

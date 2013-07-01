@@ -26,7 +26,7 @@
 	right: 120px;
 	width: 250px;
 	display: none;
-	max-height: 60%;
+	max-height: 75%;
 }
 
 .menuPaneContent {
@@ -48,19 +48,15 @@
 	display: none;
 }
 
+#demographischPane {
+	display: none;
+}
+
 .submenuArrow {
 	height: 10px;
 }
 
 #arrowAutomatic {
-	-moz-transform:rotate(90deg); /* Firefox 3.6 Firefox 4 */
-	-webkit-transform:rotate(90deg); /* Safari */
-	-o-transform:rotate(90deg); /* Opera */
-	-ms-transform:rotate(90deg); /* IE9 */
-	transform:rotate(90deg); /* W3C */
-}
-
-#arrowDemographisch {
 	-moz-transform:rotate(90deg); /* Firefox 3.6 Firefox 4 */
 	-webkit-transform:rotate(90deg); /* Safari */
 	-o-transform:rotate(90deg); /* Opera */

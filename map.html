@@ -39,6 +39,7 @@
     <script src="js/timeslider.js" type="text/javascript"></script>
     <script src="js/tooltips.js" type="text/javascript"></script>
     <script src="js/data.js" type="text/javascript"></script>
+    <script src="js/loading.js" type="text/javascript"></script>
     <!-- -->
     <script type="text/javascript" src="js/individualBreaks.js">
     </script>
@@ -402,11 +403,11 @@
           <br>
           Autor: <input type="text" id="mapExportAuthor">
           <br>
-          <input type="button" id="mapExportChange" onclick="exportChangeValues();" value="Übernehmen">
-          <div id="exportWarning"></div>
-          <a href="#" id="printButton">
-          </a>
-          <img src="images/loading.gif" id="loadingImage" alt="loading" />
+          <div id="exportWarning">
+            Achtung: Das exportieren der Karte kann einige Sekunden in Anspruch nehmen.
+          </div>
+          <input type="button" id="mapExportChange" onclick="initPrinter();" value="Drucken">
+          <a href="#" id="printButton"></a>
         </div>
       </div>
 
@@ -440,7 +441,11 @@
 	      <br>
 	      Über Feedback würden wir uns unter <a href="mailto:feedback.lwl-webgis@uni-muenster.de" style="color:white;">feedback.lwl-webgis@uni-muenster.de</a> sehr freuen!
   </div>
-  
+
+  <!--loading Icon for the Map-->
+  <div id="mapLoading">
+    <img src="images/loading_map.gif"></img>
+  </div>
   
   <!--<a href="#" class="icons" id="printButton" style="position: absolute; right:0px; top:290px; z-index: 4;"></a>-->
   <!--

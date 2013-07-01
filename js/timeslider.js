@@ -18,13 +18,13 @@ function updateTimeslider(){
 	    	slideDuration:0,
 	    	style:{width:"20%", height:"20px"} 
 		})
-		document.getElementById("timesliderValue").innerHTML = years[currentLayer][initYearValues[currentLayer]];
+		document.getElementById("timesliderValue").innerHTML = timesliderLabelValues[currentLayer][initYearValues[currentLayer]];
 		document.getElementById("timesliderMinLabel").innerHTML = timesliderMinLabelValues[currentLayer];
 		document.getElementById("timesliderMaxLabel").innerHTML = timesliderMaxLabelValues[currentLayer];
 	}
 	else if (years[currentLayer].length == 1){
 		document.getElementById("timesliderDiv").style.display = "none";
-		document.getElementById("timesliderValue").innerHTML = years[currentLayer][0];
+		document.getElementById("timesliderValue").innerHTML = timesliderLabelValues[currentLayer][0];
 	}
 	else {
 		document.getElementById("timesliderDiv").style.display = "none";
@@ -50,5 +50,5 @@ function createTimeslider(){
 	    	style:{width:"20%", height:"20px"} 
 		}, "timeslider");
 	});
-	document.getElementById("timesliderValue").innerHTML = years[currentLayer][initYearValues[currentLayer]];
+	document.getElementById("timesliderValue").innerHTML = timesliderLabelValues[currentLayer][initYearValues[currentLayer]];
 }

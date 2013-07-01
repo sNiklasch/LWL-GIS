@@ -66,12 +66,12 @@ div.title{
 font-weight:bold;
 }
 
-#loadingImage{
+#mapLoading {
 	position: absolute;
-	bottom: 0%;
+	z-index: 10;
+	top: 50%;
 	left: 50%;
-	visibility: hidden;
-	width: 50px;
+	margin-left: -150px;
 }
 
 #indivBreaksApply{
@@ -84,7 +84,7 @@ font-weight:bold;
 	top: 40%;
 	left: 30%;
 	right: 30%;
-	z-index: 10;
+	z-index: 15;
 	background-color: #2f2f2f;	color: white;
 	padding: 10px;
 	border-radius: 5px;
@@ -148,6 +148,10 @@ font-weight:bold;
 	top: 35px;
 	left: 60.5%;
 	font-size: small;
+}
+
+#printButton {
+	display: none;
 }
 
 .esriLargeSliderTL {

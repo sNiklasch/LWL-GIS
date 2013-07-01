@@ -438,6 +438,7 @@ var jscolor = {
 				if(this.caps) { value = value.toUpperCase(); }
 				if(this.hash) { value = '#'+value; }
 				valueElement.value = value;
+				THIS.hidePicker(); // hide picker after choosing a color
 			}
 			if(!(flags & leaveStyle) && styleElement) {
 				styleElement.style.backgroundImage = "none";
