@@ -1,37 +1,49 @@
 .icons {
-background: #9cb5e6;
-background-color:#ededed;
--moz-border-radius:6px;
--webkit-border-radius:6px;
-border-radius:6px;
-border:1px solid #dcdcdc;
-display:inline-block;
+	background: #9cb5e6;
+	background-color:#ededed;
+	-moz-border-radius:6px;
+	-webkit-border-radius:6px;
+	border-radius:6px;
+	border:1px solid #dcdcdc;
+	display:inline-block;
+	font-family:verdana;
+	font-size:15px;
+	font-weight:bold;
+	padding:6px 5px;
+	text-decoration:none;
+}
 
-font-family:verdana;
-font-size:15px;
-font-weight:bold;
-padding:6px 5px;
-text-decoration:none;
+.icons:hover {
+	background-color:#dbdbdb;
+}
 
-}.icons:hover {
-background-color:#dbdbdb;
-
-}.icons:active {
+.icons:active {
 	position: right;
 	top:1px;
 }
 
-.wipe-menu {
-background-color:#ededff;	
-border-radius:6px;
-border:1px solid #dcdcdc;
-margin:2em;
-padding:0.5em;
-text-align:left;
-min-width:200px;
-font-family: verdana;
-font-size: 12px;
+.buttonLabel {
+	position: absolute;
+	right:0px;
+	left: 0px;
+	top:36px;
+	z-index:10;
+	font-size:xx-small;
+	text-align: center;
 }
+
+.wipe-menu {
+	background-color:#ededff;	
+	border-radius:6px;
+	border:1px solid #dcdcdc;
+	margin:2em;
+	padding:0.5em;
+	text-align:left;
+	min-width:200px;
+	font-family: verdana;
+	font-size: 12px;
+}
+
 .wipe {
 font-size: 18px;
 height: auto;
@@ -84,13 +96,21 @@ font-weight:bold;
 	top: 40%;
 	left: 30%;
 	right: 30%;
-	z-index: 15;
+	z-index: 350;
 	background-color: #2f2f2f;	color: white;
 	padding: 10px;
 	border-radius: 5px;
-	opacity: 0.85;
 	text-align: center;
 	visibility: hidden;
+}
+
+#welcomeBackground {
+	position: absolute;
+	background-color: #2f2f2f;
+	opacity: 0;
+	height: 100%;
+	width: 100%;
+	z-index: 300;
 }
 
 #header{

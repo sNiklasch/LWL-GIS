@@ -26,6 +26,7 @@ dojo.ready(function () {
             fs.appendChild(f2);
             dualView = true;
         }
+        window.setTimeout("fullExtent(); fullExtent();", 500);
     });
 
 });

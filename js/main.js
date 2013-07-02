@@ -188,6 +188,7 @@ function init() {
 	initLabels();
     createTimeslider();
     updateTimeslider();
+    fullExtent();
 }
 
 /**
@@ -210,8 +211,8 @@ function initLabels(){
  */
 function fullExtent(){
     map.setExtent(maxExtent);
-    reLocate(maxExtent);
-    syncZoom(maxExtent);
+    //reLocate(maxExtent);
+    //syncZoom(maxExtent);
 }
 
 /**

@@ -104,7 +104,7 @@
       <!-- Layer Button -->
       <a href="#" class="icons" id="slideAwayButton_layer" onclick="showPane('menuPane-layer')" style="position: absolute; right:10px; top:72px; z-index: 4;">
         <img src="images/layers_map.png">
-        <div id="labelLayer" style="position: absolute; right:1px; top:35px; z-index:5; font-size:xx-small;">
+        <div id="labelLayer" class="buttonLabel">
 	      Themen
 	    </div>    
       </a>
@@ -291,7 +291,7 @@
       <!-- Classes Button-->
       <a href="#" class="icons" id="slideAwayButton_classes" onclick="showPane('menuPane-classes')" style="position: absolute; right:10px; top:142px; z-index: 3;">
         <img id="classesBtnImg" src="images/classes.png">
-        <div id="labelClass" style="position: absolute; right:2px; top:35px; z-index:5; font-size:xx-small;">
+        <div id="labelClass" class="buttonLabel">
           Klassen
         </div>
       </a>
@@ -366,7 +366,7 @@
       <!-- Legend Button -->
       <a href="#" class="icons" id="slideAwayButton_legend" onclick="showPane('menuPane-legend')" style="position: absolute; right:10px; top:212px; z-index: 2;">
         <img id="legendBtnImg" src="images/legend.png">
-        <div id="labelLegend" style="position: absolute; right:0px; top:35px; z-index:50; font-size:xx-small;">
+        <div id="labelLegend" class="buttonLabel">
           Legende
         </div>
       </a>
@@ -385,7 +385,7 @@
       <!-- Export Button -->
       <a href="#" class="icons" id="slideAwayButton_export" onclick="showPane('menuPane-export')" style="position: absolute; right:10px; top:352px; z-index: 2;">
         <img id="exportBtnImg" src="images/download.png">
-        <div id="labelExport" style="position: absolute; right:0px; top:35px; z-index:50; font-size:xx-small;">
+        <div id="labelExport" class="buttonLabel">
           Drucken
         </div>
       </a>
@@ -416,23 +416,27 @@
         <img id="fullExtBtnImg" src="images/full_extent.png">
       </a>
   
-  
-  <!-- Split Screen -->
-  <div id="splitDiv">
-    <a href="#" class="icons" id="slideAwayButton_split" style="position: absolute; right:10px; top:282px; z-index: 5;">
-      <img src="images/map_btn.png" >
-      <div id="labelSplit" style="position: absolute; right:15px; top:36px; z-index:5; font-size:xx-small;">
-	      Vergleichen
-	    </div>
-    </a>
-  </div>
-    
-    
-  
+      <!-- Info Button -->
+      <a href="#" class="icons" id="infoButton" onclick="showPane('information')" style="position: absolute; right:10px; bottom:5px; z-index: 2; width: 55px;">
+        <img id="infoBtnImg" src="images/punkte.png" style="right: 0px;">
+        <div id="labelInfoButton" class="buttonLabel" style="top: 20px;">
+          Information
+        </div>
+      </a>
+
+      <!-- Split Screen -->
+      <div id="splitDiv">
+        <a href="#" class="icons" id="slideAwayButton_split" style="position: absolute; right:10px; top:282px; z-index: 5;">
+          <img src="images/map_btn.png" >
+          <div id="labelSplit" class="buttonLabel">
+    	      Vergleichen
+    	    </div>
+        </a>
+      </div>
   
   <!-- Welcome window -->
   <div id="welcome" align="center">
-  	<a href="#" id="close_welcome" style="position: absolute; top:7px; right:9px; z-index: 11;" onclick="document.getElementById('welcome').style.display = 'none';">
+  	<a href="#" id="close_welcome" style="position: absolute; top:7px; right:9px; z-index: 11;" onclick="document.getElementById('welcome').style.display = 'none'; document.getElementById('welcomeBackground').style.display = 'none';">
       <img src="images/close12.png">
     </a>
 	      Herzlich Willkommen!
@@ -440,6 +444,8 @@
 	      Diese Seite befindet sich noch in der Beta-Phase.
 	      <br>
 	      Über Feedback würden wir uns unter <a href="mailto:feedback.lwl-webgis@uni-muenster.de" style="color:white;">feedback.lwl-webgis@uni-muenster.de</a> sehr freuen!
+  </div>
+  <div id="welcomeBackground" onclick="document.getElementById('welcome').style.display = 'none'; document.getElementById('welcomeBackground').style.display = 'none';">
   </div>
 
   <!--loading Icon for the Map-->
