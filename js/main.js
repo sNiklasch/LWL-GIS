@@ -506,7 +506,8 @@ function reCenterAndZoom(center, zoom, extent, frameNr) {
  */
 function onLoadCheck() {
 	if (self.name == "frame1") {
-        document.getElementById("welcome").style.visibility = 'visible';
+        document.getElementById("welcome").style.display = 'block';
+        document.getElementById("welcomeBackground").style.display = 'block';
 	}
     if (self.name == "frame2") {
         document.getElementById("splitDiv").removeChild(document.getElementById("slideAwayButton_split"));

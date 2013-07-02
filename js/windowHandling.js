@@ -5,10 +5,18 @@
 
 
 function hidePane(layer){
-	$(layer).hide('slow');
+	if (layer == 'textWindows'){
+		$('#infoWindow').hide('slow');
+		$('#welcome').hide('slow');
+		$('#welcomeBackground').hide('slow');
+	}
+	else {
+		$(layer).hide('slow');
+	}
 }
 
 function showPane(layer){
+	console.log(layer);
 	if (document.getElementById(layer).style.display == 'block'){
 		hidePane("#"+layer);
 	}
@@ -26,6 +34,10 @@ function showPane(layer){
 		hidePane('#menuPane-classes');
 		hidePane('#menuPane-layer');
 		$("#"+layer).show('slow');
+	}
+	else if (layer == 'infoWindow'){
+		$("#"+layer).show('slow');
+		$("#welcomeBackground").show('slow');
 	}
 	else {
 		$("#"+layer).show('slow');

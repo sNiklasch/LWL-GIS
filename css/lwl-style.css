@@ -91,7 +91,7 @@ font-weight:bold;
 	right: 50%;
 }
 
-#welcome{
+.textWindow{
 	position: absolute;
 	top: 40%;
 	left: 30%;
@@ -101,7 +101,15 @@ font-weight:bold;
 	padding: 10px;
 	border-radius: 5px;
 	text-align: center;
-	visibility: hidden;
+	display: none;
+	max-height: 60%;
+	overflow: auto;
+}
+
+#infoWindow {
+	top:20%;
+	left: 20%;
+	right: 20%;
 }
 
 #welcomeBackground {
@@ -111,6 +119,7 @@ font-weight:bold;
 	height: 100%;
 	width: 100%;
 	z-index: 300;
+	display: none;
 }
 
 #header{

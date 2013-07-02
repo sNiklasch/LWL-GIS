@@ -35,7 +35,7 @@
     </script>
     <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
     <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
-    <script src="js/wipeMenuPane.js" type="text/javascript"></script>
+    <script src="js/windowHandling.js" type="text/javascript"></script>
     <script src="js/timeslider.js" type="text/javascript"></script>
     <script src="js/tooltips.js" type="text/javascript"></script>
     <script src="js/data.js" type="text/javascript"></script>
@@ -74,7 +74,7 @@
   <div id="header" class="lwl-cd">
   <div id="headercontent">
   <div id="quadrat_claim_logo">
-    <div id="lwl-logo"> <a href="http://www.lwl.org/LWL/Kultur/geko/"><img id="quadrat" src="http://www.lwl.org/nozope/LWL/skin11/refresh/logo.png" width="136" height="30" alt="LWL" /></a> </div>
+    <div id="lwl-logo"> <a href="http://www.lwl.org/" target="_blank"><img id="quadrat" src="http://www.lwl.org/nozope/LWL/skin11/refresh/logo.png" width="136" height="30" alt="LWL" /></a> </div>
       <div id="hauptmenue">
       <!--<ul>
         <li><a href="/">LWL-Startseite</a></li>
@@ -417,12 +417,29 @@
       </a>
   
       <!-- Info Button -->
-      <a href="#" class="icons" id="infoButton" onclick="showPane('information')" style="position: absolute; right:10px; bottom:5px; z-index: 2; width: 55px;">
-        <img id="infoBtnImg" src="images/punkte.png" style="right: 0px;">
-        <div id="labelInfoButton" class="buttonLabel" style="top: 20px;">
+      <a href="#" class="icons" id="infoButton" onclick="showPane('infoWindow')" style="position: absolute; right:10px; top:100%; margin-top: -55px; z-index: 2; width: 55px;">
+        <img id="infoBtnImg" src="images/information.png" style="margin-left: 20px; margin-right: 20px;">
+        <div id="labelInfoButton" class="buttonLabel">
           Information
         </div>
       </a>
+
+      <!-- Info Pane -->
+      <div id="infoWindow" class="textWindow">
+        <a href="#" id="close_welcome" style="position: absolute; top:7px; right:9px; z-index: 11;" onclick="hidePane('textWindows')">
+          <img src="images/close12.png">
+        </a>
+        <div style="font-size: x-large;">Herzlich willkommen beim WebGIS Westfalen!</div>
+        <br><br>
+        Mit diesem interbasierten Geo-Informationssystem (GIS) lassen sich im Handumdrehen übersichtliche thematische Karten über den Raum Westfalen erstellen.
+        <br><br>
+        WebGIS Westfalen eignet sich besonders für den modernen Erdkundeunterricht, um hier den Schülerinnen und Schülern räumliche Disparitäten zwischen den insgesamt 27 Kreisen bzw. kreisfreien Städten Westfalens mit nur wenigen Schritten näherzubringen – egal ob am PC, via Beamer oder Whiteboard.
+        <br><br>
+        WebGIS Westfalen ist ein Kooperationsprojekt der <a href="http://www.geographische-kommission.de/" style="color:lightgrey;"target="_blank">Geographischen Kommission für Westfalen</a> im Landschaftsverband Westfalen-Lippe und des Instituts für Geoinformatik der Universität Münster. Datenquelle sind Statistiken des Landesbetriebes Information und Technik Nordrhein-Westfalen (IT.NRW). Die heute im WebGIS Westfalen vorhandenen Inhalte werden in Zukunft schrittweise um weitere Themen ergänzt.
+        <br><br>
+        Die Geographische Kommission für Westfalen dankt der Manfred-Engel-Stiftung für die finanzielle Unterstützung dieses Projektes.
+      </div>
+
 
       <!-- Split Screen -->
       <div id="splitDiv">
@@ -434,19 +451,21 @@
         </a>
       </div>
   
-  <!-- Welcome window -->
-  <div id="welcome" align="center">
-  	<a href="#" id="close_welcome" style="position: absolute; top:7px; right:9px; z-index: 11;" onclick="document.getElementById('welcome').style.display = 'none'; document.getElementById('welcomeBackground').style.display = 'none';">
-      <img src="images/close12.png">
-    </a>
-	      Herzlich Willkommen!
-	      <br>
-	      Diese Seite befindet sich noch in der Beta-Phase.
-	      <br>
-	      Über Feedback würden wir uns unter <a href="mailto:feedback.lwl-webgis@uni-muenster.de" style="color:white;">feedback.lwl-webgis@uni-muenster.de</a> sehr freuen!
-  </div>
-  <div id="welcomeBackground" onclick="document.getElementById('welcome').style.display = 'none'; document.getElementById('welcomeBackground').style.display = 'none';">
-  </div>
+      <!-- Welcome window -->
+      <div id="welcome" class="textWindow" align="center">
+      	<a href="#" id="close_welcome" style="position: absolute; top:7px; right:9px; z-index: 11;" onclick="hidePane('textWindows')">
+          <img src="images/close12.png">
+        </a>
+    	      Herzlich Willkommen!
+    	      <br>
+    	      Diese Seite befindet sich noch in der Beta-Phase.
+    	      <br>
+    	      Über Feedback würden wir uns unter <a href="mailto:feedback.lwl-webgis@uni-muenster.de" style="color:white;">feedback.lwl-webgis@uni-muenster.de</a> sehr freuen!
+      </div>
+
+
+      <div id="welcomeBackground" onclick="hidePane('textWindows')">
+      </div>
 
   <!--loading Icon for the Map-->
   <div id="mapLoading">
