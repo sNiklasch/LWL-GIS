@@ -13,6 +13,7 @@ dojo.require("esri.tasks.geometry");
 dojo.require("esri.virtualearth.VETiledLayer");
 dojo.require("esri.arcgis.utils");
 dojo.require("esri.renderer");
+dojo.require("esri.symbol");
 
 dojo.require("dojox.widget.TitleGroup");
 dojo.require("dojox.charting.themes.Julie");
@@ -38,10 +39,24 @@ var breakCount = 0; // keep track of how many individual breaks have been create
 var diagramLayer; // the active clickable diagram layer
 var printCounter = 0; //counter for the printer widget
 
-var map, queryTask, query, template, initExtent, maxExtent, operationalLayer, year, currentYearLabel;
+var map, queryTask, query, template, initExtent, maxExtent, operationalLayer, featureLayer, currentYearLabel, year, colorArray;
+var currentDataframe = [
+  {
+    "Name":"Jahre",
+    "Data": [""]
+  }
+];
+var yearIndex = 0;
+var autoClassesStartColor = '000000';
+var autoClassesEndColor = 'ffffff';
+var autoClassesBreaks = 3;
+var legendArray = [];
+var layerAttributes = ["", "Webgis Westfalen"];
 
 //the MapServer for the whole app:
 var mapServer = "http://giv-learn2.uni-muenster.de/ArcGIS/rest/services/LWL/Legende/MapServer";
+//the Server for the feature Layer:
+var feauterLayerServer = "https://services1.arcgis.com/W47q82gM5Y2xNen1/arcgis/rest/services/westfalen_kreise/FeatureServer";
 
 //LayerIDs:
 var fIDkreisnamen = 0;
@@ -197,11 +212,18 @@ function init() {
 */
 function initLabels(){    
     //Set labels visible on load:
+    featureLayer = new esri.layers.FeatureLayer(feauterLayerServer + "/0", {
+            infoTemplate: new esri.InfoTemplate("&nbsp;", "${Kreisname}"),
+            mode: esri.layers.FeatureLayer.MODE_ONDEMAND,
+            outFields: ["Kreisname"]
+          });
+    map.addLayer(featureLayer, 0);
+    colorizeLayer(defaultClassification);
     operationalLayer = new esri.layers.ArcGISDynamicMapServiceLayer(mapServer, { "id": "collection" });
     //document.getElementById("labelChk").checked = true;
-    dojo.connect(operationalLayer, "onUpdateStart", showLoadingIcon);
-    dojo.connect(operationalLayer, "onUpdateEnd", hideLoadingIcon);
-    map.addLayers([operationalLayer]);
+    dojo.connect(featureLayer, "onUpdateStart", showLoadingIcon);
+    dojo.connect(featureLayer, "onUpdateEnd", hideLoadingIcon);
+    map.addLayer(operationalLayer, 1);
     operationalLayer.setVisibleLayers([fIDkreisnamen]);
     window.setTimeout("addEqualBreaks(equalBreaksOptions[0], equalBreaksOptions[1], equalBreaksOptions[2])", 1000);
 }
@@ -283,43 +305,34 @@ function initPrinter(){
  * opacity for OperationalLayer
 */
 function setFeatureLayerOpacity(opacity) {
-    operationalLayer.setOpacity(opacity);
+    featureLayer.setOpacity(opacity);
+    $(".legendColorfield").css({ opacity: opacity });
 } 
 
-
 /**
- * This method can assign a new color scheme to a layer
- * as used for individual breaks
- */
-function colorChange() {
-    activeClassification = 1;
-	//Set the default symbol, which is used for unmatched values
-    symbol = new esri.symbol.SimpleFillSymbol();
-    symbol.setColor(new dojo.Color([150, 150, 150, 0.75]));
+ * this function expects an array of colors for the features of the main layer
+ * 
+*/
+function colorizeLayer(colorArray){
+    var defaultSymbol = new esri.symbol.SimpleFillSymbol().setColor(new dojo.Color([255,255,255,0.5]))
     
-    var renderer = new esri.renderer.ClassBreaksRenderer(symbol, attributeFields[activeLayer] + currentYear);
-    for (var i = 1; i <= breakCount; i++) {
-        var element = document.getElementById("breakFrom" + i);
-        if (element) {
-            renderer.addBreak({
-                minValue: document.getElementById("breakFrom" + i).value,
-            	maxValue: document.getElementById("breakTo" + i).value,
-            	symbol: new esri.symbol.SimpleFillSymbol().setColor(new dojo.Color("#" + document.getElementById("myValue" + i).value)),
-                label: document.getElementById("breakFrom" + i).value + " - " + document.getElementById("breakTo" + i).value
-            });
-        }
-    }
-    
-    var optionsArray = [];
-    var drawingOptions = new esri.layers.LayerDrawingOptions();
-    drawingOptions.renderer = renderer;
-    optionsArray[activeLayer] = drawingOptions;
-    operationalLayer.setLayerDrawingOptions(optionsArray);
+    var renderer = new esri.renderer.UniqueValueRenderer(defaultSymbol, "Kreisname");
+    for (var i = colorArray.length - 1; i >= 0; i--) {
+        renderer.addValue(colorArray[i][0], new esri.symbol.SimpleFillSymbol().setColor(new dojo.Color(colorArray[i][1])));
+        //console.log(renderer);
+    };
 
-    legend.refresh();
+    featureLayer.setRenderer(renderer);
+    featureLayer.redraw();
+
+    var minmax = getMinMax(datenEinwohner);
+
+    addLegendItems(legendArray); //update the Legend
+    console.log(map.getLayersVisibleAtScale());
+
+    //console.log(minmax);
+    //console.log(getLayerData(datenEinwohner, 2012));
 }
-
-
 
 /**
  * Method for changing the active overlay layer
@@ -363,74 +376,32 @@ function layerChange(layerNr) {
     	labelVisibility = false;
         updateLayerVisibility();
     } else {
-        currentLayer = layerNr;
-        currentYear = years[currentLayer][initYearValues[currentLayer]];
-        activeClassification = 0;
-        window.setTimeout("addEqualBreaks(equalBreaksOptions[0], equalBreaksOptions[1], equalBreaksOptions[2])", 1000);
-        activeLayer = layerNr; //setting the new layer
-        updateLayerVisibility();
+        currentDataframe = layerNr; //new
+        getLayerAttributes(); //new
+        colorArray = addEqualBreaksNew(0, autoClassesBreaks, autoClassesStartColor, autoClassesEndColor); //new
+        colorizeLayer(colorArray); //new
+        //currentYear = years[currentLayer][initYearValues[currentLayer]];
+        //activeClassification = 0;
+        //window.setTimeout("addEqualBreaks(equalBreaksOptions[0], equalBreaksOptions[1], equalBreaksOptions[2])", 1000);
+        //activeLayer = layerNr; //setting the new layer
+        //updateLayerVisibility();
         updateTimeslider();
     }
 }
 
 function yearChange(value){
-    currentYearLabel = timesliderLabelValues[currentLayer][value];
-    document.getElementById("timesliderValue").innerHTML = currentYearLabel;
-    currentYear = years[currentLayer][value];
+    yearIndex = value;
+    currentYearLabel = getYearsArray(currentDataframe)[value];
+    console.log("aktuell: " + currentLayer);
+    document.getElementById("timesliderValue").innerHTML = layerAttributes[1] + ": " + currentYearLabel;
+    currentYear = currentYearLabel;
     if (activeClassification == 1){
-        colorChange();
+        colorizeLayer(createColorArrayByLegendArray(legendArray));
     }
     else {
-        addEqualBreaks(equalBreaksOptions[0], equalBreaksOptions[1], equalBreaksOptions[2]);
+        colorArray = addEqualBreaksNew(value, autoClassesBreaks, autoClassesStartColor, autoClassesEndColor); //new
+        colorizeLayer(colorArray);
     }
-}
-
-/**
- * method for automatic (equal) breaks
- */
-function addEqualBreaks(number, colorStart, colorEnd) {
-    equalBreaksOptions[0] = number; //number of breaks
-    equalBreaksOptions[1] = colorStart;
-    equalBreaksOptions[2] = colorEnd;
-    activeClassification = 2; // 2 = automatic
-
-    //maximum of 12 classes:
-	if (number > 11){
-		number = 11;
-		document.getElementById("equalBreaksText").value = 12;
-	}
-
-    var breakStep = (maxValues[activeLayer] - minValues[activeLayer]) / (number + 1); //size of one class
-    var colorArray = generateColor(colorStart, colorEnd, number); //generates an array of an color gradient
-
-    symbol = new esri.symbol.SimpleFillSymbol();
-    symbol.setColor(new dojo.Color([150, 150, 150, 0.75]));
-    var renderer = new esri.renderer.ClassBreaksRenderer(symbol, attributeFields[activeLayer] + currentYear);
-    
-    for (var i = 0; i <= number; i++) {
-        var min = minValues[activeLayer] + i * breakStep;
-        var max = minValues[activeLayer] + (i + 1) * breakStep;
-        renderer.addBreak({
-            minValue: min,
-            maxValue: max,
-            symbol: new esri.symbol.SimpleFillSymbol().setColor(dojo.colorFromHex('#' + colorArray[i])),
-            label: min + " - " + max
-        });
-    }
-
-    //delete the entrys of the manual classification:
-	var breaksList = document.getElementById("Breaks");
-	breaksList.innerHTML = '';
-	breakCount = 0;
-    
-    //following from the ArcGIS Server JS-API:
-    var optionsArray = [];
-    var drawingOptions = new esri.layers.LayerDrawingOptions();
-    drawingOptions.renderer = renderer;
-    optionsArray[activeLayer] = drawingOptions;
-    operationalLayer.setLayerDrawingOptions(optionsArray);
-
-    legend.refresh();
 }
 
 /**
@@ -456,6 +427,14 @@ function updateLayerVisibility(){
 		}
 	}
 	legend.refresh();
+}
+
+function getLayerAttributes(){
+    for (var i = allLayerAttributes.length - 1; i >= 0; i--) {
+        if (allLayerAttributes[i][0] == currentDataframe){
+            layerAttributes = allLayerAttributes[i];
+        }
+    };
 }
 
 

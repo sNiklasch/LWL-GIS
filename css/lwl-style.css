@@ -1,3 +1,7 @@
+img {
+	border: 0;
+}
+
 .icons {
 	background: #9cb5e6;
 	background-color:#ededed;
@@ -228,4 +232,16 @@ font-weight:bold;
 	z-index: 2;
 	opacity: 0.5;
 	height: 25px;
+}
+
+#legend_msg {
+	display: none;
+}
+
+.esriLegendServiceLabel {
+	display: none;
+}
+
+.esriLegendLayerLabel {
+	/*display: none;*/
 }

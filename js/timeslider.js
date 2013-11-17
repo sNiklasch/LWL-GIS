@@ -4,31 +4,36 @@ var timeslider;
  * function to update the visibility and values of the timeslider if a Layer has changed
  */
 function updateTimeslider(){	
-	if (years[currentLayer].length > 1){
+	if (getYearsArray(currentDataframe).length > 1){
 		document.getElementById("timesliderDiv").style.display = "block";
 		timeslider.set({
 			name: "timeslider",
 	    	minimum:0, 
-	    	maximum:years[currentLayer].length-1, 
+	    	maximum:getYearsArray(currentDataframe).length-1, 
 	    	onChange:function(val){ yearChange(val) }, 
-	    	value:initYearValues[currentLayer], 
-	    	discreteValues:years[currentLayer].length,
+	    	value:0, 
+	    	discreteValues:getYearsArray(currentDataframe).length,
 	    	showButtons:true, 
 	    	intermediateChanges:true, 
 	    	slideDuration:0,
 	    	style:{width:"20%", height:"20px"} 
 		})
-		document.getElementById("timesliderValue").innerHTML = timesliderLabelValues[currentLayer][initYearValues[currentLayer]];
-		document.getElementById("timesliderMinLabel").innerHTML = timesliderMinLabelValues[currentLayer];
-		document.getElementById("timesliderMaxLabel").innerHTML = timesliderMaxLabelValues[currentLayer];
+		document.getElementById("timesliderValue").innerHTML = layerAttributes[1] + ": " + getYearsArray(currentDataframe)[0];
+		document.getElementById("timesliderMinLabel").innerHTML = getYearsArray(currentDataframe)[0];
+		document.getElementById("timesliderMaxLabel").innerHTML = getYearsArray(currentDataframe)[getYearsArray(currentDataframe).length-1];
 	}
-	else if (years[currentLayer].length == 1){
+	else if (getYearsArray(currentDataframe).length == 1){
 		document.getElementById("timesliderDiv").style.display = "none";
-		document.getElementById("timesliderValue").innerHTML = timesliderLabelValues[currentLayer][0];
+		if (getYearsArray(currentDataframe)[0] == ""){
+			document.getElementById("timesliderValue").innerHTML = layerAttributes[1];
+		}
+		else {
+			document.getElementById("timesliderValue").innerHTML = layerAttributes[1] + ": " + getYearsArray(currentDataframe)[0];
+		}
 	}
 	else {
 		document.getElementById("timesliderDiv").style.display = "none";
-		document.getElementById("timesliderValue").innerHTML = "";
+		document.getElementById("timesliderValue").innerHTML = layerAttributes[1];
 	}
 }
 
@@ -40,15 +45,15 @@ function createTimeslider(){
 		timeslider = new HorizontalSlider({
 			name: "timeslider",
 	    	minimum:0, 
-	    	maximum:years[currentLayer].length-1, 
+	    	maximum:getYearsArray(currentDataframe).length-1, 
 	    	onChange:function(val){ yearChange(val) }, 
-	    	value:initYearValues[currentLayer], 
-	    	discreteValues:years[currentLayer].length,
+	    	value:0, 
+	    	discreteValues:getYearsArray(currentDataframe).length,
 	    	showButtons:true, 
 	    	intermediateChanges:true, 
 	    	slideDuration:0,
 	    	style:{width:"20%", height:"20px"} 
 		}, "timeslider");
 	});
-	document.getElementById("timesliderValue").innerHTML = timesliderLabelValues[currentLayer][initYearValues[currentLayer]];
+	document.getElementById("timesliderValue").innerHTML = layerAttributes[1] + ": " + getYearsArray(currentDataframe)[0];
 }

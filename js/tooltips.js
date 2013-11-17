@@ -48,19 +48,19 @@ function addTooltips() {
     //Migrationen Layer
     new dijit.Tooltip({
         connectId: ["migrationen_gesamtInfo"],
-        label: "Migrationen der gesamten<br>Bevölkerung<br><b>Einheit: </b>&permil;",
+        label: "Migrationen der gesamten<br>Bevölkerung (Jahre 2007 - 2011)<br><br><b>Einheit: </b>&permil;",
         showDelay: 0
     });
     //Migrationen Nichtdeutsch Layer
     new dijit.Tooltip({
         connectId: ["migrationen_nichtdeutschInfo"],
-        label: "Migrationen von Nichtdeutschen<br><b>Einheit: </b>&permil;",
+        label: "Migrationen von Nichtdeutschen<br>der Jahre 2007 - 2011<br><b>Einheit: </b>&permil;",
         showDelay: 0
     });
     //Pflegebeduerftige Layer
     new dijit.Tooltip({
         connectId: ["pflegebeduerftigeInfo"],
-        label: "Antel der Pflegebedürftigen<br>im Jahr 2011<br><b>Einheit: </b>&permil;",
+        label: "Anteil der Pflegebedürftigen<br>im Jahr 2011<br><b>Einheit: </b>&permil;",
         showDelay: 0
     });
     //Pflegeeinrichtungen Layer

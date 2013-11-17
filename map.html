@@ -35,11 +35,15 @@
     </script>
     <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
     <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    <script src="js/lwldatajson.js" type="text/javascript"></script>
     <script src="js/windowHandling.js" type="text/javascript"></script>
+    <script src="js/dataHandling.js" type="text/javascript"></script>
     <script src="js/timeslider.js" type="text/javascript"></script>
+    <script src="js/classifications.js" type="text/javascript"></script>
     <script src="js/tooltips.js" type="text/javascript"></script>
     <script src="js/data.js" type="text/javascript"></script>
     <script src="js/loading.js" type="text/javascript"></script>
+    <script src="js/legend.js" type="text/javascript"></script>
     <!-- -->
     <script type="text/javascript" src="js/individualBreaks.js">
     </script>
@@ -74,7 +78,9 @@
   <div id="header" class="lwl-cd">
   <div id="headercontent">
   <div id="quadrat_claim_logo">
-    <div id="lwl-logo"> <a href="http://www.lwl.org/" target="_blank"><img id="quadrat" src="http://www.lwl.org/nozope/LWL/skin11/refresh/logo.png" width="136" height="30" alt="LWL" /></a> </div>
+    <div id="lwl-logo"> <a href="http://www.lwl.org/" target="_blank"><img id="quadrat" src="http://www.lwl.org/nozope/LWL/skin11/refresh/logo.png" width="136" height="30" alt="LWL" /></a>
+      <!--a href="#" onclick="">Test</a-->
+    </div>
       <div id="hauptmenue">
       <!--<ul>
         <li><a href="/">LWL-Startseite</a></li>
@@ -89,14 +95,17 @@
     
   </div>
     <div id="lwl-claim"> 
-      <a href="http://www.lwl.org/LWL/Kultur/geko/"><img id="logo" src="http://www.lwl.org/nozope/LWL/skin11/refresh/claim.png" width="265" height="20" alt="Für die Menschen. Für Westfalen-Lippe" title="Für die Menschen. Für Westfalen-Lippe"></a> 
+      <img id="logo" src="http://www.lwl.org/nozope/LWL/skin11/refresh/claim.png" width="265" height="20" alt="Für die Menschen. Für Westfalen-Lippe" title="Für die Menschen. Für Westfalen-Lippe">
     </div></div>
  </div>
   
   <!-- Timeslider -->
   <div id="timesliderValue"></div>
-  <div id="timesliderDiv"><div id="timesliderMinLabel"></div><div id="timeslider"></div><div id="timesliderMaxLabel"></div>
-    </div>
+  <div id="timesliderDiv">
+    <div id="timesliderMinLabel"></div>
+    <div id="timeslider"></div>
+    <div id="timesliderMaxLabel"></div>
+  </div>
 
     <!-- Layer selection menu -->
     <div id="content1" style="position: absolute; width: 100%; height: 100%;">
@@ -128,25 +137,25 @@
                 Demographische Daten
               </div>
               <div id="demographischPane" class="menuPaneContent">
-                  <input type="radio" id="einwohnerCheck" name="Layer" value="Einwohner" checked=true onchange="layerChange(fIDeinwohner)">
+                  <input type="radio" id="einwohnerCheck" name="Layer" value="Einwohner" checked=true onchange="layerChange(datenEinwohner)">
                   Einwohner 
                   <a id="einwohnerInfo" style="cursor: help;">
                     <img src="images/Help_sm.png">
                   </a>
                 <br>
-                  <input type="radio" id="einwohner_entwicklungCheck" name="Layer" value="Einwohner-Entwicklung" checked=true onchange="layerChange(fIDeinwohner_entwicklung)">
+                  <input type="radio" id="einwohner_entwicklungCheck" name="Layer" value="Einwohner-Entwicklung" checked=true onchange="layerChange(datenEinwohnerEntwicklung)">
                   Einwohner-Entwicklung 
                   <a id="einwohner_entwicklungInfo" style="cursor: help;">
                     <img src="images/Help_sm.png">
                   </a>
                 <br>
-                  <input type="radio" id="bevoelkerungsdichteCheck" name="Layer" value="Bev&ouml;lkerungsdichte" checked=true onchange="layerChange(fIDbevoelkerungsdichte)">
+                  <input type="radio" id="bevoelkerungsdichteCheck" name="Layer" value="Bev&ouml;lkerungsdichte" checked=true onchange="layerChange(datenBevoelkerungsdichte)">
                   Bev&ouml;lkerungsdichte 
                   <a id="bevoelkerungsdichteInfo" style="cursor: help;">
                     <img src="images/Help_sm.png">
                   </a>
                 <br>
-                  <input type="radio" id="altersgruppenCheck" name="Layer" value="Altersgruppen" checked=true onchange="layerChange(fIDaltersgruppen)">
+                  <input type="radio" id="altersgruppenCheck" name="Layer" value="Altersgruppen" checked=true onchange="layerChange(datenAltersgruppen)">
                   Altersgruppen 
                   <a id="altersgruppenInfo" style="cursor: help;">
                     <img src="images/Help_sm.png">
@@ -158,26 +167,26 @@
                   <a id="altersgruppenDiagramme2011Info" style="cursor: help;">
                     <img src="images/Help_sm.png">
                 <br>
-                  <input type="radio" id="geburtenrateCheck" name="Layer" value="Geburtenrate" checked=true onchange="layerChange(fIDgeburtenrate)">
+                  <input type="radio" id="geburtenrateCheck" name="Layer" value="Geburtenrate" checked=true onchange="layerChange(datenGeburtenrate)">
                   Geburtenrate 
                   <a id="geburtenrateInfo" style="cursor: help;">
                     <img src="images/Help_sm.png">
                   </a>
                 <br>
-                  <input type="radio" id="sterberateCheck" name="Layer" value="Sterberate" checked=true onchange="layerChange(fIDsterberate)">
+                  <input type="radio" id="sterberateCheck" name="Layer" value="Sterberate" checked=true onchange="layerChange(datenSterberate)">
                   Sterberate 
                   <a id="sterberateInfo" style="cursor: help;">
                     <img src="images/Help_sm.png">
                   </a>
                 <br>
-                  <input type="radio" id="migrationen_gesamtCheck" name="Layer" value="Migrationen Gesamt" checked=true onchange="layerChange(fIDmigrationen_gesamt)">
+                  <input type="radio" id="migrationen_gesamtCheck" name="Layer" value="Migrationen Gesamt" checked=true onchange="layerChange(datenMigrationenGesamt)">
                   Migrationen Gesamt 
                   <a id="migrationen_gesamtInfo" style="cursor: help;">
                     <img src="images/Help_sm.png">
                   </a>
                 <br>
-                  <input type="radio" id="migrationen_nichtdeutschCheck" name="Layer" value="Migrationen Nichtdeutsch" checked=true onchange="layerChange(fIDmigrationen_nichtdeutsch)">
-                  Migrationen Nichtdeutsch 
+                  <input type="radio" id="migrationen_nichtdeutschCheck" name="Layer" value="Migrationen Nichtdeutsch" checked=true onchange="layerChange(datenMigrationenNichtdeutsche)">
+                  Migrationen Nichtdeutsche 
                   <a id="migrationen_nichtdeutschInfo" style="cursor: help;">
                     <img src="images/Help_sm.png">
                   </a>
@@ -189,49 +198,49 @@
                 Soziographische Daten
               </div>
               <div id="soziographischPane" class="menuPaneContent">
-                  <input type="radio" id="pflegebeduerftigeCheck" name="Layer" value="Pflegebed&uuml;rftige" checked=true onchange="layerChange(fIDpflegebeduerftige)">
+                  <input type="radio" id="pflegebeduerftigeCheck" name="Layer" value="Pflegebed&uuml;rftige" checked=true onchange="layerChange(datenPflegebeduerftige)">
                   Pflegebed&uuml;rftige 
                   <a id="pflegebeduerftigeInfo" style="cursor: help;">
                     <img src="images/Help_sm.png">
                   </a>
                 <br>
-                  <input type="radio" id="pflegeeinrichtungenCheck" name="Layer" value="Pflegeeinrichtungen" checked=true onchange="layerChange(fIDpflegeeinrichtungen)">
+                  <input type="radio" id="pflegeeinrichtungenCheck" name="Layer" value="Pflegeeinrichtungen" checked=true onchange="layerChange(datenPflegeeinrichtungen)">
                   Pflegeeinrichtungen 
                   <a id="pflegeeinrichtungenInfo" style="cursor: help;">
                     <img src="images/Help_sm.png">
                   </a>
                 <br>
-                  <input type="radio" id="haushaltsgroessenCheck" name="Layer" value="Haushaltsgr&ouml;ssen" checked=true onchange="layerChange(fIDhaushaltsgroessen)">
+                  <input type="radio" id="haushaltsgroessenCheck" name="Layer" value="Haushaltsgr&ouml;ssen" checked=true onchange="layerChange(datenHaushaltsgroesse)">
                   Haushaltsgr&ouml;ssen 
                   <a id="haushaltsgroessenInfo" style="cursor: help;">
                     <img src="images/Help_sm.png">
                   </a>
                 <br>
-                  <input type="radio" id="single_haushalteCheck" name="Layer" value="Single-Haushalte" checked=true onchange="layerChange(fIDsingle_haushalte)">
+                  <input type="radio" id="single_haushalteCheck" name="Layer" value="Single-Haushalte" checked=true onchange="layerChange(datenSingleHaushalte)">
                   Single-Haushalte 
                   <a id="single_haushalteInfo" style="cursor: help;">
                     <img src="images/Help_sm.png">
                   </a>
                 <br>
-                  <input type="radio" id="nichtdeutscheCheck" name="Layer" value="Nichtdeutsche" checked=true onchange="layerChange(fIDnichtdeutsche)">
+                  <input type="radio" id="nichtdeutscheCheck" name="Layer" value="Nichtdeutsche" checked=true onchange="layerChange(datenNichtdeutsche)">
                   Nichtdeutsche 
                   <a id="nichtdeutscheInfo" style="cursor: help;">
                     <img src="images/Help_sm.png">
                   </a>
                 <br>
-                  <input type="radio" id="migrationshintergrundCheck" name="Layer" value="Migrationshintergrund" checked=true onchange="layerChange(fIDmigrationshintergrund)">
+                  <input type="radio" id="migrationshintergrundCheck" name="Layer" value="Migrationshintergrund" checked=true onchange="layerChange(datenMigranten)">
                   Migrationshintergrund 
                   <a id="migrationshintergrundInfo" style="cursor: help;">
                     <img src="images/Help_sm.png">
                   </a>
                 <br>
-                  <input type="radio" id="einkommenCheck" name="Layer" value="Einkommen" checked=true onchange="layerChange(fIDeinkommen)">
+                  <input type="radio" id="einkommenCheck" name="Layer" value="Einkommen" checked=true onchange="layerChange(datenEinkommen)">
                   Einkommen 
                   <a id="einkommenInfo" style="cursor: help;">
                     <img src="images/Help_sm.png">
                   </a>
                 <br>
-                  <input type="radio" id="konfessionenCheck" name="Layer" value="Konfessionen" checked=true onchange="layerChange(fIDkonfessionen)">
+                  <input type="radio" id="konfessionenCheck" name="Layer" value="Konfessionen" checked=true onchange="layerChange(datenKonfessionen)">
                   Konfessionen 
                   <a id="konfessionenInfo" style="cursor: help;">
                     <img src="images/Help_sm.png">
@@ -245,26 +254,7 @@
                   </a>
               </div>
             </form>
-          </p><!--
-          <form>
-            <div align="left" style="font-size:1em">
-              <br>
-              <b>
-                Nur Diagramme:
-              </b>
-            </div>
-            <input type="checkbox" id="religionChk" name="Layer" value="Religion" onchange="layerChange(fIDreligion)">
-            Religion 
-            <a id="religionInfo" style="cursor: help;">
-              <img src="images/Help_sm.png">
-            </a>
-            <br>
-            <input type="checkbox" id="pflegehilfeChk" name="Layer" value="Pflegehilfe" onchange="layerChange(fIDleistungsempfaenger)">
-            Pflegehilfe 
-            <a id="pflegehilfeInfo" style="cursor: help;">
-              <img src="images/Help_sm.png">
-            </a>
-          </form>-->
+          </p>
           <br>
           <div id="slider1" data-dojo-type="dijit.form.HorizontalSlider" data-dojo-props='name:"horizontal1", onChange:function(val){ setFeatureLayerOpacity(val) }, value:1, maximum:1, minimum:0, pageIncrement:100, showButtons:true, intermediateChanges:true, slideDuration:500, style:{width:"50%", height:"20px"} '>
             <div align="center" style="font-size:0.75em">
@@ -278,7 +268,7 @@
                 Zusätzliche Ebenen:
               </b>
               <br>
-              <input type="checkbox" id="baseMapChk" name="Layer" value="Basemap" onchange="layerChange(50)">
+              <input type="checkbox" id="baseMapChk" name="Layer" value="Basemap" onchange="layerChange(50)" autocomplete="off">
               Hintergrundkarte einblenden
               <br>
               <input type="checkbox" id="labelChk" name="Layer" value="Label" onchange="layerChange(60)" checked="checked">
@@ -319,7 +309,7 @@
             <a href="javascript:addIndivBreakField()">
               <img src="images/plus20.png">
             </a>
-            <input id="indivBreaksApply" type="button" onclick="colorChange()" value="Anwenden">
+            <input id="indivBreaksApply" type="button" onclick="addIndividualBreaks()" value="Anwenden">
             </div>
           <div class="menuPane-head subMenuPane" onClick="switchClassificationPane('automatic')" style="font-style:italic;">
             <img id="arrowAutomatic" class="submenuArrow" src="images/arrow20.png">
@@ -353,8 +343,8 @@
                 </td>
               </tr>
             </table>
-            <input type="button" onclick="javascript:addEqualBreaks(parseInt(document.getElementById('equalBreaksText').value)-1, 
-            document.getElementById('colorPickerValueOne').value, document.getElementById('colorPickerValueTwo').value)" value="Anwenden">
+            <input type="button" onclick="javascript:colorizeLayer(addEqualBreaksNew(yearIndex, parseInt(document.getElementById('equalBreaksText').value)-1, 
+            document.getElementById('colorPickerValueOne').value, document.getElementById('colorPickerValueTwo').value))" value="Anwenden">
             <input id="colorPickerValueOne" style="width:0px; visibility:hidden;">
             <input id="colorPickerValueTwo" style="width:0px; visibility:hidden;">
             <table id="Breaks">
@@ -377,6 +367,9 @@
           <img src="images/close12.png">
         </a>
         <div id="legendDiv">
+          Legende
+          <div id="myLegend">
+          </div>
           <div id="legend">
           </div>
         </div>
@@ -428,13 +421,14 @@
         </a>
         <div style="font-size: x-large;">Herzlich willkommen beim WebGIS Westfalen!</div>
         <br><br>
-        Mit diesem interbasierten Geo-Informationssystem (GIS) lassen sich im Handumdrehen übersichtliche thematische Karten über den Raum Westfalen erstellen.
+        Mit diesem internetbasierten Geo-Informationssystem (WebGIS) lassen sich im Handumdrehen übersichtliche thematische Karten über den Raum Westfalen erstellen.
         <br><br>
-        WebGIS Westfalen eignet sich besonders für den modernen Erdkundeunterricht, um hier den Schülerinnen und Schülern räumliche Disparitäten zwischen den insgesamt 27 Kreisen bzw. kreisfreien Städten Westfalens mit nur wenigen Schritten näherzubringen – egal ob am PC, via Beamer oder Whiteboard.
+        WebGIS Westfalen eignet sich besonders für den modernen Erdkundeunterricht (<a href="http://lwl.org" style="color:lightgrey;"target="_blank">Unterrichtsmaterialien</a>), um hier den Schülerinnen und Schülern räumliche Disparitäten zwischen den insgesamt 27 Kreisen bzw. kreisfreien Städten Westfalens mit nur wenigen Schritten näherzubringen – egal ob am PC, Beamer, Whiteboard, Tablet oder Smartphone.
         <br><br>
-        WebGIS Westfalen ist ein Kooperationsprojekt der <a href="http://www.geographische-kommission.de/" style="color:lightgrey;"target="_blank">Geographischen Kommission für Westfalen</a> im Landschaftsverband Westfalen-Lippe und des Instituts für Geoinformatik der Universität Münster. Datenquelle sind Statistiken des Landesbetriebes Information und Technik Nordrhein-Westfalen (IT.NRW). Die heute im WebGIS Westfalen vorhandenen Inhalte werden in Zukunft schrittweise um weitere Themen ergänzt.
+        WebGIS Westfalen ist ein Kooperationsprojekt der <a href="http://www.geographische-kommission.de/" style="color:lightgrey;"target="_blank">Geographischen Kommission für Westfalen</a> im <a href="http://lwl.org" style="color:lightgrey;"target="_blank">Landschaftsverband Westfalen-Lippe</a> und des <a href="http://gi-at-school.de" style="color:lightgrey;"target="_blank">GI@School Labs</a> am <a href="http://ifgi.uni-muenster.de" style="color:lightgrey;"target="_blank">Institut für Geoinformatik</a> der <a href="http://www.uni-muenster.de" style="color:lightgrey;"target="_blank">Universität Münster</a>. Datenquelle sind Statistiken des Landesbetriebes Information und Technik Nordrhein-Westfalen (IT.NRW). Die heute im WebGIS Westfalen vorhandenen Inhalte werden in Zukunft schrittweise um weitere Themen ergänzt.
         <br><br>
         Die Geographische Kommission für Westfalen dankt der Manfred-Engel-Stiftung für die finanzielle Unterstützung dieses Projektes.
+        
       </div>
 
 
