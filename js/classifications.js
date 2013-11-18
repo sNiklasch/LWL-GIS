@@ -24,12 +24,7 @@ function addEqualBreaksNew(yearIndex, number, colorStart, colorEnd) {
     for (var i = 0; i < legendArray.length; i++) {
         legendArray[i] = new Array(3);
         legendArray[i][0] = colorArray[i];
-        if (i == 0){
-            legendArray[i][1] = minmax[0] + (breakStep * i);
-        }
-        else {
-            legendArray[i][1] = minmax[0] + (breakStep * i) + 1;
-        }
+        legendArray[i][1] = minmax[0] + (breakStep * i);
         legendArray[i][2] = minmax[0] + (breakStep * (i + 1));
     };
 

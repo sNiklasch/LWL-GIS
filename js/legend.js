@@ -31,6 +31,10 @@ function addLegendItems(classesArray){
 		dash.innerHTML = "&ndash;";
 		listItem.appendChild(dash);
 
+		var less = document.createElement("td");
+		if (i != classesArray.length - 1){less.innerHTML = "<"};
+		listItem.appendChild(less);
+		
 		var maxField = document.createElement("td");
 		maxField.innerHTML = classesArray[i][2];
 		listItem.appendChild(maxField);
