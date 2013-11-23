@@ -40,15 +40,10 @@ var diagramLayer; // the active clickable diagram layer
 var printCounter = 0; //counter for the printer widget
 
 var map, queryTask, query, template, initExtent, maxExtent, operationalLayer, featureLayer, currentYearLabel, year, colorArray;
-var currentDataframe = [
-  {
-    "Name":"Jahre",
-    "Data": [""]
-  }
-];
+var currentDataframe = datenEinwohner;
 var yearIndex = 0;
-var autoClassesStartColor = '000000';
-var autoClassesEndColor = 'ffffff';
+var autoClassesStartColor = 'FFF880';
+var autoClassesEndColor = 'EA3313';
 var autoClassesBreaks = 3;
 var legendArray = [];
 var layerAttributes = ["", "Webgis Westfalen"];
@@ -56,7 +51,7 @@ var layerAttributes = ["", "Webgis Westfalen"];
 //the MapServer for the whole app:
 var mapServer = "http://giv-learn2.uni-muenster.de/ArcGIS/rest/services/LWL/Legende/MapServer";
 //the Server for the feature Layer:
-var feauterLayerServer = "https://services1.arcgis.com/W47q82gM5Y2xNen1/arcgis/rest/services/westfalen_kreise/FeatureServer";
+var featureLayerServer = "https://services1.arcgis.com/W47q82gM5Y2xNen1/arcgis/rest/services/westfalen_kreise/FeatureServer";
 
 //LayerIDs:
 var fIDkreisnamen = 0;
@@ -200,7 +195,7 @@ function init() {
     //Check if split-screen is active:
     onLoadCheck();
 	
-	initLabels();
+	initLayers();
     createTimeslider();
     updateTimeslider();
     fullExtent();
@@ -210,15 +205,16 @@ function init() {
 * Diese Funktion initialisiert den operationalLayer, welcher die gesamten Layer vom Server enthält.
 * Zusätzlich wird beim ausführen der Funktion der operationalLayer zur map hinzugefügt und der Layer mit den Kreisnamen auf sichtbar gestellt.
 */
-function initLabels(){    
+function initLayers(){    
     //Set labels visible on load:
-    featureLayer = new esri.layers.FeatureLayer(feauterLayerServer + "/0", {
+    featureLayer = new esri.layers.FeatureLayer(featureLayerServer + "/0", {
             infoTemplate: new esri.InfoTemplate("&nbsp;", "${Kreisname}"),
             mode: esri.layers.FeatureLayer.MODE_ONDEMAND,
             outFields: ["Kreisname"]
           });
     map.addLayer(featureLayer, 0);
-    colorizeLayer(defaultClassification);
+    colorArray = addEqualBreaksNew(0, autoClassesBreaks, autoClassesStartColor, autoClassesEndColor); //new
+    colorizeLayer(colorArray); //new
     operationalLayer = new esri.layers.ArcGISDynamicMapServiceLayer(mapServer, { "id": "collection" });
     //document.getElementById("labelChk").checked = true;
     dojo.connect(featureLayer, "onUpdateStart", showLoadingIcon);
