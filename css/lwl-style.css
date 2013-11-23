@@ -90,6 +90,11 @@ font-weight:bold;
 	margin-left: -150px;
 }
 
+#loadingImage {
+	margin-top: 15px;
+	margin-bottom: 15px;
+}
+
 #indivBreaksApply{
 	position: absolute;
 	right: 50%;
@@ -106,14 +111,14 @@ font-weight:bold;
 	border-radius: 5px;
 	text-align: center;
 	display: none;
-	max-height: 60%;
+	max-height: 80%;
 	overflow: auto;
 }
 
 #infoWindow {
-	top:20%;
-	left: 20%;
-	right: 20%;
+	top: 10%;
+	left: 10%;
+	right: 10%;
 }
 
 #welcomeBackground {
