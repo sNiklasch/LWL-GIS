@@ -221,7 +221,7 @@ function initLayers(){
     dojo.connect(featureLayer, "onUpdateEnd", hideLoadingIcon);
     map.addLayer(operationalLayer, 1);
     operationalLayer.setVisibleLayers([fIDkreisnamen]);
-    window.setTimeout("addEqualBreaks(equalBreaksOptions[0], equalBreaksOptions[1], equalBreaksOptions[2])", 1000);
+    //window.setTimeout("addEqualBreaks(equalBreaksOptions[0], equalBreaksOptions[1], equalBreaksOptions[2])", 1000);
 }
 
 /**

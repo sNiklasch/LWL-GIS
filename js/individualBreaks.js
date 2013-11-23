@@ -1,6 +1,6 @@
 function addIndivBreakField() {
-    var initialFrom = minValues[activeLayer];
-    var initialTo = maxValues[activeLayer];
+    var initialFrom = getMinMax(currentDataframe)[0];
+    var initialTo = getMinMax(currentDataframe)[1];
 
     if (breakCount > 0) {
     	//Wenn ein Feld exisitert, wird in die Grenzen des neuen Feldes die obere Grenze eingetragen:
