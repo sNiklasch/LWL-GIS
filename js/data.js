@@ -225,20 +225,21 @@ var defaultClassification = [
 ];
 
 var allLayerAttributes = [
-	[datenEinwohner, "Einwohner"],
-	[datenEinwohnerEntwicklung, "Einwohnerentwicklung"],
-	[datenBevoelkerungsdichte, "Bevölkerungsdichte"],
-	[datenAltersgruppen, "Altersgruppen 2011"],
-	[datenGeburtenrate, "Geburtenrate"],
-	[datenSterberate, "Sterberate"],
-	[datenMigrationenGesamt, "Migrationen (gesamt)"],
-	[datenMigrationenNichtdeutsche, "Migrationen (Nichtdeutsche)"],
-	[datenPflegebeduerftige, "Pflegebedürftige"],
-	[datenPflegeeinrichtungen, "Pflegeeinrichtungen"],
-	[datenHaushaltsgroesse, "Haushaltsgröße"],
-	[datenSingleHaushalte, "Single-Haushalte"],
-	[datenNichtdeutsche, "Nichtdeutsche"],
-	[datenMigranten, "Migranten"],
-	[datenEinkommen, "Einkommen"],
-	[datenKonfessionen, "Konfessionen 2008 - 2010"]
+	//[dataset, "Title (String)", "Value (String)", "Legend-description"]
+	[datenEinwohner, "Einwohner", "", ""],
+	[datenEinwohnerEntwicklung, "Einwohnerentwicklung", "&#037;", ""],
+	[datenBevoelkerungsdichte, "Bevölkerungsdichte", "", "Einheit: Einwohner pro km&sup2;"],
+	[datenAltersgruppen, "Altersgruppen 2011", "&#037;", ""],
+	[datenGeburtenrate, "Geburtenrate", "&permil;", ""],
+	[datenSterberate, "Sterberate", "&permil;", ""],
+	[datenMigrationenGesamt, "Migrationen (gesamt)", "&permil;", ""],
+	[datenMigrationenNichtdeutsche, "Migrationen (Nichtdeutsche)", "&permil;", ""],
+	[datenPflegebeduerftige, "Pflegebedürftige", "&permil;", ""],
+	[datenPflegeeinrichtungen, "Pflegeeinrichtungen", "", "je 100000 Einwohner"],
+	[datenHaushaltsgroesse, "Haushaltsgröße", "Personen", ""],
+	[datenSingleHaushalte, "Single-Haushalte", "&#037;", ""],
+	[datenNichtdeutsche, "Nichtdeutsche", "&#037;", ""],
+	[datenMigranten, "Migranten", "&#037;", ""],
+	[datenEinkommen, "Einkommen", "&euro;", "&euro; je Einw."],
+	[datenKonfessionen, "Konfessionen 2008 - 2010", "&#037;", ""]
 ];

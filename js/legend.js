@@ -1,4 +1,5 @@
 function addLegendItems(classesArray){
+	document.getElementById("legendTitle").innerHTML = "<div style='font-size:1.5em;'>Legende</div>" + getLegendAttributes(currentDataframe, 3);
 	var legendDiv = document.getElementById("myLegend");
 	legendDiv.innerHTML = "";
 	var legendList = document.createElement("table");
@@ -40,11 +41,19 @@ function addLegendItems(classesArray){
 		listItem.appendChild(maxField);
 
 		var unit = document.createElement("td");
-		unit.innerHTML = "Einheit";
+		unit.innerHTML = getLegendAttributes(currentDataframe, 2);
 		listItem.appendChild(unit);
 
 		legendList.appendChild(listItem);
 	}
 
 	legendDiv.appendChild(legendList);
+}
+
+function getLegendAttributes(dataframe, attribute){
+	for (var i = allLayerAttributes.length - 1; i >= 0; i--) {
+		if (allLayerAttributes[i][0] == dataframe){
+			return allLayerAttributes[i][attribute];
+		}
+	};
 }

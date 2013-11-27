@@ -221,6 +221,7 @@ function initLayers(){
     dojo.connect(featureLayer, "onUpdateEnd", hideLoadingIcon);
     map.addLayer(operationalLayer, 1);
     operationalLayer.setVisibleLayers([fIDkreisnamen]);
+    getLayerAttributes();
     //window.setTimeout("addEqualBreaks(equalBreaksOptions[0], equalBreaksOptions[1], equalBreaksOptions[2])", 1000);
 }
 
@@ -367,9 +368,11 @@ function layerChange(layerNr) {
         //handling checkbox for the operationalLayer
     } else if (layerNr == 60 && (document.getElementById("labelChk").checked)) {
     	labelVisibility = true;
+        console.log("Labels einblenden" + labelVisibility);
         updateLayerVisibility();
     } else if (layerNr == 60 && !(document.getElementById("labelChk").checked)) {
     	labelVisibility = false;
+        console.log("Labels ausblenden" + labelVisibility);
         updateLayerVisibility();
     } else {
         currentDataframe = layerNr; //new
@@ -405,24 +408,25 @@ function yearChange(value){
  * should be called everytime, when "labelVisibility", "activeDiagramLayer" or "activeLayer" changes
  */
 function updateLayerVisibility(){
-	if (labelVisibility == true) {
+	if (labelVisibility) {
 		if (activeDiagramLayer == 0){
-			operationalLayer.setVisibleLayers([fIDkreisnamen, activeLayer]);
+			operationalLayer.setVisibleLayers([fIDkreisnamen]);
 		}
 		else {
-			operationalLayer.setVisibleLayers([fIDkreisnamen, activeLayer, activeDiagramLayer]);
+			operationalLayer.setVisibleLayers([fIDkreisnamen, activeDiagramLayer]);
 		}
-		
+		console.log("Labels sichtbar")
 	}
 	else {
 		if (activeDiagramLayer == 0){
-			operationalLayer.setVisibleLayers([activeLayer]);
+			operationalLayer.setVisibleLayers([2]);
 		}
 		else {
-			operationalLayer.setVisibleLayers([activeLayer, activeDiagramLayer]);
+			operationalLayer.setVisibleLayers([activeDiagramLayer]);
 		}
+        console.log("Labels nicht sichtbar")
 	}
-	legend.refresh();
+	//legend.refresh();
 }
 
 function getLayerAttributes(){

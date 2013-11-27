@@ -243,6 +243,10 @@ font-weight:bold;
 	display: none;
 }
 
+#map_collection {
+	z-index: 1;
+}
+
 .esriLegendServiceLabel {
 	display: none;
 }
