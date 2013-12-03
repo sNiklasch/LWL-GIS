@@ -49,7 +49,7 @@ var legendArray = [];
 var layerAttributes = ["", "Webgis Westfalen"];
 
 //the MapServer for the whole app:
-var mapServer = "http://giv-learn2.uni-muenster.de/ArcGIS/rest/services/LWL/Legende/MapServer";
+var mapServer = "http://giv-learn2.uni-muenster.de/ArcGIS/rest/services/LWL/lwl_data/MapServer";
 //the Server for the feature Layer:
 var featureLayerServer = "https://services1.arcgis.com/W47q82gM5Y2xNen1/arcgis/rest/services/westfalen_kreise/FeatureServer";
 
@@ -59,7 +59,7 @@ var fIDeinwohner = 2;
 var fIDeinwohner_entwicklung = 3;
 var fIDbevoelkerungsdichte = 4;
 var fIDaltersgruppen = 5;
-var fIDaltersgruppen_diagramme_2011 = 6;
+var fIDaltersgruppen_diagramme_2011 = 1;
 var fIDgeburtenrate = 7;
 var fIDsterberate = 8;
 var fIDmigrationen_gesamt = 9;
@@ -72,7 +72,7 @@ var fIDnichtdeutsche = 16;
 var fIDmigrationshintergrund = 17;
 var fIDeinkommen = 18;
 var fIDkonfessionen = 19;
-var fIDkonfessionen_diagramme_20082010 = 20;
+var fIDkonfessionen_diagramme_20082010 = 2;
 
 var activeLayer = 1; // which layer is active at the beginning
 var currentLayer = 1;
