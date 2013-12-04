@@ -339,6 +339,7 @@ function layerChange(layerNr) {
     if (layerNr == fIDaltersgruppen_diagramme_2011 && !(document.getElementById("altersgruppenDiagramme2011Check").checked)) {
         diagramLayer = null;
         activeDiagramLayer = 0;
+        document.getElementById("legendDiagrams").innerHTML = "";
         updateLayerVisibility();
     } else if (layerNr == fIDaltersgruppen_diagramme_2011 && document.getElementById("altersgruppenDiagramme2011Check").checked) {
         document.getElementById("konfessionenDiagramme2008Check").checked = false;
@@ -347,10 +348,12 @@ function layerChange(layerNr) {
             diagramLayer = null;
         }
         activeDiagramLayer = layerNr;
+        document.getElementById("legendDiagrams").innerHTML = "<img src='images/legend_altersklassen.png'></img>";
         updateLayerVisibility();
     } else if (layerNr == fIDkonfessionen_diagramme_20082010 && !(document.getElementById("konfessionenDiagramme2008Check").checked)) {
         diagramLayer = null;
         activeDiagramLayer = 0;
+        document.getElementById("legendDiagrams").innerHTML = "";
         updateLayerVisibility();
     } else if (layerNr == fIDkonfessionen_diagramme_20082010 && document.getElementById("konfessionenDiagramme2008Check").checked) {
         document.getElementById("altersgruppenDiagramme2011Check").checked = false;
@@ -359,6 +362,7 @@ function layerChange(layerNr) {
             diagramLayer = null;
         }
         activeDiagramLayer = layerNr;
+        document.getElementById("legendDiagrams").innerHTML = "<img src='images/legend_konfessionen.png'></img>";
         updateLayerVisibility();
         //handling checkbox for the basemap
     } else if (layerNr == 50 && !(document.getElementById("baseMapChk").checked)) {
