@@ -236,8 +236,61 @@ function fullExtent(){
 
 /**
  * function to set the printer, incl. title and author of the map and export it
- */        
+ */
+function legendToJSON() {
+    var i = 0;
+    var legend = [];
+
+    $('#myLegend table tr').each( function () {
+
+        legend.push(
+                {
+                    "bg" : $(this).children(".legendColorfield").css("background-color"),
+                    "min" : $(this).children("td:nth-of-type(1)").html(),
+                    "l" : $(this).children("td:nth-of-type(3)").html(),
+                    "max" : $(this).children("td:nth-of-type(4)").html()
+                }
+            );
+
+    });
+
+    return legend;
+}
+
 function initPrinter(){
+    console.log("initPrinter called");
+    
+
+    var svg_element = $('#map_gc')[0];
+    var xmlSerializer = new XMLSerializer();
+    var str = xmlSerializer.serializeToString(svg_element);
+    var overlayUrl = $('#map_collection img').attr("src");
+
+    var mapTitle = $('#mapExportTitle').val();
+    var mapAuthor = $('#mapExportAuthor').val();
+    var jsonLegend = legendToJSON();
+
+    $("#exportWarning").html('<img src="images/loading_small.gif" id="loadingImage" alt="loading" />');
+
+    $.ajax({
+        type: "POST",
+        url: "http://giv-learn2.uni-muenster.de/lwl-convert/converter.php",
+        data: { 
+            "svg": str,
+            "overlay": overlayUrl
+         },
+        success: function(data) {
+            response = $.parseJSON(data);
+            console.log("Map printed, id "+response.message);
+            $("#exportWarning").html('<a style="margin:" href="/lwl-convert/printpreview.php?map='+response.message+'&name='+escape(mapAuthor)+'&title='+escape(mapTitle)+'&legend='+escape(JSON.stringify(jsonLegend) )+'" target="_blank">Link zur Druckansicht</a>');
+        },
+        fail: function(data) {
+            console.log("Error printing id "+response.message);
+            $("#exportWarning").html('Beim Erstellen der Druckansicht ist ein Fehler aufgetreten.');
+        }
+    });
+
+    /*
     if (currentYearLabel == "" || currentYearLabel == null){
         exportTitle = document.getElementById("mapExportTitle").value;
     }
@@ -295,6 +348,7 @@ function initPrinter(){
         document.getElementById("exportWarning").innerHTML = '<a href="' + value.url + '" target="_blank">Link zum Dokument</a>';
     });
     document.getElementById("dijit_form_ComboButton_" + printCounter + "_button").click();
+    */
 }
 
 

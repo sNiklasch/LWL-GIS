@@ -1,0 +1,147 @@
+body {
+	font-family: sans-serif;
+}
+
+h1 {
+	text-align: center;
+	font-weight: bold;
+	font-size: 2.5em;
+	padding:0px;
+	margin:0px;
+}
+
+div#logos img {
+	max-height: 120px;
+	max-width: 120px;
+	padding:5px;
+	background-color: #fff;
+}
+
+div#container {
+	text-align: center;
+	width:100%;
+	height:100%;
+}
+
+div#legend img {
+	vertical-align: middle;
+}
+
+div#bottom {
+	position: absolute;
+	left: 0px;
+	bottom: 0px;
+	width: 100%;
+}
+
+div#logos, div#logos {
+	width:40%;
+}
+
+div#spacer {
+	width:15%;
+}
+
+div#bottom #legend,
+div#bottom #spacer,
+div#bottom #logos {
+	display:inline-block;
+}
+
+div#bottom #logos {
+	text-align: right;
+}
+
+div#legend span, div#legend #legendinner {
+	padding:5px;
+	background-color: #fff;
+}
+
+div#info {
+	background-color:#ffff88;
+	text-align: left;
+	padding:15px;
+	margin-bottom: 10px;
+	text-align: justify;
+}
+
+div#lwl-claim img {
+	vertical-align: middle;
+}
+
+/*
+	Anzeige auf Bildschirmen
+*/
+@media screen {
+	html, body {
+		width:600px;
+	}
+
+	h1 {
+		font-size: 2em;
+	}
+
+	img#map {
+		max-width: 600px;
+		max-height: 400px;
+		margin-bottom: 2em;
+		margin-top: 2em;
+	}
+
+	div#bottom {
+		position: relative;
+	}
+
+	div#logos img {
+		max-height: 100px;
+		max-width: 100px;
+	}
+}
+
+/*
+	Druckansicht
+*/
+@media print {
+	div#info {
+		display:none;
+	}
+	html, body {
+		height: 99%;
+		width: 99%;
+	}
+}
+
+/*
+	Druckansicht hochkant
+*/
+@media print and (orientation: portrait) {
+	img#map {
+		max-width: 90%;
+		max-height: 90%;
+	}
+
+	div#bottom {
+		position: relative;
+	}
+}
+
+/*
+	Druckansicht quer
+*/
+@media print and (orientation: landscape) {
+	img#map {
+		height: 80%;
+	}
+
+	div#legend {
+		position: absolute;
+		left: 0px;
+		bottom: 0px;
+	}
+
+	div#logos {
+		position: absolute;
+		bottom: 0px;
+		right: 0px;
+	}
+}
