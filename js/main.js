@@ -274,7 +274,7 @@ function initPrinter(){
 
     $.ajax({
         type: "POST",
-        url: "http://giv-learn2.uni-muenster.de/lwl-convert/converter.php",
+        url: "/lwl-convert/converter.php",
         data: { 
             "svg": str,
             "overlay": overlayUrl
@@ -289,66 +289,6 @@ function initPrinter(){
             $("#exportWarning").html('Beim Erstellen der Druckansicht ist ein Fehler aufgetreten.');
         }
     });
-
-    /*
-    if (currentYearLabel == "" || currentYearLabel == null){
-        exportTitle = document.getElementById("mapExportTitle").value;
-    }
-    else {
-        exportTitle = document.getElementById("mapExportTitle").value + " (" + currentYearLabel + ")";
-    }
-    exportAuthor = document.getElementById("mapExportAuthor").value;
-    var legendLayer = new esri.tasks.LegendLayer();
-    legendLayer.layerId = "collection"; // "layerCollection" is the id of the operationalLayer
-    
-    //printer
-    if(printer != undefined){
-    	printer.destroy();
-        printCounter++;
-    }
-    printer = new esri.dijit.Print({
-          map: map,
-          templates: [{
-                label: "PNG Hochformat",
-                format: "PNG32",
-                layout: "A4 Portrait",
-                layoutOptions: {
-                  titleText: document.getElementById("mapExportTitle").value,
-                  authorText: document.getElementById("mapExportAuthor").value,
-                  scalebarUnit: 'Kilometer',
-                  //legendLayers: [],
-                  copyrightText: "© Landschaftsverband Westfalen-Lippe (LWL), 48133 Münster"
-                }
-              },{
-                label: "PNG Querformat",
-                format: "PNG32",
-                layout: "A4 Landscape",
-                layoutOptions: {
-                  titleText: document.getElementById("mapExportTitle").value,
-                  authorText: document.getElementById("mapExportAuthor").value,
-                  scalebarUnit: 'Kilometer',
-                  //legendLayers: [],
-                  copyrightText: "© Landschaftsverband Westfalen-Lippe (LWL), 48133 Münster"
-                }
-              }],
-         url: "http://giv-learn2.uni-muenster.de/arcgis/rest/services/ExportWebMap/GPServer/Export%20Web%20Map/"
-         }, dojo.byId("printButton"));
-    printer.startup();
-    
-    dojo.connect(printer,'onPrintStart',function(){
-    	console.log('The print operation has started');
-        document.getElementById("exportWarning").innerHTML = '<img src="images/loading_small.gif" id="loadingImage" alt="loading" />';
-    });
-    
-    dojo.connect(printer,'onPrintComplete',function(value){
-    	console.log('The url to the print image is : ' + value.url);
-    	document.getElementById("loadingImage").style.visibility = "hidden";
-        var resultWindow = open(value.url, "Ausdruck");
-        resultWindow.focus();
-        document.getElementById("exportWarning").innerHTML = '<a href="' + value.url + '" target="_blank">Link zum Dokument</a>';
-    });
-    document.getElementById("dijit_form_ComboButton_" + printCounter + "_button").click();
-    */
 }
 
 
