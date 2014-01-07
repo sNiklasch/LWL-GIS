@@ -1,0 +1,9 @@
+<?php
+// Absolute Pfade hier angeben:
+$temp_folder = 'C:/Windows/temp/';
+$folder_in = $temp_folder.'in/';
+$folder_out = $temp_folder.'out/';
+
+// Relativer Pfad zum Ausgabeordner zur printpreview.php
+$folder_out_rel = 'temp/out/';
+?>

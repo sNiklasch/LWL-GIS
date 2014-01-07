@@ -236,65 +236,59 @@ function fullExtent(){
 
 /**
  * function to set the printer, incl. title and author of the map and export it
- */        
+ */
+function legendToJSON() {
+    var i = 0;
+    var legend = [];
+
+    $('#myLegend table tr').each( function () {
+
+        legend.push(
+                {
+                    "bg" : $(this).children(".legendColorfield").css("background-color"),
+                    "min" : $(this).children("td:nth-of-type(1)").html(),
+                    "l" : $(this).children("td:nth-of-type(3)").html(),
+                    "max" : $(this).children("td:nth-of-type(4)").html()
+                }
+            );
+
+    });
+
+    return legend;
+}
+
 function initPrinter(){
-    if (currentYearLabel == "" || currentYearLabel == null){
-        exportTitle = document.getElementById("mapExportTitle").value;
-    }
-    else {
-        exportTitle = document.getElementById("mapExportTitle").value + " (" + currentYearLabel + ")";
-    }
-    exportAuthor = document.getElementById("mapExportAuthor").value;
-    var legendLayer = new esri.tasks.LegendLayer();
-    legendLayer.layerId = "collection"; // "layerCollection" is the id of the operationalLayer
+    console.log("initPrinter called");
     
-    //printer
-    if(printer != undefined){
-    	printer.destroy();
-        printCounter++;
-    }
-    printer = new esri.dijit.Print({
-          map: map,
-          templates: [{
-                label: "PNG Hochformat",
-                format: "PNG32",
-                layout: "A4 Portrait",
-                layoutOptions: {
-                  titleText: document.getElementById("mapExportTitle").value,
-                  authorText: document.getElementById("mapExportAuthor").value,
-                  scalebarUnit: 'Kilometer',
-                  //legendLayers: [],
-                  copyrightText: "© Landschaftsverband Westfalen-Lippe (LWL), 48133 Münster"
-                }
-              },{
-                label: "PNG Querformat",
-                format: "PNG32",
-                layout: "A4 Landscape",
-                layoutOptions: {
-                  titleText: document.getElementById("mapExportTitle").value,
-                  authorText: document.getElementById("mapExportAuthor").value,
-                  scalebarUnit: 'Kilometer',
-                  //legendLayers: [],
-                  copyrightText: "© Landschaftsverband Westfalen-Lippe (LWL), 48133 Münster"
-                }
-              }],
-         url: "http://giv-learn2.uni-muenster.de/arcgis/rest/services/ExportWebMap/GPServer/Export%20Web%20Map/"
-         }, dojo.byId("printButton"));
-    printer.startup();
-    
-    dojo.connect(printer,'onPrintStart',function(){
-    	console.log('The print operation has started');
-        document.getElementById("exportWarning").innerHTML = '<img src="images/loading_small.gif" id="loadingImage" alt="loading" />';
+
+    var svg_element = $('#map_gc')[0];
+    var xmlSerializer = new XMLSerializer();
+    var str = xmlSerializer.serializeToString(svg_element);
+    var overlayUrl = $('#map_collection img').attr("src");
+
+    var mapTitle = $('#mapExportTitle').val();
+    var mapAuthor = $('#mapExportAuthor').val();
+    var jsonLegend = legendToJSON();
+
+    $("#exportWarning").html('<img src="images/loading_small.gif" id="loadingImage" alt="loading" />');
+
+    $.ajax({
+        type: "POST",
+        url: "/lwl-convert/converter.php",
+        data: { 
+            "svg": str,
+            "overlay": overlayUrl
+         },
+        success: function(data) {
+            response = $.parseJSON(data);
+            console.log("Map printed, id "+response.message);
+            $("#exportWarning").html('<a style="margin:" href="/lwl-convert/printpreview.php?map='+response.message+'&name='+escape(mapAuthor)+'&title='+escape(mapTitle)+'&legend='+escape(JSON.stringify(jsonLegend) )+'" target="_blank">Link zur Druckansicht</a>');
+        },
+        fail: function(data) {
+            console.log("Error printing id "+response.message);
+            $("#exportWarning").html('Beim Erstellen der Druckansicht ist ein Fehler aufgetreten.');
+        }
     });
-    
-    dojo.connect(printer,'onPrintComplete',function(value){
-    	console.log('The url to the print image is : ' + value.url);
-    	document.getElementById("loadingImage").style.visibility = "hidden";
-        var resultWindow = open(value.url, "Ausdruck");
-        resultWindow.focus();
-        document.getElementById("exportWarning").innerHTML = '<a href="' + value.url + '" target="_blank">Link zum Dokument</a>';
-    });
-    document.getElementById("dijit_form_ComboButton_" + printCounter + "_button").click();
 }
 
 
