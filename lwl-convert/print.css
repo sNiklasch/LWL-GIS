@@ -5,7 +5,7 @@ body {
 h1 {
 	text-align: center;
 	font-weight: bold;
-	font-size: 2.5em;
+	font-size: 2.0em;
 	padding:0px;
 	margin:0px;
 }
@@ -79,6 +79,12 @@ div#lwl-claim img {
 
 	h1 {
 		font-size: 2em;
+		width:600px;
+	}
+
+	[contenteditable="true"]:hover {
+		background-color:#fbfbfb;
+		border-bottom: 2px solid #ccc;
 	}
 
 	img#map {
@@ -99,7 +105,7 @@ div#lwl-claim img {
 }
 
 /*
-	Druckansicht
+	Druckansicht allgemein
 */
 @media print {
 	div#info {
