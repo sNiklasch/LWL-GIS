@@ -74,3 +74,19 @@
 #menuPane-classes {
 	width: 285px;
 }
+
+.menuPaneContent .table {
+	display:table;
+}
+
+.menuPaneContent .row {
+	display:table-row;
+}
+
+.menuPaneContent .cell {
+	display:table-cell;
+}
+
+.menuPaneContent label {
+	padding-right:3px;
+}
