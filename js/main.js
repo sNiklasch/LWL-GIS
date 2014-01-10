@@ -235,14 +235,13 @@ function fullExtent(){
 }
 
 /**
- * function to set the printer, incl. title and author of the map and export it
+ * converts the legend to JSON to transmit it to the print preview
  */
 function legendToJSON() {
     var i = 0;
     var legend = [];
 
     $('#myLegend table tr').each( function () {
-
         legend.push(
                 {
                     "bg" : $(this).children(".legendColorfield").css("background-color"),
@@ -251,16 +250,21 @@ function legendToJSON() {
                     "max" : $(this).children("td:nth-of-type(4)").html()
                 }
             );
-
     });
+
+    if($('#legendDiagrams img').length > 0) {
+        legend.push( { "diagram": $('#legendDiagrams img').attr("src") } );
+    }
 
     return legend;
 }
 
+/**
+ * function to set the printer, incl. title and author of the map and export it
+ */
 function initPrinter(){
     console.log("initPrinter called");
     
-
     var svg_element = $('#map_gc')[0];
     var xmlSerializer = new XMLSerializer();
     var str = xmlSerializer.serializeToString(svg_element);
@@ -274,15 +278,16 @@ function initPrinter(){
 
     $.ajax({
         type: "POST",
-        url: "/lwl-convert/converter.php",
+        url: "lwl-convert/converter.php",
         data: { 
             "svg": str,
-            "overlay": overlayUrl
+            "overlay": overlayUrl,
+            "legend": JSON.stringify(jsonLegend)
          },
         success: function(data) {
             response = $.parseJSON(data);
             console.log("Map printed, id "+response.message);
-            $("#exportWarning").html('<a style="margin:" href="/lwl-convert/printpreview.php?map='+response.message+'&name='+escape(mapAuthor)+'&title='+escape(mapTitle)+'&legend='+escape(JSON.stringify(jsonLegend) )+'" target="_blank">Link zur Druckansicht</a>');
+            $("#exportWarning").html('<a style="margin:" href="lwl-convert/printpreview.php?map='+response.message+'&name='+escape(mapAuthor)+'&title='+escape(mapTitle)+'" target="_blank">Link zur Druckansicht</a>');
         },
         fail: function(data) {
             console.log("Error printing id "+response.message);

@@ -394,13 +394,32 @@
           Karte exportieren:
         </div>
         <div class="menuPaneContent">
-          Titel: <input type="text" id="mapExportTitle">
-          <br>
-          Autor: <input type="text" id="mapExportAuthor">
+
+          <div class="table">
+            <div class="row">
+              <div class="cell">
+                <label for="mapExportTitle">Titel: </label> 
+              </div>
+              <div class="cell printForm">
+                <input type="text" id="mapExportTitle" placeholder="Meine Karte">
+              </div>
+            </div>
+            <div class="row">
+              <div class="cell">
+                <label for="mapExportAuthor">Autor: </label>
+              </div>
+              <div class="cell printForm">
+                <input type="text" id="mapExportAuthor" placeholder="Anonym">
+              </div>
+            </div>
+          </div>
+
           <br>
           <div id="exportWarning">
             Achtung: Das exportieren der Karte kann einige Sekunden in Anspruch nehmen.
           </div>
+
+          <br>
           <input type="button" id="mapExportChange" onclick="initPrinter();" value="Drucken">
           <a href="#" id="printButton"></a>
         </div>

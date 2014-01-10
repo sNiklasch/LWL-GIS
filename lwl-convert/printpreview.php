@@ -1,21 +1,21 @@
 <?php
 include('conf.php');
 
-// Standardwerte setzen
+// Set default values
 $name = "Anonym";
 $title = "Meine Karte";
 $legend = array();
 $map = "img/default-map.png";
 
-// Standardwerte überschreiben, wenn vom Nutzer andere gesetzt sind
+// Overwrite defaults if set by user
 if(isset($_GET["name"]) && $_GET["name"] != "")  $name = htmlspecialchars($_GET["name"]);
 if(isset($_GET["title"]) && $_GET["title"] != "") $title = htmlspecialchars($_GET["title"]);
-if(isset($_GET["legend"]) && $_GET["legend"] != "") $legend = json_decode($_GET["legend"], true);
 
-// Kartennamen auf gültigkeit prüfen, sonst Beispielkarte einbinden
+// Check map id, else show default
 if(isset($_GET["map"]) && ctype_alnum($_GET["map"])) {
 	if(file_exists($folder_out.$_GET["map"].'.png')) {
 		$map = $folder_out_rel.$_GET["map"].'.png';
+		$legend = json_decode(file_get_contents($folder_in.$_GET["map"].'.json'), true);
 	}
 }
 ?>
@@ -28,16 +28,22 @@ if(isset($_GET["map"]) && ctype_alnum($_GET["map"])) {
 	</head>
 	<body>
 		<div id="container">
-			<div id="info">Nutzen Sie die Druckvorschau Ihres Browsers, um zu sehen, wie die gedruckte Fassung aussehen wird. 
-			Sie können dort außerdem die Orientierung des Blattes vor dem Drucken wechseln sowie die Ausgabe skalieren.</div>
+			<div id="info">
+			<b>Nutzungshinweise:</b><br>
+			<br>
+			Nutzen Sie die <b>Druckvorschau</b> Ihres Browsers, um zu sehen, wie die gedruckte Fassung aussehen wird. 
+			Sie können die Karte dort vor dem Druck auch drehen und skalieren.<br>
+			<br>
+			Klicken Sie auf den <b>Kartentitel</b> oder den <b>Autorennamen</b>, um diese nachträglich zu verändern.
+			</div>
 			
 			<img src="img/lwl-logo-reddot.png" style="float:left;">
 			<img src="img/lwl-claim.png" style="float:right;padding-top:5px;padding-bottom:5px;">
 			
 			<div style="clear:both"></div>
 			
-			<h1><?php echo $title; ?></h1>
-			<?php echo $name; ?> <br>
+			<h1 contenteditable="true"><?php echo $title; ?></h1>
+			<span contenteditable="true"><?php echo $name; ?></span><br>
 				
 			<img id="map" src="<?php echo $map; ?>">
 
@@ -46,20 +52,26 @@ if(isset($_GET["map"]) && ctype_alnum($_GET["map"])) {
 			<div id="bottom">
 			<div id="legend" style="text-align:left;">
 				<?php
-				// Legende parsen
+				// Parse JSON legend
 				if(count($legend) > 0) {
 					echo '<span style="font-weight:bold;line-height:150%;">Legende</span><br>';
 					echo '<div id="legendinner">';
 				
 					foreach($legend as $entry) {
-						if(preg_match('/rgb\((?<r>[0-9]{1,3}), (?<g>[0-9]{1,3}), (?<b>[0-9]{1,3})\)/', $entry["bg"], $pregmatchresults)) {
+						if(isset($entry["diagram"])) { 
+							echo '<br>';
+							echo '<img src="../'.$entry["diagram"].'"">';
+						} else {
+							if(preg_match('/rgb\((?<r>[0-9]{1,3}), (?<g>[0-9]{1,3}), (?<b>[0-9]{1,3})\)/', $entry["bg"], $pregmatchresults)) {
 							echo '<img src="color.php?r='.$pregmatchresults["r"].'&g='.$pregmatchresults["g"].'&b='.$pregmatchresults["b"].'" style="width:20px;height:20px;">&nbsp;';
+							}
+							echo htmlspecialchars($entry["min"]);
+							echo " - ";
+							if($entry["l"] != "") echo "<";
+							echo htmlspecialchars($entry["max"]);
+							echo "<br>";
 						}
-						echo htmlspecialchars($entry["min"]);
-						echo " - ";
-						if($entry["l"] != "") echo "<";
-						echo htmlspecialchars($entry["max"]);
-						echo "<br>";
+						
 					}
 
 					echo '</div>';
