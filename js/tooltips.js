@@ -48,7 +48,7 @@ function addTooltips() {
     //Migrationen Layer
     new dijit.Tooltip({
         connectId: ["migrationen_gesamtInfo"],
-        label: "Migrationen der gesamten<br>Bevölkerung (Jahre 2007 - 2011)<br><br><b>Einheit: </b>&permil;",
+        label: "Migrationen der gesamten<br>Bevölkerung der Jahre 2007 - 2011<br><b>Einheit: </b>&permil;",
         showDelay: 0
     });
     //Migrationen Nichtdeutsch Layer

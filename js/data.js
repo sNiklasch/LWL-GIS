@@ -227,7 +227,7 @@ var defaultClassification = [
 var allLayerAttributes = [
 	//[dataset, "Title (String)", "Value (String)", "Legend-description"]
 	[datenEinwohner, "Einwohner", "", ""],
-	[datenEinwohnerEntwicklung, "Einwohnerentwicklung", "&#037;", ""],
+	[datenEinwohnerEntwicklung, "Einwohner-Entwicklung", "&#037;", ""],
 	[datenBevoelkerungsdichte, "Bevölkerungsdichte", "", "Einheit: Einwohner pro km&sup2;"],
 	[datenAltersgruppen, "Altersgruppen 2011", "&#037;", ""],
 	[datenGeburtenrate, "Geburtenrate", "&permil;", ""],
