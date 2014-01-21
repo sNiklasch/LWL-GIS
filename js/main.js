@@ -49,7 +49,7 @@ var legendArray = [];
 var layerAttributes = ["", "Webgis Westfalen"];
 
 //the MapServer for the whole app:
-var mapServer = "http://giv-learn2.uni-muenster.de/ArcGIS/rest/services/LWL/lwl_data/MapServer";
+var mapServer = "http://giv-learn2.uni-muenster.de/ArcGIS/rest/services/LWL/lwl_service/MapServer";
 //the Server for the feature Layer:
 var featureLayerServer = "https://services1.arcgis.com/W47q82gM5Y2xNen1/arcgis/rest/services/westfalen_kreise/FeatureServer";
 
@@ -352,7 +352,7 @@ function layerChange(layerNr) {
             diagramLayer = null;
         }
         activeDiagramLayer = layerNr;
-        document.getElementById("legendDiagrams").innerHTML = "<img src='images/legend_altersklassen.png'></img>";
+        document.getElementById("legendDiagrams").innerHTML = '<table style="margin-left:2px;" cellspacing="0" cellpadding="0"><tr><td><img src="images/legend_altersklassen_diagramm.png" /></td><td style="font-size:13px;">Altersklassen</td></tr><tr><td><img src="images/legend_altersklassen_feld1.png" /></td><td>0 - 18</td></tr><tr><td><img src="images/legend_altersklassen_feld2.png" /></td><td>18 - 30</td></tr><tr><td><img src="images/legend_altersklassen_feld3.png" /></td><td>30 - 65</td></tr><tr><td><img src="images/legend_altersklassen_feld4.png" /></td><td>>65</td></tr></table>';
         updateLayerVisibility();
     } else if (layerNr == fIDkonfessionen_diagramme_20082010 && !(document.getElementById("konfessionenDiagramme2008Check").checked)) {
         diagramLayer = null;
@@ -366,7 +366,7 @@ function layerChange(layerNr) {
             diagramLayer = null;
         }
         activeDiagramLayer = layerNr;
-        document.getElementById("legendDiagrams").innerHTML = "<img src='images/legend_konfessionen.png'></img>";
+        document.getElementById("legendDiagrams").innerHTML = '<table style="margin-left:2px;" cellspacing="0" cellpadding="0"><tr><td><img src="images/legend_konfessionen_diagramm.png" /></td><td style="font-size:13px;">Altersklassen</td></tr><tr><td><img src="images/legend_konfessionen_feld1rk.png" /></td><td>R&ouml;misch-Katholisch</td></tr><tr><td><img src="images/legend_konfessionen_feld2ev.png" /></td><td>Evangelisch</td></tr><tr><td><img src="images/legend_konfessionen_feld3andere.png" /></td><td>Andere</td></tr></table>';
         updateLayerVisibility();
         //handling checkbox for the basemap
     } else if (layerNr == 50 && !(document.getElementById("baseMapChk").checked)) {
