@@ -56,9 +56,14 @@ if(isset($_POST["svg"]) && isset($_POST["overlay"])) {
 			);
 		}
 	} catch (Exception $e) {
-		echo json_encode(array("status"=>"failure", "message"=>$e));
+		echo json_encode(array("status"=>"failure"));
+		
 		// in case of errors, make a log file entry
-		if(isset($uid) && $temp_folder) file_put_contents($temp_folder.'errorlog-'.$uid.'.txt', print_r($e,true));
+		if(isset($uid) && isset($temp_folder)) {
+			file_put_contents($temp_folder.'errorlog-'.$uid.'.txt', print_r($e,true));
+		} else {
+			file_put_contents('errorlog-'.date('Y-m-d_h-i-s').'.txt', print_r($e,true));
+		}
 	}
 } else {
 	echo json_encode(array("status" => "error", "message" => "Invalid Parameters"));
