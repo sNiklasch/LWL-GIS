@@ -196,8 +196,13 @@ function init() {
     onLoadCheck();
 	
 	initLayers();
+
+    //setup the timeslider:
     createTimeslider();
     updateTimeslider();
+    yearChange(1); //set the init-year to 2012
+    timeslider.set({value:1}); //set the init-year to 2012
+
     fullExtent();
 }
 
@@ -396,6 +401,7 @@ function yearChange(value){
     currentYearLabel = getYearsArray(currentDataframe)[value];
     console.log("aktuell: " + currentLayer);
     document.getElementById("timesliderValue").innerHTML = layerAttributes[1] + ": " + currentYearLabel;
+    document.getElementById("legendTheme").innerHTML = layerAttributes[1] + ": " + currentYearLabel;
     currentYear = currentYearLabel;
     if (activeClassification == 1){
         colorizeLayer(createColorArrayByLegendArray(legendArray));

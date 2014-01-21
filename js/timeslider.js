@@ -18,6 +18,7 @@ function updateTimeslider(){
 	    	slideDuration:0,
 	    	style:{width:"20%", height:"20px"} 
 		})
+		document.getElementById("legendTheme").innerHTML = layerAttributes[1] + ": " + getYearsArray(currentDataframe)[0];
 		document.getElementById("timesliderValue").innerHTML = layerAttributes[1] + ": " + getYearsArray(currentDataframe)[0];
 		document.getElementById("timesliderMinLabel").innerHTML = getYearsArray(currentDataframe)[0];
 		document.getElementById("timesliderMaxLabel").innerHTML = getYearsArray(currentDataframe)[getYearsArray(currentDataframe).length-1];
@@ -26,14 +27,17 @@ function updateTimeslider(){
 		document.getElementById("timesliderDiv").style.display = "none";
 		if (getYearsArray(currentDataframe)[0] == ""){
 			document.getElementById("timesliderValue").innerHTML = layerAttributes[1];
+			document.getElementById("legendTheme").innerHTML = layerAttributes[1];
 		}
 		else {
 			document.getElementById("timesliderValue").innerHTML = layerAttributes[1] + ": " + getYearsArray(currentDataframe)[0];
+			document.getElementById("legendTheme").innerHTML = layerAttributes[1] + ": " + getYearsArray(currentDataframe)[0];
 		}
 	}
 	else {
 		document.getElementById("timesliderDiv").style.display = "none";
 		document.getElementById("timesliderValue").innerHTML = layerAttributes[1];
+		document.getElementById("legendTheme").innerHTML = layerAttributes[1];
 	}
 }
 
@@ -56,4 +60,5 @@ function createTimeslider(){
 		}, "timeslider");
 	});
 	document.getElementById("timesliderValue").innerHTML = layerAttributes[1] + ": " + getYearsArray(currentDataframe)[0];
+	document.getElementById("legendTheme").innerHTML = layerAttributes[1] + ": " + getYearsArray(currentDataframe)[0];
 }
