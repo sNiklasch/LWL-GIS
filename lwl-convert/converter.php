@@ -1,8 +1,12 @@
 <?php
-include('conf.php');
-
 if(isset($_POST["svg"]) && isset($_POST["overlay"])) {
 	try {
+		if(file_exists('conf.php')) {
+			require 'conf.php';
+		} else {
+			throw new Exception('Please create the config file');
+		}
+
 		$uid = uniqid(); // uniqe id for file names
 		$result = array();
 		$svg = $_POST["svg"];
@@ -43,7 +47,8 @@ if(isset($_POST["svg"]) && isset($_POST["overlay"])) {
 			// print debug info in failure
 			throw new Exception(
 				json_encode(
-					array("overlay saved" => $overlay_saved, 
+					array("status" => "failure",
+							"overlay saved" => $overlay_saved, 
 							"svg saved" => $svg_saved, 
 							"json created" => $legend_saved, 
 							"output created" => $new_image_created)
@@ -51,9 +56,9 @@ if(isset($_POST["svg"]) && isset($_POST["overlay"])) {
 			);
 		}
 	} catch (Exception $e) {
-		echo $e;
+		echo json_encode(array("status"=>"failure", "message"=>$e));
 		// in case of errors, make a log file entry
-		file_put_contents($temp_folder.'errorlog-'.$uid.'.txt', print_r($e,true));
+		if(isset($uid) && $temp_folder) file_put_contents($temp_folder.'errorlog-'.$uid.'.txt', print_r($e,true));
 	}
 } else {
 	echo json_encode(array("status" => "error", "message" => "Invalid Parameters"));

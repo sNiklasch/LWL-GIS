@@ -292,11 +292,15 @@ function initPrinter(){
         success: function(data) {
             response = $.parseJSON(data);
             console.log("Map printed, id "+response.message);
-            $("#exportWarning").html('<a style="margin:" href="lwl-convert/printpreview.php?map='+response.message+'&name='+escape(mapAuthor)+'&title='+escape(mapTitle)+'" target="_blank">Link zur Druckansicht</a>');
+            if(response.status=="success") {
+                $("#exportWarning").html('<a style="margin:" href="lwl-convert/printpreview.php?map='+response.message+'&name='+escape(mapAuthor)+'&title='+escape(mapTitle)+'" target="_blank">Link zur Druckansicht</a>');    
+            } else {
+                $("#exportWarning").html('<i>Beim Erstellen der Druckansicht ist ein Fehler aufgetreten.</i>');
+            }
         },
         fail: function(data) {
             console.log("Error printing id "+response.message);
-            $("#exportWarning").html('Beim Erstellen der Druckansicht ist ein Fehler aufgetreten.');
+            $("#exportWarning").html('<i>Beim Erstellen der Druckansicht ist ein Fehler aufgetreten.</i>');
         }
     });
 }
