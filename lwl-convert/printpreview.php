@@ -63,7 +63,7 @@ if(isset($_GET["map"]) && ctype_alnum($_GET["map"])) {
 						}
 						echo htmlspecialchars($entry["min"]);
 						echo " - ";
-						if($entry["l"] != "") echo "<";
+						echo htmlspecialchars($entry["l"]);
 						echo htmlspecialchars($entry["max"]);
 						echo "<br>";
 					}

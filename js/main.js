@@ -252,9 +252,9 @@ function legendToJSON() {
         legend.values.push(
                 {
                     "bg" : $(this).children(".legendColorfield").css("background-color"),
-                    "min" : $(this).children("td:nth-of-type(1)").html(),
-                    "l" : $(this).children("td:nth-of-type(3)").html(),
-                    "max" : $(this).children("td:nth-of-type(4)").html()
+                    "min" : $(this).children("td:nth-of-type(1)").text(),
+                    "l" : $(this).children("td:nth-of-type(3)").text(),
+                    "max" : $(this).children("td:nth-of-type(4)").text()
                 }
             );
     });
@@ -264,7 +264,7 @@ function legendToJSON() {
             legend.diagram.push(
                     {
                         "icon" : $(this).children("td:nth-of-type(1)").children("img").attr("src"),
-                        "text" : $(this).children("td:nth-of-type(2)").html().text()
+                        "text" : $(this).children("td:nth-of-type(2)").text()
                     }
                 );
         });
