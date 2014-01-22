@@ -1,2 +1,4 @@
 .DS_Store
 lwl-convert/conf.php
+lwl-convert/temp/in/*
+lwl-convert/temp/out/*
