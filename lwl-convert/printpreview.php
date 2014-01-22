@@ -57,21 +57,26 @@ if(isset($_GET["map"]) && ctype_alnum($_GET["map"])) {
 					echo '<span style="font-weight:bold;line-height:150%;">Legende</span><br>';
 					echo '<div id="legendinner">';
 				
-					foreach($legend as $entry) {
-						if(isset($entry["diagram"])) { 
-							echo '<br>';
-							echo '<img src="../'.$entry["diagram"].'"">';
-						} else {
-							if(preg_match('/rgb\((?<r>[0-9]{1,3}), (?<g>[0-9]{1,3}), (?<b>[0-9]{1,3})\)/', $entry["bg"], $pregmatchresults)) {
+					foreach($legend["values"] as $entry) {
+						if(preg_match('/rgb\((?<r>[0-9]{1,3}), (?<g>[0-9]{1,3}), (?<b>[0-9]{1,3})\)/', $entry["bg"], $pregmatchresults)) {
 							echo '<img src="color.php?r='.$pregmatchresults["r"].'&g='.$pregmatchresults["g"].'&b='.$pregmatchresults["b"].'" style="width:20px;height:20px;">&nbsp;';
+						}
+						echo htmlspecialchars($entry["min"]);
+						echo " - ";
+						if($entry["l"] != "") echo "<";
+						echo htmlspecialchars($entry["max"]);
+						echo "<br>";
+					}
+
+					if(isset($legend["diagram"])) {
+						echo '<br>';
+						foreach($legend["diagram"] as $entry) {
+							if(preg_match('/^images\/.+/', $entry["icon"], $pregmatchresults)) {
+								echo '<img src="../'.$entry["icon"].'" style="width:20px;height:20px;">&nbsp;';
 							}
-							echo htmlspecialchars($entry["min"]);
-							echo " - ";
-							if($entry["l"] != "") echo "<";
-							echo htmlspecialchars($entry["max"]);
+							echo htmlspecialchars($entry["text"]);
 							echo "<br>";
 						}
-						
 					}
 
 					echo '</div>';
