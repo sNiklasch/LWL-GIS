@@ -2,10 +2,11 @@
  * method for automatic (equal) breaks
  */
 
-function addEqualBreaksNew(yearIndex, number, colorStart, colorEnd) {
+function addEqualBreaksNew(yearInd, number, colorStart, colorEnd) {
     autoClassesStartColor = colorStart;
     autoClassesEndColor = colorEnd;
     autoClassesBreaks = number;
+    yearIndex = yearInd;
 
     console.log("classification");
     activeClassification = 2; // 2 = automatic
@@ -38,7 +39,7 @@ function addEqualBreaksNew(yearIndex, number, colorStart, colorEnd) {
             colorIndex = 0;
         }
         else{
-            var colorIndex = Math.floor((classificationArray[i][1] - minmax[0]) / breakStep);
+            colorIndex = Math.floor((classificationArray[i][1] - minmax[0]) / breakStep);
         }
         classificationArray[i][1] = [dojo.colorFromHex('#' + colorArray[colorIndex]).r,dojo.colorFromHex('#' + colorArray[colorIndex]).g,dojo.colorFromHex('#' + colorArray[colorIndex]).b,dojo.colorFromHex('#' + colorArray[colorIndex]).a];
     };
