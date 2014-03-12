@@ -25,7 +25,7 @@ function addLegendItems(classesArray){
 		listItem.appendChild(colorField);
 
 		var minField = document.createElement("td");
-		minField.innerHTML = classesArray[i][1];
+		minField.innerHTML = Math.floor(classesArray[i][1]*100)/100;
 		listItem.appendChild(minField);
 
 		var dash = document.createElement("td");
@@ -37,7 +37,7 @@ function addLegendItems(classesArray){
 		listItem.appendChild(less);
 		
 		var maxField = document.createElement("td");
-		maxField.innerHTML = classesArray[i][2];
+		maxField.innerHTML = Math.floor(classesArray[i][2]*100)/100;
 		listItem.appendChild(maxField);
 
 		var unit = document.createElement("td");
