@@ -34,7 +34,7 @@ function addIndivBreakField() {
     var breakColor = document.createElement("td");
     var idField = 'cp' + breakCount
     var valueField = 'myValue' + breakCount;
-    breakColor.innerHTML = '<input class="color {valueElement:' + valueField + '}" id="' + idField + '" style="width:32px;" value="Farbe">';
+    breakColor.innerHTML = '<input class="color {valueElement:' + valueField + '}" id="' + idField + '" style="width:37px;" value="Farbe">';
     breakEntry.appendChild(breakColor);
 
     var breakColorUnvis = document.createElement("td");
