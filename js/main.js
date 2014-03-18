@@ -384,8 +384,10 @@ function layerChange(layerNr) {
         //handling checkbox for the basemap
     } else if (layerNr == 50 && !(document.getElementById("baseMapChk").checked)) {
     	map.removeLayer(osmLayer);
+        document.getElementById('copyrightLwl').innerHTML = '&copy; Landschaftsverband Westfalen-Lippe (LWL), 48133 M&uuml;nster';
     } else if (layerNr == 50 && (document.getElementById("baseMapChk").checked)) {
     	map.addLayer(osmLayer, 0);
+        document.getElementById('copyrightLwl').innerHTML = '&copy; Landschaftsverband Westfalen-Lippe (LWL), 48133 M&uuml;nster, <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>-Mitwirkende';
         //handling checkbox for the operationalLayer
     } else if (layerNr == 60 && (document.getElementById("labelChk").checked)) {
     	labelVisibility = true;
