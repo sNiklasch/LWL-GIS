@@ -1,7 +1,7 @@
 function showLoadingIcon(){
-	document.getElementById("mapLoading").style.display = "block";
+	document.getElementById('mapLoading').style.display = 'block';
 }
 
 function hideLoadingIcon(){
-	document.getElementById("mapLoading").style.display = "none";
+	document.getElementById('mapLoading').style.display = 'none';
 }

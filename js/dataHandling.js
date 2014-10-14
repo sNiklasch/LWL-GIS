@@ -5,11 +5,11 @@ function getMinMax(dataframe){
     var min = 99999999999;
     var max = -99999999999;
     for (var i = dataframe.length - 1; i >= 0; i--) {
-        if (dataframe[i].Name != "Jahre"){
+        if (dataframe[i].Name !== 'Jahre'){
             for (var j = 0; j <= dataframe[i].Data.length; j++) {
-                if (min > dataframe[i].Data[j]) {min = dataframe[i].Data[j]};
-                if (max < dataframe[i].Data[j]) {max = dataframe[i].Data[j]};
-            };
+                if (min > dataframe[i].Data[j]) {min = dataframe[i].Data[j];}
+                if (max < dataframe[i].Data[j]) {max = dataframe[i].Data[j];}
+            }
         }
     }
     return [min, max];
@@ -23,7 +23,7 @@ function getLayerData(dataframe, yearIndex){
     var dataArray = defaultClassification;
     var helpIndex = 0;
     for (var i = dataframe.length - 1; i >= 0; i--) {
-        if (dataframe[i].Name != "Jahre"){
+        if (dataframe[i].Name !== 'Jahre'){
             dataArray[helpIndex][0] = dataframe[i].Name;
             dataArray[helpIndex][1] = dataframe[i].Data[yearIndex];
             helpIndex++;
@@ -36,9 +36,9 @@ function getLayerData(dataframe, yearIndex){
 function getYearIndex(dataframe, year){
     var yearIndex = 0;
     for (var i = dataframe.length - 1; i >= 0; i--) {
-        if (dataframe[i].Name == "Jahre"){
+        if (dataframe[i].Name === 'Jahre'){
             for (var j = 0; j <= dataframe[i].Data.length; j++) {
-                if (dataframe[i].Data[j] == year){
+                if (dataframe[i].Data[j] === year){
                     yearIndex = j;
                 }
             }
@@ -49,7 +49,7 @@ function getYearIndex(dataframe, year){
 
 function getYearsArray(dataframe){
     for (var i = dataframe.length - 1; i >= 0; i--) {
-        if (dataframe[i].Name == "Jahre"){
+        if (dataframe[i].Name === 'Jahre'){
             return dataframe[i].Data;
         }
     }

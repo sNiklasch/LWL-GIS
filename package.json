@@ -1,0 +1,34 @@
+{
+  "name": "LWL-GIS",
+  "version": "1.0.0",
+  "description": "Educational WebGIS by LWL",
+  "main": "index.js",
+  "scripts": {
+    "test": "grunt --verbose"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mpfeil/LWL-GIS.git"
+  },
+  "keywords": [
+    "webgis",
+    "lwl",
+    "edu",
+    "education",
+    "nrw",
+    "westfalen",
+    "lippe"
+  ],
+  "author": "Matthias Pfeil",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mpfeil/LWL-GIS/issues"
+  },
+  "homepage": "https://github.com/mpfeil/LWL-GIS",
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-cli": "^0.1.13",
+    "grunt-contrib-jshint": "^0.10.0",
+    "jshint-stylish": "^1.0.0"
+  }
+}
