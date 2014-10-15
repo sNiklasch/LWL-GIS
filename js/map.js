@@ -1,3 +1,8 @@
+/* jshint ignore:start */
+var breakCount = 0; // keep track of how many individual breaks have been created, used to fetch the correct field values
+var diagramLayer; // the active clickable diagram layer
+var printCounter = 0; //counter for the printer widget
+
 var map, initExtent, osmLayer;
 var currentDataframe = datenEinwohner;
 var autoClassesStartColor = 'FFF880';
@@ -13,6 +18,7 @@ var activeDiagramLayer = 0; //Aktuell angezeigter Diagrammlayer, 0=keiner
 var labelVisibility = true; //zum überprüfen, ob die Label angezeigt sind
 
 var legend;
+
 /**
  * at this point the min and max values have to be entered manually for each layer.
  * this is not a good approach, they should be obtained directly from the data on the server
@@ -382,3 +388,88 @@ function updateLayerVisibility(){
   }
   //legend.refresh();
 }
+
+/**
+ * converts the legend to JSON to transmit it to the print preview
+ */
+function legendToJSON() {
+  var i = 0;
+  // var legend = new Object();
+  var legend = {};
+  legend.values = [];
+  legend.diagram = [];
+
+  $('div#myLegend table tr').each( function () {
+    legend.values.push(
+      {
+        'bg' : $(this).children('.legendColorfield').css('background-color'),
+        'min' : $(this).children('td:nth-of-type(1)').text(),
+        'l' : $(this).children('td:nth-of-type(3)').text(),
+        'max' : $(this).children('td:nth-of-type(4)').text()
+      }
+    );
+  });
+
+  if($('div#legendDiagrams').length > 0) {
+    $('div#legendDiagrams table tbody tr').each( function () {
+      legend.diagram.push(
+        {
+          'icon' : $(this).children('td:nth-of-type(1)').children('img').attr('src'),
+          'text' : $(this).children('td:nth-of-type(2)').text()
+        }
+      );
+    });
+  }
+
+  return legend;
+}
+
+/**
+ * function to set the printer, incl. title and author of the map and export it
+ */
+function initPrinter(){
+  console.log('initPrinter called');
+
+  var svgElement = $('#map_gc')[0];
+  var xmlSerializer = new XMLSerializer();
+  var str = xmlSerializer.serializeToString(svgElement);
+  var overlayUrl = $('#map_collection img').attr('src');
+
+  var mapTitle = $('#mapExportTitle').val();
+  var mapAuthor = $('#mapExportAuthor').val();
+  var jsonLegend = legendToJSON();
+
+  $('#exportWarning').html('<img src="images/loading_small.gif" id="loadingImage" alt="loading" />');
+
+  $.ajax({
+      type: 'POST',
+      url: 'lwl-convert/converter.php',
+      data: {
+        'svg': str,
+        'overlay': overlayUrl,
+        'legend': JSON.stringify(jsonLegend)
+       },
+      success: function(data) {
+        response = $.parseJSON(data);
+        console.log('Map printed, id '+response.message);
+        if(response.status==='success') {
+          $('#exportWarning').html('<a style="margin:" href="lwl-convert/printpreview.php?map='+response.message+'&name='+escape(mapAuthor)+'&title='+escape(mapTitle)+'" target="_blank">Link zur Druckansicht</a>');
+        } else {
+          $('#exportWarning').html('<i>Beim Erstellen der Druckansicht ist ein Fehler aufgetreten.</i>');
+        }
+      },
+      fail: function(data) {
+        console.log('Error printing id '+response.message);
+        $('#exportWarning').html('<i>Beim Erstellen der Druckansicht ist ein Fehler aufgetreten.</i>');
+      }
+  });
+}
+
+/**
+ * opacity for OperationalLayer
+*/
+function setFeatureLayerOpacity(opacity) {
+  featureLayer.setOpacity(opacity);
+  $('.legendColorfield').css({ opacity: opacity });
+}
+/* jshint ignore:end */
