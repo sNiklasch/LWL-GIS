@@ -1,39 +1,39 @@
 /* jshint ignore:start */
-dojo.require('esri.map');
-dojo.require('esri.layers.FeatureLayer');
-dojo.require('esri.layers.osm');
-dojo.require('esri.layers.agsdynamic');
-dojo.require('esri.toolbars.draw');
-dojo.require('esri.dijit.Print');
-dojo.require('esri.dijit.Scalebar');
-dojo.require('esri.dijit.Legend');
-dojo.require('esri.dijit.Popup');
-dojo.require('esri.dijit.BasemapGallery');
-dojo.require('esri.tasks.query');
-dojo.require('esri.tasks.geometry');
-dojo.require('esri.virtualearth.VETiledLayer');
-dojo.require('esri.arcgis.utils');
-dojo.require('esri.renderer');
-dojo.require('esri.symbol');
+// dojo.require('esri.map');
+// dojo.require('esri.layers.FeatureLayer');
+// dojo.require('esri.layers.osm');
+// dojo.require('esri.layers.agsdynamic');
+// dojo.require('esri.toolbars.draw');
+// dojo.require('esri.dijit.Print');
+// dojo.require('esri.dijit.Scalebar');
+// dojo.require('esri.dijit.Legend');
+// dojo.require('esri.dijit.Popup');
+// dojo.require('esri.dijit.BasemapGallery');
+// dojo.require('esri.tasks.query');
+// dojo.require('esri.tasks.geometry');
+// dojo.require('esri.virtualearth.VETiledLayer');
+// dojo.require('esri.arcgis.utils');
+// dojo.require('esri.renderer');
+// dojo.require('esri.symbol');
 
-dojo.require('dojox.widget.TitleGroup');
-dojo.require('dojox.charting.themes.Julie');
+// dojo.require('dojox.widget.TitleGroup');
+// dojo.require('dojox.charting.themes.Julie');
 
-dojo.require('dojo.parser');
+// dojo.require('dojo.parser');
 
-dojo.require('dijit.form.DropDownButton');
-dojo.require('dijit.form.Button');
-dojo.require('dijit.form.Textarea');
-dojo.require('dijit.form.TextBox');
-dojo.require('dijit.form.CheckBox');
-dojo.require('dijit.form.Slider');
-dojo.require('dijit.TitlePane');
-dojo.require('dijit.TooltipDialog');
-dojo.require('dijit.layout.BorderContainer');
-dojo.require('dijit.layout.ContentPane');
-dojo.require('dijit.layout.AccordionContainer');
-dojo.require('dijit.dijit');
-dojo.require('dijit.Tooltip');
+// dojo.require('dijit.form.DropDownButton');
+// dojo.require('dijit.form.Button');
+// dojo.require('dijit.form.Textarea');
+// dojo.require('dijit.form.TextBox');
+// dojo.require('dijit.form.CheckBox');
+// dojo.require('dijit.form.Slider');
+// dojo.require('dijit.TitlePane');
+// dojo.require('dijit.TooltipDialog');
+// dojo.require('dijit.layout.BorderContainer');
+// dojo.require('dijit.layout.ContentPane');
+// dojo.require('dijit.layout.AccordionContainer');
+// dojo.require('dijit.dijit');
+// dojo.require('dijit.Tooltip');
 
 
 var breakCount = 0; // keep track of how many individual breaks have been created, used to fetch the correct field values
@@ -107,6 +107,15 @@ var counter = 0;
 var exportTitle = 'kein Titel';
 var exportAuthor = 'kein Autor';
 var printer;
+
+require(['esri/map', 'dojo/domReady'], function(Map) {
+
+    // map = new Map('map', {
+    //     center: [-56.049, 38.485],
+    //     zoom: 3,
+    //     basemap: "streets"
+    // });
+});
 
 /**
 * Diese Funktion initialisiert den operationalLayer, welcher die gesamten Layer vom Server enthält.
@@ -253,23 +262,23 @@ function legendToJSON() {
 
     $('div#myLegend table tr').each( function () {
         legend.values.push(
-                {
-                    'bg' : $(this).children('.legendColorfield').css('background-color'),
-                    'min' : $(this).children('td:nth-of-type(1)').text(),
-                    'l' : $(this).children('td:nth-of-type(3)').text(),
-                    'max' : $(this).children('td:nth-of-type(4)').text()
-                }
-            );
+            {
+                'bg' : $(this).children('.legendColorfield').css('background-color'),
+                'min' : $(this).children('td:nth-of-type(1)').text(),
+                'l' : $(this).children('td:nth-of-type(3)').text(),
+                'max' : $(this).children('td:nth-of-type(4)').text()
+            }
+        );
     });
 
     if($('div#legendDiagrams').length > 0) {
         $('div#legendDiagrams table tbody tr').each( function () {
             legend.diagram.push(
-                    {
-                        'icon' : $(this).children('td:nth-of-type(1)').children('img').attr('src'),
-                        'text' : $(this).children('td:nth-of-type(2)').text()
-                    }
-                );
+                {
+                    'icon' : $(this).children('td:nth-of-type(1)').children('img').attr('src'),
+                    'text' : $(this).children('td:nth-of-type(2)').text()
+                }
+            );
         });
     }
 
@@ -526,4 +535,4 @@ function onLoadCheck() {
 }
 
 dojo.addOnLoad(init);
-/* jshint ignore:start */
+/* jshint ignore:end */
