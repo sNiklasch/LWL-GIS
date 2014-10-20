@@ -257,6 +257,9 @@
                 Zusätzliche Ebenen:
               </b>
               <br>
+              <input type="checkbox" id="gemeindeLayerChk" name="Layer" value="Gemeinde" onchange="layerChange(70)" autocomplete="off">
+              <label for="baseMapChk">Gemeindegrenzen einblenden</label>
+              <br>
               <input type="checkbox" id="baseMapChk" name="Layer" value="Basemap" onchange="layerChange(50)" autocomplete="off">
               <label for="baseMapChk">Hintergrundkarte einblenden</label>
               <br>
@@ -309,6 +312,22 @@
               <tr>
                 <td>
                   <b>
+                    Klassifikation:
+                  </b>
+                </td>
+                <td>
+                  <select id="classificationMethod">
+                    <option value="equalInterval" selected>Gleiches Intervall</option>
+                    <option value="quantile">Quantil (Gleiche Anzahl)</option>
+                    <!-- <option value="jenks">Natürliche Unterbrechungen</option> -->
+                    <option value="standardDeviation">Standardabweichung</option>
+                    <option value="pretty">Schöne Unterbrechungen</option>
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <b>
                     Farbskala von/bis:
                   </b>
                 </td>
@@ -332,8 +351,10 @@
                 </td>
               </tr>
             </table>
-            <input type="button" onclick="javascript:colorizeLayer(addEqualBreaksNew(yearIndex, parseInt(document.getElementById('equalBreaksText').value)-1,
-            document.getElementById('colorPickerValueOne').value, document.getElementById('colorPickerValueTwo').value))" value="Anwenden">
+            <!-- <input type="button" onclick="javascript:colorizeLayer(addEqualBreaksNew(yearIndex, parseInt(document.getElementById('equalBreaksText').value)-1,
+            document.getElementById('colorPickerValueOne').value, document.getElementById('colorPickerValueTwo').value))" value="Anwenden"> -->
+            <input type="button" onclick="javascript:classify(document.getElementById('classificationMethod').value, yearIndex, parseInt(document.getElementById('equalBreaksText').value)-1,
+            document.getElementById('colorPickerValueOne').value, document.getElementById('colorPickerValueTwo').value)" value="Anwenden">
             <input id="colorPickerValueOne" style="width:0px; visibility:hidden;">
             <input id="colorPickerValueTwo" style="width:0px; visibility:hidden;">
             <table id="Breaks">

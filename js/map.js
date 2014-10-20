@@ -3,7 +3,7 @@ var breakCount = 0; // keep track of how many individual breaks have been create
 var diagramLayer; // the active clickable diagram layer
 var printCounter = 0; //counter for the printer widget
 
-var map, initExtent, osmLayer;
+var map, initExtent, osmLayer, featureLayerGemeinde, featureLayer;
 var currentDataframe = datenEinwohner;
 var autoClassesStartColor = 'FFF880';
 var autoClassesEndColor = 'EA3313';
@@ -54,6 +54,7 @@ var fIDkonfessionenDiagramme20082010 = 2;
 var mapServer = 'http://giv-learn2.uni-muenster.de/ArcGIS/rest/services/LWL/lwl_service/MapServer';
 //the Server for the feature Layer:
 var featureLayerServer = 'https://services1.arcgis.com/W47q82gM5Y2xNen1/arcgis/rest/services/westfalen_kreise/FeatureServer';
+var fLGemeinde = 'https://services1.arcgis.com/W47q82gM5Y2xNen1/arcgis/rest/services/westfalen_kreise/FeatureServer';
 
 require(['esri/map',
   'esri/dijit/Popup',
@@ -178,9 +179,15 @@ function initLayers(){
       mode: FeatureLayer.MODE_ONDEMAND,
       outFields: ['Kreisname']
     });
+    featureLayerGemeinde = new FeatureLayer(fLGemeinde + '/0', {
+      infoTemplate: new InfoTemplate('&nbsp;', '${Kreisname}'),
+      mode: FeatureLayer.MODE_ONDEMAND,
+      outFields: ['Kreisname']
+    });
     map.addLayer(featureLayer, 0);
-    colorArray = addEqualBreaksNew(0, autoClassesBreaks, autoClassesStartColor, autoClassesEndColor); //new
-    colorizeLayer(colorArray); //new
+    classify('equalInterval', 0, autoClassesBreaks, autoClassesStartColor, autoClassesEndColor);
+    // colorArray = addEqualBreaksNew(0, autoClassesBreaks, autoClassesStartColor, autoClassesEndColor);
+    // colorizeLayer(colorArray);
     operationalLayer = new ArcGISDynamicMapServiceLayer(mapServer, { 'id': 'collection' });
     featureLayer.on('update-start', showLoadingIcon);
     featureLayer.on('update-end', hideLoadingIcon);
@@ -204,7 +211,6 @@ function colorizeLayer(colorArray){
     var renderer = new UniqueValueRenderer(defaultSymbol, 'Kreisname');
     for (var i = colorArray.length - 1; i >= 0; i--) {
       renderer.addValue(colorArray[i][0], new SimpleFillSymbol().setColor(new Color(colorArray[i][1])));
-      //console.log(renderer);
     }
 
     featureLayer.setRenderer(renderer);
@@ -325,6 +331,10 @@ function layerChange(layerNr) {
     labelVisibility = false;
     console.log('Labels ausblenden' + labelVisibility);
     updateLayerVisibility();
+  } else if (layerNr === 70 && (document.getElementById('gemeindeLayerChk').checked)) {
+    map.addLayer(featureLayerGemeinde);
+  } else if (layerNr === 70 && !(document.getElementById('gemeindeLayerChk').checked)) {
+    map.removeLayer(featureLayerGemeinde);
   } else {
     currentDataframe = layerNr; //new
     getLayerAttributes(); //new
