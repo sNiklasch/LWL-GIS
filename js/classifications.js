@@ -92,10 +92,100 @@ function jenks(yearInd, number, colorStart, colorEnd) {
   autoClassesBreaks = number;
   yearIndex = yearInd;
 
-  console.log('classification: quantile');
+  console.log('classification: jenks');
   activeClassification = 2; // 2 = automatic
   classificationArray = getLayerData(currentDataframe, yearIndex); // jshint ignore:line
   var minmax = getMinMax(currentDataframe,yearIndex); // jshint ignore:line
+  var colorArray = generateColor(colorStart,colorEnd,number);
+
+  classificationArray.sort(function(a,b){
+    return a[1]-b[1];
+  });
+  var mat1 = [];
+  var mat2 = [];
+  var range1 = range(0,classificationArray.length);
+  var rangeClasses = range(0,number+1);
+  range1.forEach(function(elem, index, array){
+    temp = [];
+    rangeClasses.forEach(function(elem, index, array){
+      temp.push(0);
+    });
+    mat1.push(temp);
+  });
+  range1.forEach(function(elem, index, array){
+    temp = [];
+    rangeClasses.forEach(function(elem, index, array){
+      temp.push(0);
+    });
+    mat2.push(temp);
+  });
+  rangeClasses2 = range(1,number+1);
+  rangeClasses2.forEach(function(elem, index, array){
+    mat1[1][elem] = 1;
+    mat2[1][elem] = 0;
+    rangeValues = range(2, classificationArray.length);
+    rangeValues.forEach(function(elem1, index, array){
+      mat2[elem1][elem] = parseFloat('Infinity');
+    });
+  });
+  var v = 0.0;
+  var range2 = range(2,classificationArray.length);
+  range2.forEach(function(l, index, array){
+    var s1 = 0.0;
+    var s2 = 0.0;
+    w = 0.0;
+    var range3 = range(1,l);
+    range3.forEach(function(m, index, array){
+      var i3 = l - m + 1;
+      var val = parseFloat(classificationArray[i3-1][1]);
+      s2 += val * val;
+      s1 += val;
+      w += 1;
+      v = s2 - (s1 * s1) / w;
+      i4 = i3 - 1;
+      if (i4 !== 0) {
+        range4 = range(2, number+1);
+        range4.forEach(function(j, index, array){
+          if (mat2[l][j] >= (v + mat2[i4][j - 1])) {
+            mat1[l][j] = i3;
+            mat2[l][j] = v + mat2[i4][j - 1];
+          }
+        });
+      }
+    });
+    mat1[l][1] = 1;
+    mat2[l][1] = v;
+  });
+  var k = classificationArray.length;
+  var kclass = [];
+  var range5 = range(0,number+1);
+  range5.forEach(function(i, index, array){
+    kclass.push(0);
+  });
+  kclass[number+1] = parseFloat(classificationArray[classificationArray.length-1][1]);
+  kclass[0] = parseFloat(classificationArray[0][1]);
+  var countNum = number+1;
+  while(countNum >= 2){
+    var id = parseInt((mat1[k][countNum]) - 2);
+    kclass[countNum - 1] = classificationArray[id][1];
+    k = parseInt((mat1[k][countNum] - 1));
+    countNum -= 1;
+  }
+
+  require(['dojo/_base/Color'],function(Color){
+    for(var i = 0; i < classificationArray.length; i++) {
+      for(var j = 1; j < kclass.length; j++) {
+        if(classificationArray[i][1] <= kclass[j]) {
+          var color = Color.fromHex('#'+colorArray[j-1]);
+          classificationArray[i][1] = color;
+          break;
+        }
+      }
+    }
+  });
+  console.log(classificationArray);
+  return classificationArray;
+
 }
 
 function rpretty(dmin, dmax, n) {
@@ -252,7 +342,7 @@ function pretty(yearInd, number, colorStart, colorEnd) {
   autoClassesBreaks = number;
   yearIndex = yearInd;
 
-  console.log('classification: quantile');
+  console.log('classification: pretty');
   activeClassification = 2; // 2 = automatic
   classificationArray = getLayerData(currentDataframe, yearIndex); // jshint ignore:line
   var minmax = getMinMax(currentDataframe,yearIndex); // jshint ignore:line

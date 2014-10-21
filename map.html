@@ -319,7 +319,7 @@
                   <select id="classificationMethod">
                     <option value="equalInterval" selected>Gleiches Intervall</option>
                     <option value="quantile">Quantil (Gleiche Anzahl)</option>
-                    <!-- <option value="jenks">Natürliche Unterbrechungen</option> -->
+                    <option value="jenks">Natürliche Unterbrechungen</option>
                     <option value="standardDeviation">Standardabweichung</option>
                     <option value="pretty">Schöne Unterbrechungen</option>
                   </select>
@@ -347,7 +347,7 @@
                   </b>
                 </td>
                 <td>
-                  <input type="text" id="equalBreaksText" value="4" style="width:50px;">
+                  <input type="number" min="1" max="12" step="1" name="" value="4" id="equalBreaksText" placeholder="" onkeydown="return false" />
                 </td>
               </tr>
             </table>
