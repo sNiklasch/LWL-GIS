@@ -51,7 +51,7 @@ function quantile(yearInd, number, colorStart, colorEnd) {
   yearIndex = yearInd;
 
   console.log('classification: quantile');
-  activeClassification = 2; // 2 = automatic
+  activeClassification = 3;
   classificationArray = getLayerData(currentDataframe, yearIndex); // jshint ignore:line
   var colorArray = generateColor(colorStart, colorEnd, number); // jshint ignore:line
 
@@ -83,6 +83,15 @@ function quantile(yearInd, number, colorStart, colorEnd) {
     }
   });
 
+  legendArray = [];
+  for (var i = 0; i < breaks.length-1; i++) {
+    var temp = [];
+    temp.push(colorArray[i]);
+    temp.push(breaks[i]);
+    temp.push(breaks[i+1]);
+    legendArray.push(temp);
+  }
+
   return classificationArray;
 }
 
@@ -93,7 +102,7 @@ function jenks(yearInd, number, colorStart, colorEnd) {
   yearIndex = yearInd;
 
   console.log('classification: jenks');
-  activeClassification = 2; // 2 = automatic
+  activeClassification = 4; // 2 = automatic
   classificationArray = getLayerData(currentDataframe, yearIndex); // jshint ignore:line
   var minmax = getMinMax(currentDataframe,yearIndex); // jshint ignore:line
   var colorArray = generateColor(colorStart,colorEnd,number);
@@ -183,9 +192,17 @@ function jenks(yearInd, number, colorStart, colorEnd) {
       }
     }
   });
-  console.log(classificationArray);
-  return classificationArray;
 
+  legendArray = [];
+  for (var i = 0; i < kclass.length-1; i++) {
+    var temp = [];
+    temp.push(colorArray[i]);
+    temp.push(kclass[i]);
+    temp.push(kclass[i+1]);
+    legendArray.push(temp);
+  }
+
+  return classificationArray;
 }
 
 function rpretty(dmin, dmax, n) {
@@ -295,7 +312,7 @@ function standardDeviation(yearInd, number, colorStart, colorEnd) {
   yearIndex = yearInd;
 
   console.log('classification: standard deviation');
-  activeClassification = 2; // 2 = automatic
+  activeClassification = 5;
   classificationArray = getLayerData(currentDataframe, yearIndex); // jshint ignore:line
 
   var mean = 0.0;
@@ -333,6 +350,15 @@ function standardDeviation(yearInd, number, colorStart, colorEnd) {
     }
   });
 
+  legendArray = [];
+  for (var l = 0; l < res2.length-1; l++) {
+    var temp = [];
+    temp.push(colorArray[l]);
+    temp.push(res2[l]);
+    temp.push(res2[l+1]);
+    legendArray.push(temp);
+  }
+
   return classificationArray;
 }
 
@@ -343,7 +369,7 @@ function pretty(yearInd, number, colorStart, colorEnd) {
   yearIndex = yearInd;
 
   console.log('classification: pretty');
-  activeClassification = 2; // 2 = automatic
+  activeClassification = 6;
   classificationArray = getLayerData(currentDataframe, yearIndex); // jshint ignore:line
   var minmax = getMinMax(currentDataframe,yearIndex); // jshint ignore:line
 
@@ -364,6 +390,15 @@ function pretty(yearInd, number, colorStart, colorEnd) {
     }
   });
 
+  legendArray = [];
+  for (var i = 0; i < res.length-1; i++) {
+    var temp = [];
+    temp.push(colorArray[i]);
+    temp.push(res[i]);
+    temp.push(res[i+1]);
+    legendArray.push(temp);
+  }
+
   return classificationArray;
 }
 
@@ -383,7 +418,7 @@ function addEqualBreaksNew(yearInd, number, colorStart, colorEnd) { //jshint ign
         number = 11;
         document.getElementById('equalBreaksText').value = 12;
     }
-    var minmax = getMinMax(currentDataframe); // jshint ignore:line
+    var minmax = getMinMax(currentDataframe, yearIndex); // jshint ignore:line
     var breakStep = (minmax[1] - minmax[0]) / (number + 1); //size of one class
     var colorArray = generateColor(colorStart, colorEnd, number);   // jshint ignore:line
                                                                     //generates an array of an color gradient
