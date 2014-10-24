@@ -356,13 +356,35 @@ function yearChange(value){
   document.getElementById('timesliderValue').innerHTML = layerAttributes[1] + ': ' + currentYearLabel;
   document.getElementById('legendTheme').innerHTML = layerAttributes[1] + ': ' + currentYearLabel;
   currentYear = currentYearLabel;
-  if (activeClassification === 1){
+  switch(activeClassification) {
+    case 1:
+      colorizeLayer(createColorArrayByLegendArray(legendArray));
+      break;
+    case 2:
+      classify('equalInterval', value, autoClassesBreaks, autoClassesStartColor, autoClassesEndColor);
+      break;
+    case 3:
+      classify('quantile', value, autoClassesBreaks, autoClassesStartColor, autoClassesEndColor);
+      break;
+    case 4:
+      classify('jenks', value, autoClassesBreaks, autoClassesStartColor, autoClassesEndColor);
+      break;
+    case 5:
+      classify('standardDeviation', value, autoClassesBreaks, autoClassesStartColor, autoClassesEndColor);
+      break;
+    case 6:
+      classify('pretty', value, autoClassesBreaks, autoClassesStartColor, autoClassesEndColor);
+      break;
+    default:
+      break;
+  }
+  /*if (activeClassification === 1){
     colorizeLayer(createColorArrayByLegendArray(legendArray));
   }
   else {
     colorArray = addEqualBreaksNew(value, autoClassesBreaks, autoClassesStartColor, autoClassesEndColor); //new
     colorizeLayer(colorArray);
-  }
+  }*/
 }
 
 function getLayerAttributes(){
