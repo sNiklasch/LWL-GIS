@@ -285,28 +285,21 @@ function onLoadCheck() {
 /**
  * Method for changing the active overlay layer
  */
-function layerChange(layerNr) {
+function layerChange(layerNr,removeLayer) {
   //disconnect and connect click handlers for diagrams based on checkboxes
-
-  //remove diagramLayer
-  if (layerNr !== fIDaltersgruppenDiagramme2011 && layerNr !== fIDkonfessionenDiagramme20082010) {
-    if (diagramLayer !== null) {
-      map.removeLayer(diagramLayer);
-      diagramLayer = null;
-    };
-    activeDiagramLayer = 0;
-    document.getElementById('legendDiagrams').innerHTML = '';
-    document.getElementById('altersgruppenDiagramme2011Check').checked = false;
-    document.getElementById('konfessionenDiagramme2008Check').checked = false;
-    updateLayerVisibility();
-  };
-
   if (layerNr === fIDaltersgruppenDiagramme2011 && !(document.getElementById('altersgruppenDiagramme2011Check').checked)) {
     diagramLayer = null;
     activeDiagramLayer = 0;
     document.getElementById('legendDiagrams').innerHTML = '';
     updateLayerVisibility();
   } else if (layerNr === fIDaltersgruppenDiagramme2011 && document.getElementById('altersgruppenDiagramme2011Check').checked) {
+
+    //change Layer to Altersgruppen
+    if (document.getElementById('altersgruppenCheck').checked !== true) {
+      document.getElementById('altersgruppenCheck').checked = true;
+      layerChange(datenAltersgruppen,false);
+    }
+
     document.getElementById('konfessionenDiagramme2008Check').checked = false;
     if (diagramLayer !== null) {
       map.removeLayer(diagramLayer);
@@ -321,13 +314,20 @@ function layerChange(layerNr) {
     document.getElementById('legendDiagrams').innerHTML = '';
     updateLayerVisibility();
   } else if (layerNr === fIDkonfessionenDiagramme20082010 && document.getElementById('konfessionenDiagramme2008Check').checked) {
+
+    //change Layer to Konfessionen
+    if (document.getElementById('konfessionenCheck').checked !== true) {
+      document.getElementById('konfessionenCheck').checked = true;
+      layerChange(datenKonfessionen,false);
+    }
+
     document.getElementById('altersgruppenDiagramme2011Check').checked = false;
     if (diagramLayer !== null) {
       map.removeLayer(diagramLayer);
       diagramLayer = null;
     }
     activeDiagramLayer = layerNr;
-    document.getElementById('legendDiagrams').innerHTML = '<table style="margin-left:2px;" cellspacing="0" cellpadding="0"><tr><td><img src="images/legend_konfessionen_diagramm.png" /></td><td style="font-size:13px;">Altersklassen</td></tr><tr><td><img src="images/legend_konfessionen_feld1rk.png" /></td><td>R&ouml;misch-Katholisch</td></tr><tr><td><img src="images/legend_konfessionen_feld2ev.png" /></td><td>Evangelisch</td></tr><tr><td><img src="images/legend_konfessionen_feld3andere.png" /></td><td>Andere</td></tr></table>';
+    document.getElementById('legendDiagrams').innerHTML = '<table style="margin-left:2px;" cellspacing="0" cellpadding="0"><tr><td><img src="images/legend_konfessionen_diagramm.png" /></td><td style="font-size:13px;">Konfessionen</td></tr><tr><td><img src="images/legend_konfessionen_feld1rk.png" /></td><td>R&ouml;misch-Katholisch</td></tr><tr><td><img src="images/legend_konfessionen_feld2ev.png" /></td><td>Evangelisch</td></tr><tr><td><img src="images/legend_konfessionen_feld3andere.png" /></td><td>Andere</td></tr></table>';
     updateLayerVisibility();
     //handling checkbox for the basemap
   } else if (layerNr === 50 && !(document.getElementById('baseMapChk').checked)) {
@@ -350,6 +350,20 @@ function layerChange(layerNr) {
   } else if (layerNr === 70 && !(document.getElementById('gemeindeLayerChk').checked)) {
     map.removeLayer(featureLayerGemeinde);
   } else {
+    //remove diagramLayer
+    if (removeLayer === undefined) {
+      if (layerNr !== fIDaltersgruppenDiagramme2011 && layerNr !== fIDkonfessionenDiagramme20082010) {
+        if (diagramLayer !== null) {
+          map.removeLayer(diagramLayer);
+          diagramLayer = null;
+        };
+        activeDiagramLayer = 0;
+        document.getElementById('legendDiagrams').innerHTML = '';
+        document.getElementById('altersgruppenDiagramme2011Check').checked = false;
+        document.getElementById('konfessionenDiagramme2008Check').checked = false;
+        updateLayerVisibility();
+      }
+    }
     currentDataframe = layerNr; //new
     getLayerAttributes(); //new
     var colorArray = addEqualBreaksNew(0, autoClassesBreaks, autoClassesStartColor, autoClassesEndColor); //new
