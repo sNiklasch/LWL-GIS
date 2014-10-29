@@ -1,6 +1,6 @@
 /* jshint ignore:start */
 var breakCount = 0; // keep track of how many individual breaks have been created, used to fetch the correct field values
-var diagramLayer; // the active clickable diagram layer
+var diagramLayer = null; // the active clickable diagram layer
 var printCounter = 0; //counter for the printer widget
 
 var map, initExtent, osmLayer, featureLayerGemeinde, featureLayer;
@@ -287,6 +287,20 @@ function onLoadCheck() {
  */
 function layerChange(layerNr) {
   //disconnect and connect click handlers for diagrams based on checkboxes
+
+  //remove diagramLayer
+  if (layerNr !== fIDaltersgruppenDiagramme2011 && layerNr !== fIDkonfessionenDiagramme20082010) {
+    if (diagramLayer !== null) {
+      map.removeLayer(diagramLayer);
+      diagramLayer = null;
+    };
+    activeDiagramLayer = 0;
+    document.getElementById('legendDiagrams').innerHTML = '';
+    document.getElementById('altersgruppenDiagramme2011Check').checked = false;
+    document.getElementById('konfessionenDiagramme2008Check').checked = false;
+    updateLayerVisibility();
+  };
+
   if (layerNr === fIDaltersgruppenDiagramme2011 && !(document.getElementById('altersgruppenDiagramme2011Check').checked)) {
     diagramLayer = null;
     activeDiagramLayer = 0;
