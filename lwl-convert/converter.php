@@ -34,7 +34,8 @@ if(isset($_POST["svg"]) && isset($_POST["overlay"])) {
 		$overlay_saved = file_put_contents($folder_in.$uid.".png", file_get_contents($overlay));
 
 		// combine SVG map and district names PNG into one PNG image with ImageMagick
-		$cmd = $imagick_folder.'convert.exe -page 2526x1785 -density 296 "'.$folder_in.$uid.'.svg" -resize 2526x1785 -page 2526x1785 "'.$folder_in.$uid.'.png" -resize 2526x1785 -composite -trim "'.$folder_out.$uid.'.png"';
+		// $cmd = $imagick_folder.'convert.exe -page 2526x1785 -density 296 "'.$folder_in.$uid.'.svg" -resize 2526x1785 -page 2526x1785 "'.$folder_in.$uid.'.png" -resize 2526x1785 -composite -trim "'.$folder_out.$uid.'.png"';
+		$cmd = $imagick_folder.'convert -page 2526x1785 -density 296 "'.$folder_in.$uid.'.svg" -resize 2526x1785 -page 2526x1785 "'.$folder_in.$uid.'.png" -resize 2526x1785 -composite -trim "'.$folder_out.$uid.'.png"';
 		passthru($cmd);
 
 		// check if the image was generated successfully by probing the resulting file
@@ -48,16 +49,16 @@ if(isset($_POST["svg"]) && isset($_POST["overlay"])) {
 			throw new Exception(
 				json_encode(
 					array("status" => "failure",
-							"overlay saved" => $overlay_saved, 
-							"svg saved" => $svg_saved, 
-							"json created" => $legend_saved, 
+							"overlay saved" => $overlay_saved,
+							"svg saved" => $svg_saved,
+							"json created" => $legend_saved,
 							"output created" => $new_image_created)
 				)
 			);
 		}
 	} catch (Exception $e) {
 		echo json_encode(array("status"=>"failure"));
-		
+
 		// in case of errors, make a log file entry
 		if(isset($uid) && isset($temp_folder)) {
 			file_put_contents($temp_folder.'errorlog-'.$uid.'.txt', print_r($e,true));

@@ -15,11 +15,7 @@ function addLegendItems(classesArray){
 	for (var i = 0; i < classesArray.length; i++) {
 		var listItem = document.createElement('tr');
 
-		var colorField = document.createElement('td');
-		// colorField.innerHTML = '<div style="background-color:' + classesArray[i][0] + '; height:20px; width:35px;">test</div>';
-		listItem.appendChild(colorField);
-
-		colorField = document.createElement('div');
+		var colorField = document.createElement('div');
 		if (classesArray[i][0] === 0) {
 			colorField.style.backgroundColor = '#000000';
 		}

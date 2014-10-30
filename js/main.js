@@ -387,7 +387,7 @@ function layerChange(layerNr) {
         updateLayerVisibility();
     } else if (layerNr === fIDkonfessionenDiagramme20082010 && document.getElementById('konfessionenDiagramme2008Check').checked) {
         document.getElementById('altersgruppenDiagramme2011Check').checked = false;
-        if (diagramLayer !== null) {
+        if (diagramLayer !== undefined) {
             map.removeLayer(diagramLayer);
             diagramLayer = null;
         }

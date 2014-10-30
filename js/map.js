@@ -27,7 +27,11 @@ var legend;
 var minValues = [0, 0, 107124, -15,  121, 12, 0, 7,  8, -6, 0, 0, 18, 3844, 1.86, 29,  4,  8, 15905,  9, 0];
 var maxValues = [0, 0, 651588,  21, 3187, 50, 0, 9, 13, 13, 3, 0, 39, 7375, 2.38, 49, 16, 34, 24771,  72, 0];
 
-
+/**
+ * due to a bug in ArcGIS where invoking any method that re-centers the map a onPan() event is fired,
+ * this counter is used to prevent an infinite loop of re-centering between the two maps in split-mode.
+ */
+var counter = 0;
 
 //LayerIDs:
 var fIDkreisnamen = 0;
@@ -55,6 +59,48 @@ var mapServer = 'http://giv-learn2.uni-muenster.de/ArcGIS/rest/services/LWL/lwl_
 //the Server for the feature Layer:
 var featureLayerServer = 'https://services1.arcgis.com/W47q82gM5Y2xNen1/arcgis/rest/services/westfalen_kreise/FeatureServer';
 var fLGemeinde = 'https://services1.arcgis.com/W47q82gM5Y2xNen1/arcgis/rest/services/westfalen_kreise/FeatureServer';
+
+/**
+ * in split mode, synchronize zoom levels between both frames
+ */
+function syncZoom(extent, zoomFactor, anchor, level) {
+  console.log('zoom');
+  for (var i = 0; i < parent.frames.length; i++) {
+    if (parent.frames[i].name !== self.name) {
+      try {
+        parent.frames[i].counter = 0;
+        console.log(level + '/' + zoomFactor);
+        parent.frames[i].map.setLevel(level);
+      } catch (err) {
+        console.log('zoom failed');
+      }
+    }
+  }
+}
+
+/**
+ * sync both maps in split mode
+ * check counter (check if the pan happened through actual mouse input) and
+ * if the centers of both maps aren't identical
+ */
+function reCenterAndZoom(center, zoom, extent, frameNr) {
+  if (counter < 1 && map.extent.getCenter().x !== center.x && map.extent.getCenter().y !== center.y) {
+    map.centerAndZoom(center, zoom);
+  }
+  counter++; //is only reset to zero on onMouseDown()
+}
+
+/**
+ * called if in split mode one map is panned
+ */
+function reLocate(extent) {
+  console.log('extent-change');
+  for (var i = 0; i < parent.frames.length; i++) { //go through all frames and re-center
+    if (parent.frames[i].name !== self.name) {
+      parent.frames[i].reCenterAndZoom(extent.extent.getCenter(), map.getLevel(), extent, i);
+    }
+  }
+}
 
 require(['esri/map',
   'esri/dijit/Popup',
@@ -95,13 +141,6 @@ require(['esri/map',
     }
   });
 
-  map.on('mouse-wheel', function() {
-    console.log('mouse-wheel');
-    for (var i = 0; i < parent.frames.length; i++) {
-      parent.frames[i].counter = 0;
-    }
-  });
-
   //Initialize the Legend:
   map.on('layers-add-result', function(results) {
     console.log('layers-add-results');
@@ -121,7 +160,7 @@ require(['esri/map',
     }
   });
 
-  //resize the map when the browser resizes
+  // resize the map when the browser resizes
   map.on('resize', function() {
     console.log('resize');
     map.resize();
@@ -221,48 +260,6 @@ function colorizeLayer(colorArray){
     addLegendItems(legendArray); //update the Legend
     console.log(map.getLayersVisibleAtScale());
   });
-}
-
-/**
- * called if in split mode one map is panned
- */
-function reLocate(extent) {
-  console.log('extent-change');
-  for (var i = 0; i < parent.frames.length; i++) { //go through all frames and re-center
-    if (parent.frames[i].name !== self.name) {
-      parent.frames[i].reCenterAndZoom(extent.getCenter(), map.getLevel(), extent, i);
-    }
-  }
-}
-
-/**
- * in split mode, synchronize zoom levels between both frames
- */
-function syncZoom(extent, zoomFactor, anchor, level) {
-  console.log('zoom');
-  for (var i = 0; i < parent.frames.length; i++) {
-    if (parent.frames[i].name !== self.name) {
-      try {
-        parent.frames[i].counter = 0;
-        console.log(level + '/' + zoomFactor);
-        parent.frames[i].map.setLevel(level);
-      } catch (err) {
-        console.log('zoom failed');
-      }
-    }
-  }
-}
-
-/**
- * sync both maps in split mode
- * check counter (check if the pan happened through actual mouse input) and
- * if the centers of both maps aren't identical
- */
-function reCenterAndZoom(center, zoom, extent, frameNr) {
-  if (counter < 1 && map.extent.getCenter().x !== center.x && map.extent.getCenter().y !== center.y) {
-    map.centerAndZoom(center, zoom);
-  }
-  counter++; //is only reset to zero on onMouseDown()
 }
 
 /**
@@ -454,7 +451,7 @@ function updateLayerVisibility(){
  */
 function legendToJSON() {
   var i = 0;
-  // var legend = new Object();
+
   var legend = {};
   legend.values = [];
   legend.diagram = [];
@@ -503,7 +500,7 @@ function initPrinter(){
 
   $.ajax({
       type: 'POST',
-      url: 'lwl-convert/converter.php',
+      url: './lwl-convert/converter.php',
       data: {
         'svg': str,
         'overlay': overlayUrl,
@@ -513,7 +510,7 @@ function initPrinter(){
         response = $.parseJSON(data);
         console.log('Map printed, id '+response.message);
         if(response.status==='success') {
-          $('#exportWarning').html('<a style="margin:" href="lwl-convert/printpreview.php?map='+response.message+'&name='+escape(mapAuthor)+'&title='+escape(mapTitle)+'" target="_blank">Link zur Druckansicht</a>');
+          $('#exportWarning').html('<a style="margin:" href="./lwl-convert/printpreview.php?map='+response.message+'&name='+escape(mapAuthor)+'&title='+escape(mapTitle)+'" target="_blank">Link zur Druckansicht</a>');
         } else {
           $('#exportWarning').html('<i>Beim Erstellen der Druckansicht ist ein Fehler aufgetreten.</i>');
         }
