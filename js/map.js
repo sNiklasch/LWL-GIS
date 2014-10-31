@@ -110,6 +110,8 @@ require(['esri/map',
   'dojo/dom-construct',
   'dojo/domReady!'], function(Map, Popup, Extent, SpatialReference, OpenStreetMapLayer, domConstruct) {
 
+  addTooltips(); //the mouse-over tooltips are created programmatically
+
   var popup = new Popup(null, domConstruct.create('div')); //ini popups for diagrams
 
   initExtent = new Extent(518012, 6573584, 1286052, 6898288, new SpatialReference({
