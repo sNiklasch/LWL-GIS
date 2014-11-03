@@ -1,11 +1,11 @@
 function addIndivBreakField() {
-    var initialFrom = getMinMax(currentDataframe)[0];
-    var initialTo = getMinMax(currentDataframe)[1];
+    var initialFrom = getMinMax(currentDataframe,yearIndex)[0];
+    var initialTo = getMinMax(currentDataframe,yearIndex)[1];
 
     if (breakCount > 0) {
     	//Wenn ein Feld exisitert, wird in die Grenzen des neuen Feldes die obere Grenze eingetragen:
         initialFrom = new Number(document.getElementById('breakTo' + (breakCount)).value); //jshint ignore:line
-        if (initialFrom < initialTo){initialFrom++;}
+        // if (initialFrom < initialTo){initialFrom++;}
         //initialTo = parseInt(document.getElementById('breakTo' + (breakCount)).value);
     }
 
@@ -50,10 +50,7 @@ function addIndivBreakField() {
 
     breaksList.appendChild(breakEntry);
 
-
     jscolor.init();
-
-
 }
 
 function remIndivBreakField(count) {
@@ -61,5 +58,4 @@ function remIndivBreakField(count) {
     var olddiv = document.getElementById('tr' + count);
     d.removeChild(olddiv);
     breakCount--;
-
 }
