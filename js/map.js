@@ -63,14 +63,14 @@ var fLGemeinde = 'https://services1.arcgis.com/W47q82gM5Y2xNen1/arcgis/rest/serv
 /**
  * in split mode, synchronize zoom levels between both frames
  */
-function syncZoom(extent, zoomFactor, anchor, level) {
+function syncZoom(extent) {
   console.log('zoom');
   for (var i = 0; i < parent.frames.length; i++) {
     if (parent.frames[i].name !== self.name) {
       try {
         parent.frames[i].counter = 0;
-        console.log(level + '/' + zoomFactor);
-        parent.frames[i].map.setLevel(level);
+        console.log(extent.level + '/' + extent.zoomFactor);
+        parent.frames[i].map.setLevel(extent.level);
       } catch (err) {
         console.log('zoom failed');
       }
