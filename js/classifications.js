@@ -481,10 +481,10 @@ function createColorArrayByLegendArray(legendArray){
 
 function addIndividualBreaks(){ //jshint ignore:line
 
-    var activeClassification = 1;
+    activeClassification = 1;
 
     //hex, min, max
-    var legendArray = new Array(breakCount); // jshint ignore:line
+    legendArray = new Array(breakCount); // jshint ignore:line
 
     for (var i = 1; i <= breakCount; i++) { // jshint ignore:line
         legendArray[i-1] = new Array(3);
