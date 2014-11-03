@@ -2,7 +2,7 @@
  * programmatically add onMouseOver-tooltips
  */
 function addTooltips() {
-  require(['dijit/Tooltip', 'dojo/domReady!'],function(Tooltip){
+  require(['dijit/Tooltip', 'dojo/dom', 'dojo/domReady!'],function(Tooltip, dom){
 
     //Layers:
     //Einwohner Layer
@@ -57,14 +57,14 @@ function addTooltips() {
     //Migrationen Layer
     new Tooltip({
       connectId: ['migrationen_gesamtInfo'],
-      label: 'Migrationen der gesamten<br>Bevölkerung der Jahre 2007 - 2011<br><b>Einheit: </b>&permil;',
+      label: 'Zu-/Fortzüge der gesamten<br>Bevölkerung der Jahre 2007 - 2011<br><b>Einheit: </b>&permil;',
       showDelay: 0
     });
 
     //Migrationen Nichtdeutsch Layer
     new Tooltip({
       connectId: ['migrationen_nichtdeutschInfo'],
-      label: 'Migrationen von Nichtdeutschen<br>der Jahre 2007 - 2011<br><b>Einheit: </b>&permil;',
+      label: 'Zu-/Fortzüge von Nichtdeutschen<br>der Jahre 2007 - 2011<br><b>Einheit: </b>&permil;',
       showDelay: 0
     });
 
@@ -78,7 +78,7 @@ function addTooltips() {
     //Pflegeeinrichtungen Layer
     new Tooltip({
       connectId: ['pflegeeinrichtungenInfo'],
-      label: 'Stationäre Pflegeeinrichtungen<br>im Jahr 2009<br><b>Einheit: </b>verfügbare Plätze je<br>100000 Einwohner ab 65 Jahren',
+      label: 'Verfügbare Plätze in stationären<br>Pflegeeinrichtungen im Jahre 2009<br><b>Einheit: </b>verfügbare Plätze je<br>100000 Einwohner ab 65 Jahren',
       showDelay: 0
     });
 
@@ -144,6 +144,37 @@ function addTooltips() {
       connectId: ['klasseneinteilungInfo'],
       label: 'In diesem Untermenü kannst du <br>die Farbgebung der Karte anpassen.',
       showDelay: 0
+    });
+
+    //Klassifikationsmethode
+    new Tooltip({
+      connectId: ['klassifikationsInfo'],
+      showDelay: 0,
+      getContent: function() {
+        var classifier = dom.byId('classificationMethod').value;
+        var tooltipText = '';
+        switch(classifier) {
+          case 'equalInterval':
+            tooltipText = 'Unterteilt den Bereich der Attributwerte in gleichgroße Teilbereiche.';
+            break;
+          case 'quantile':
+            tooltipText = 'Allen Klassen wird die gleiche Anzahl von Objekten zugewiesen.';
+            break;
+          case 'jenks':
+            tooltipText = 'Klassen basieren auf natürlichen Gruppierungen innerhalb der Daten.<br>Es werden Klassengrenzen identifiziert, die ähnliche Werte möglichst gut gruppieren<br>und die Unterschiede zwischen den Klassen maximieren.<br>Es werden Grenzen an den Stellen gesetzt, wo die Daten relativ große Unterschiede aufweisen.';
+            break;
+          case 'standardDeviation':
+            tooltipText = 'Klassen zeigen den Umfang der Abweichung der Objekt-Attributwerte vom Mittelwert.';
+            break;
+          case 'pretty':
+            tooltipText = 'Erstellt Klassen, die leicht verständlich sind.';
+            break;
+          default:
+            tooltipText = '';
+            break;
+        }
+        return tooltipText;
+      }
     });
   });
 }
