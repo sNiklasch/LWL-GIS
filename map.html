@@ -308,14 +308,14 @@
             Automatisch
           </div>
           <div id="automaticClassesPane" class="menuPaneContent">
-            <table border="0">
-              <tr>
-                <td>
+            <div style="width:100%; height: auto;">
+              <div class="row">
+                <div class="col-3">
                   <b>
                     Klassifikation:
                   </b>
-                </td>
-                <td>
+                </div>
+                <div class="col-6">
                   <select id="classificationMethod">
                     <option value="equalInterval" selected>Gleiches Intervall</option>
                     <option value="quantile">Quantil (Gleiche Anzahl)</option>
@@ -323,39 +323,44 @@
                     <option value="standardDeviation">Standardabweichung</option>
                     <option value="pretty">Schöne Unterbrechungen</option>
                   </select>
-                </td>
-                <td>
+                </div>
+                <div class="col-1">
                   <a id="klassifikationsInfo">
                     <img src="images/Help_sm.png">
                   </a>
-                </td>
-              </tr>
-              <tr>
-                <td>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-3">
                   <b>
                     Farbskala von/bis:
                   </b>
-                </td>
-                <td>
+                </div>
+                <div class="col-6">
                   <input class="color {valueElement:'colorPickerValueOne'}" id="eqBrStartColor" style="width:37px;" value="Farbe">
                   <b>
                   /
                   <b>
                   <input class="color {valueElement:'colorPickerValueTwo'}" id="eqBrEndColor" style="width:37px;" value="Farbe">
-                  <br>
-                </td>
-              </tr>
-              <tr>
-                <td>
+                </div>
+                <div class="col-1">
+
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-3">
                   <b>
                     Anzahl der Klassen:
                   </b>
-                </td>
-                <td>
-                  <input type="number" min="1" max="12" step="1" name="" value="4" id="equalBreaksText" placeholder="" onkeydown="return false" />
-                </td>
-              </tr>
-            </table>
+                </div>
+                <div class="col-6">
+                  <input type="text" name="" value="4" id="equalBreaksText" placeholder="" />
+                </div>
+                <div class="col-1">
+
+                </div>
+              </div>
+            </div>
             <!-- <input type="button" onclick="javascript:colorizeLayer(addEqualBreaksNew(yearIndex, parseInt(document.getElementById('equalBreaksText').value)-1,
             document.getElementById('colorPickerValueOne').value, document.getElementById('colorPickerValueTwo').value))" value="Anwenden"> -->
             <input type="button" onclick="javascript:classify(document.getElementById('classificationMethod').value, yearIndex, parseInt(document.getElementById('equalBreaksText').value)-1,
