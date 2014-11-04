@@ -19,7 +19,7 @@ function updateTimeslider(){
 	    	style:{width:'20%', height:'20px'}
 		});
 		var appendix = '';
-		if (layerAttributes[1].indexOf('Altersgruppe') !== -1) {appendix = ' J.'};
+		if (layerAttributes[1].indexOf('Altersgruppe') !== -1) {appendix = ' J.';}
 		document.getElementById('legendTheme').innerHTML = layerAttributes[1] + ': ' + getYearsArray(currentDataframe)[0] + appendix;
 		document.getElementById('timesliderValue').innerHTML = layerAttributes[1] + ': ' + getYearsArray(currentDataframe)[0] + appendix;
 		document.getElementById('timesliderMinLabel').innerHTML = getYearsArray(currentDataframe)[0];
