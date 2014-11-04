@@ -205,6 +205,10 @@ function jenks(yearInd, number, colorStart, colorEnd) {
   return classificationArray;
 }
 
+function log10(x){
+  return Math.log(x) / Math.LN10;
+}
+
 function rpretty(dmin, dmax, n) {
   var resultArray = [];
   var min_n = parseInt(n / 3);
@@ -250,7 +254,7 @@ function rpretty(dmin, dmax, n) {
     cell = 20 * 1e-07;
   }
 
-  base = Math.pow(10.0, Math.floor(Math.log10(cell)));
+  base = Math.pow(10.0, Math.floor(log10(cell)));
   var unit = base;
   if ((2 * base) - cell < h * (cell - unit)) {
     unit = 2.0 * base;
