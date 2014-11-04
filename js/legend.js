@@ -11,10 +11,11 @@ function addLegendItems(classesArray){
 	var legendDiv = document.getElementById('myLegend');
 	legendDiv.innerHTML = '';
 	var legendList = document.createElement('table');
-
+	var tbody = document.createElement('tbody');
+	legendList.appendChild(tbody);
 	for (var i = 0; i < classesArray.length; i++) {
 		var listItem = document.createElement('tr');
-
+		var colortd = document.createElement('td');
 		var colorField = document.createElement('div');
 		if (classesArray[i][0] === 0) {
 			colorField.style.backgroundColor = '#000000';
@@ -26,7 +27,8 @@ function addLegendItems(classesArray){
 		colorField.style.width = '35px';
 		colorField.style.opacity = 1;
 		colorField.className = 'legendColorfield';
-		listItem.appendChild(colorField);
+		colortd.appendChild(colorField);
+		listItem.appendChild(colortd);
 
 		var minField = document.createElement('td');
 		minField.innerHTML = Math.floor(classesArray[i][1]*100)/100;
@@ -48,7 +50,7 @@ function addLegendItems(classesArray){
 		unit.innerHTML = getLegendAttributes(currentDataframe, 2);
 		listItem.appendChild(unit);
 
-		legendList.appendChild(listItem);
+		tbody.appendChild(listItem);
 	}
 
 	legendDiv.appendChild(legendList);
