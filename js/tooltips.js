@@ -22,7 +22,7 @@ function addTooltips() {
     //Bevoelkerungsdichte Layer
     new Tooltip({
       connectId: ['bevoelkerungsdichteInfo'],
-      label: 'Bevölkerungsdichte im Jahr 2012<br><b>Einheit: </b>Einwohner je km&sup2;',
+      label: 'Bevölkerungsdichte im Jahr 2012<br><b>Einheit: </b>Einwohner pro km&sup2;',
       showDelay: 0
     });
 
@@ -71,14 +71,14 @@ function addTooltips() {
     //Pflegebeduerftige Layer
     new Tooltip({
       connectId: ['pflegebeduerftigeInfo'],
-      label: 'Anteil der Pflegebedürftigen<br>im Jahr 2011<br><b>Einheit: </b>&permil;',
+      label: 'Anteil der Pflegebedürftigen an<br>der Gesamtbevölkerung<br>im Jahr 2011<br><b>Einheit: </b>&permil;',
       showDelay: 0
     });
 
     //Pflegeeinrichtungen Layer
     new Tooltip({
       connectId: ['pflegeeinrichtungenInfo'],
-      label: 'Verfügbare Plätze in stationären<br>Pflegeeinrichtungen im Jahre 2009<br><b>Einheit: </b>verfügbare Plätze je<br>100000 Einwohner ab 65 Jahren',
+      label: 'Verfügbare Plätze in stationären<br>Pflegeeinrichtungen im Jahr 2009<br><b>Einheit: </b>verfügbare Plätze je<br>100000 Einwohner ab 65 Jahren',
       showDelay: 0
     });
 
@@ -135,14 +135,14 @@ function addTooltips() {
     //Themenauswahl Menü
     new Tooltip({
       connectId: ['themenauswahlInfo'],
-      label: 'In diesem Untermenü kannst du aussuchen,<br>welche Daten als Ebene über die Karte <br>gelegt werden sollen.',
+      label: 'In diesem Untermenü können Sie aussuchen,<br>welche Daten als Ebene über die Karte <br>gelegt werden sollen.',
       showDelay: 0
     });
 
     //Klasseneinteilung Menü
     new Tooltip({
       connectId: ['klasseneinteilungInfo'],
-      label: 'In diesem Untermenü kannst du <br>die Farbgebung der Karte anpassen.',
+      label: 'In diesem Untermenü können Sie die Art der Klassifikation angeben,<br>die Farbgebung und die Klassenanzahl verändern<br>und eigene Klassengrenzen bilden.',
       showDelay: 0
     });
 
@@ -155,16 +155,16 @@ function addTooltips() {
         var tooltipText = '';
         switch(classifier) {
           case 'equalInterval':
-            tooltipText = 'Unterteilt den Bereich der Attributwerte in gleichgroße Teilbereiche.';
+            tooltipText = 'Unterteilt die Klassen in gleich große Bereiche.';
             break;
           case 'quantile':
-            tooltipText = 'Allen Klassen wird die gleiche Anzahl von Objekten zugewiesen.';
+            tooltipText = 'Weist allen Klassen eine möglichst gleiche Anzahl von Objekten zu.';
             break;
           case 'jenks':
-            tooltipText = 'Klassen basieren auf natürlichen Gruppierungen innerhalb der Daten.<br>Es werden Klassengrenzen identifiziert, die ähnliche Werte möglichst gut gruppieren<br>und die Unterschiede zwischen den Klassen maximieren.<br>Es werden Grenzen an den Stellen gesetzt, wo die Daten relativ große Unterschiede aufweisen.';
+            tooltipText = 'Bildet Klassen, deren Objekte nah beieinanderliegende Werte aufweisen.';
             break;
           case 'standardDeviation':
-            tooltipText = 'Klassen zeigen den Umfang der Abweichung der Objekt-Attributwerte vom Mittelwert.';
+            tooltipText = 'Fasst Objekte, deren Werte eine ähnlich große Abweichung vom Durchschnitt aufweisen, zu Klassen zusammen.';
             break;
           case 'pretty':
             tooltipText = 'Erstellt Klassen, die leicht verständlich sind.';

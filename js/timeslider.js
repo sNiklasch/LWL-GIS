@@ -18,8 +18,10 @@ function updateTimeslider(){
 	    	slideDuration:0,
 	    	style:{width:'20%', height:'20px'}
 		});
-		document.getElementById('legendTheme').innerHTML = layerAttributes[1] + ': ' + getYearsArray(currentDataframe)[0];
-		document.getElementById('timesliderValue').innerHTML = layerAttributes[1] + ': ' + getYearsArray(currentDataframe)[0];
+		var appendix = '';
+		if (layerAttributes[1].indexOf('Altersgruppe') !== -1) {appendix = ' J.'};
+		document.getElementById('legendTheme').innerHTML = layerAttributes[1] + ': ' + getYearsArray(currentDataframe)[0] + appendix;
+		document.getElementById('timesliderValue').innerHTML = layerAttributes[1] + ': ' + getYearsArray(currentDataframe)[0] + appendix;
 		document.getElementById('timesliderMinLabel').innerHTML = getYearsArray(currentDataframe)[0];
 		document.getElementById('timesliderMaxLabel').innerHTML = getYearsArray(currentDataframe)[getYearsArray(currentDataframe).length-1];
 	}

@@ -91,7 +91,7 @@ var timesliderLabelValues = [   [],
 				                ['2011'],
 				                ['2008'],
 				                ['2009'],
-				                ['Römisch-Katholisch', 'Evangelisch', 'Andere / Konfessionslos'],
+				                ['katholisch', 'evangelisch', 'andere'],
 				                []
 				            ];
 
@@ -235,11 +235,11 @@ var allLayerAttributes = [
 	[datenMigrationenGesamt, 'Zu-/Fortzüge (gesamt)', '&permil;', ''],
 	[datenMigrationenNichtdeutsche, 'Zu-/Fortzüge (Nichtdeutsche)', '&permil;', ''],
 	[datenPflegebeduerftige, 'Pflegebedürftige', '&permil;', ''],
-	[datenPflegeeinrichtungen, 'Pflegeplätze', '', 'je 100000 Einwohner'],
-	[datenHaushaltsgroesse, 'Haushaltsgröße', 'Personen', ''],
+	[datenPflegeeinrichtungen, 'Pflegeplätze', '', 'Einheit: je 100000 Einwohner ab 65 J.'],
+	[datenHaushaltsgroesse, 'Haushaltsgrößen', 'Personen', ''],
 	[datenSingleHaushalte, 'Single-Haushalte', '&#037;', ''],
 	[datenNichtdeutsche, 'Nichtdeutsche', '&#037;', ''],
-	[datenMigranten, 'Migranten', '&#037;', ''],
-	[datenEinkommen, 'Einkommen', '&euro;', '&euro; je Einw.'],
+	[datenMigranten, 'Menschen mit Migrationshintergrund', '&#037;', ''],
+	[datenEinkommen, 'Einkommen', '&euro;', 'Einheit: &euro; je Einwohner'],
 	[datenKonfessionen, 'Konfessionen 2008 - 2010', '&#037;', '']
 ];

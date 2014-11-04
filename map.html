@@ -169,7 +169,7 @@
                   </a>
                 <br>
                   <input type="radio" id="migrationen_gesamtCheck" name="Layer" value="Migrationen Gesamt" onchange="layerChange(datenMigrationenGesamt)">
-                  <label for="migrationen_gesamtCheck">Zu-/Fortzüge Gesamt </label>
+                  <label for="migrationen_gesamtCheck">Zu-/Fortzüge gesamt </label>
                   <a id="migrationen_gesamtInfo" style="cursor: help;">
                     <img src="images/Help_sm.png">
                   </a>
@@ -200,7 +200,7 @@
                   </a>
                 <br>
                   <input type="radio" id="haushaltsgroessenCheck" name="Layer" value="Haushaltsgr&ouml;ssen" onchange="layerChange(datenHaushaltsgroesse)">
-                  <label for="haushaltsgroessenCheck">Haushaltsgr&ouml;ssen </label>
+                  <label for="haushaltsgroessenCheck">Haushaltsgrößen </label>
                   <a id="haushaltsgroessenInfo" style="cursor: help;">
                     <img src="images/Help_sm.png">
                   </a>
@@ -218,7 +218,7 @@
                   </a>
                 <br>
                   <input type="radio" id="migrationshintergrundCheck" name="Layer" value="Migrationshintergrund" onchange="layerChange(datenMigranten)">
-                  <label for="migrationshintergrundCheck">Migrationshintergrund </label>
+                  <label for="migrationshintergrundCheck">Menschen mit Migrationshintergrund </label>
                   <a id="migrationshintergrundInfo" style="cursor: help;">
                     <img src="images/Help_sm.png">
                   </a>
@@ -257,9 +257,9 @@
                 Zusätzliche Ebenen:
               </b>
               <br>
-              <input type="checkbox" id="gemeindeLayerChk" name="Layer" value="Gemeinde" onchange="layerChange(70)" autocomplete="off">
+             <!--  <input type="checkbox" id="gemeindeLayerChk" name="Layer" value="Gemeinde" onchange="layerChange(70)" autocomplete="off">
               <label for="baseMapChk">Gemeindegrenzen einblenden</label>
-              <br>
+              <br> -->
               <input type="checkbox" id="baseMapChk" name="Layer" value="Basemap" onchange="layerChange(50)" autocomplete="off">
               <label for="baseMapChk">Hintergrundkarte einblenden</label>
               <br>
@@ -317,8 +317,8 @@
                 </div>
                 <div class="col-6">
                   <select id="classificationMethod">
-                    <option value="equalInterval" selected>Gleiches Intervall</option>
-                    <option value="quantile">Quantil (Gleiche Anzahl)</option>
+                    <option value="equalInterval" selected>Gleiche Intervalle</option>
+                    <option value="quantile">Quantile (Gleiche Anzahl)</option>
                     <option value="jenks">Natürliche Unterbrechungen</option>
                     <option value="standardDeviation">Standardabweichung</option>
                     <option value="pretty">Schöne Unterbrechungen</option>

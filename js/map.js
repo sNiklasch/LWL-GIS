@@ -326,7 +326,7 @@ function layerChange(layerNr,removeLayer) {
       diagramLayer = null;
     }
     activeDiagramLayer = layerNr;
-    document.getElementById('legendDiagrams').innerHTML = '<table style="margin-left:2px;" cellspacing="0" cellpadding="0"><tr><td><img src="images/legend_konfessionen_diagramm.png" /></td><td style="font-size:13px;">Konfessionen</td></tr><tr><td><img src="images/legend_konfessionen_feld1rk.png" /></td><td>R&ouml;misch-Katholisch</td></tr><tr><td><img src="images/legend_konfessionen_feld2ev.png" /></td><td>Evangelisch</td></tr><tr><td><img src="images/legend_konfessionen_feld3andere.png" /></td><td>Andere</td></tr></table>';
+    document.getElementById('legendDiagrams').innerHTML = '<table style="margin-left:2px;" cellspacing="0" cellpadding="0"><tr><td><img src="images/legend_konfessionen_diagramm.png" /></td><td style="font-size:13px;">Konfessionen</td></tr><tr><td><img src="images/legend_konfessionen_feld1rk.png" /></td><td>katholisch</td></tr><tr><td><img src="images/legend_konfessionen_feld2ev.png" /></td><td>evangelisch</td></tr><tr><td><img src="images/legend_konfessionen_feld3andere.png" /></td><td>andere</td></tr></table>';
     updateLayerVisibility();
     //handling checkbox for the basemap
   } else if (layerNr === 50 && !(document.getElementById('baseMapChk').checked)) {
@@ -380,8 +380,10 @@ function yearChange(value){
   yearIndex = value;
   currentYearLabel = getYearsArray(currentDataframe)[value];
   console.log('aktuell: ' + currentLayer);
-  document.getElementById('timesliderValue').innerHTML = layerAttributes[1] + ': ' + currentYearLabel;
-  document.getElementById('legendTheme').innerHTML = layerAttributes[1] + ': ' + currentYearLabel;
+  var appendix = '';
+  if (layerAttributes[1].indexOf('Altersgruppen') !== -1) { appendix = ' J.'};
+  document.getElementById('timesliderValue').innerHTML = layerAttributes[1] + ': ' + currentYearLabel + appendix;
+  document.getElementById('legendTheme').innerHTML = layerAttributes[1] + ': ' + currentYearLabel + appendix;
   currentYear = currentYearLabel;
   switch(activeClassification) {
     case 1:
