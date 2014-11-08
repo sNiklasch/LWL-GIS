@@ -3,7 +3,7 @@ var breakCount = 0; // keep track of how many individual breaks have been create
 var diagramLayer = null; // the active clickable diagram layer
 var printCounter = 0; //counter for the printer widget
 
-var map, initExtent, osmLayer, featureLayerGemeinde, featureLayer;
+var map, initExtent, osmLayer, featureLayerGemeinde, featureLayer, operationalLayer;
 var currentDataframe = datenEinwohner;
 var autoClassesStartColor = 'FFF880';
 var autoClassesEndColor = 'EA3313';
@@ -64,12 +64,10 @@ var fLGemeinde = 'https://services1.arcgis.com/W47q82gM5Y2xNen1/arcgis/rest/serv
  * in split mode, synchronize zoom levels between both frames
  */
 function syncZoom(extent) {
-  console.log('zoom');
   for (var i = 0; i < parent.frames.length; i++) {
     if (parent.frames[i].name !== self.name) {
       try {
         parent.frames[i].counter = 0;
-        console.log(extent.level + '/' + extent.zoomFactor);
         parent.frames[i].map.setLevel(extent.level);
       } catch (err) {
         console.log('zoom failed');
@@ -94,7 +92,6 @@ function reCenterAndZoom(center, zoom, extent, frameNr) {
  * called if in split mode one map is panned
  */
 function reLocate(extent) {
-  console.log('extent-change');
   for (var i = 0; i < parent.frames.length; i++) { //go through all frames and re-center
     if (parent.frames[i].name !== self.name) {
       parent.frames[i].reCenterAndZoom(extent.extent.getCenter(), map.getLevel(), extent, i);
@@ -137,7 +134,6 @@ require(['esri/map',
   map.on('zoom-end', syncZoom);
 
   map.on('mouse-down', function() {
-    console.log('mouse-down');
     for (var i = 0; i < parent.frames.length; i++) {
       parent.frames[i].counter = 0; //the counter is used if any pan related events occured onMouseDown
     }
@@ -145,7 +141,6 @@ require(['esri/map',
 
   //Initialize the Legend:
   map.on('layers-add-result', function(results) {
-    console.log('layers-add-results');
     var layerInfo = dojo.map(results, function(layer,index){
       return {
         layer:layer.layer,
@@ -164,7 +159,6 @@ require(['esri/map',
 
   // resize the map when the browser resizes
   map.on('resize', function() {
-    console.log('resize');
     map.resize();
   });
 
@@ -220,22 +214,20 @@ function initLayers(){
       mode: FeatureLayer.MODE_ONDEMAND,
       outFields: ['Kreisname']
     });
-    featureLayerGemeinde = new FeatureLayer(fLGemeinde + '/0', {
-      infoTemplate: new InfoTemplate('&nbsp;', '${Kreisname}'),
-      mode: FeatureLayer.MODE_ONDEMAND,
-      outFields: ['Kreisname']
-    });
+    // featureLayerGemeinde = new FeatureLayer(fLGemeinde + '/0', {
+    //   infoTemplate: new InfoTemplate('&nbsp;', '${Kreisname}'),
+    //   mode: FeatureLayer.MODE_ONDEMAND,
+    //   outFields: ['Kreisname']
+    // });
     map.addLayer(featureLayer, 0);
     classify('equalInterval', 0, autoClassesBreaks, autoClassesStartColor, autoClassesEndColor);
-    // colorArray = addEqualBreaksNew(0, autoClassesBreaks, autoClassesStartColor, autoClassesEndColor);
-    // colorizeLayer(colorArray);
+
     operationalLayer = new ArcGISDynamicMapServiceLayer(mapServer, { 'id': 'collection' });
     featureLayer.on('update-start', showLoadingIcon);
     featureLayer.on('update-end', hideLoadingIcon);
+    operationalLayer.setVisibleLayers([fIDkreisnamen],true);
     map.addLayer(operationalLayer, 1);
-    operationalLayer.setVisibleLayers([fIDkreisnamen]);
     getLayerAttributes();
-    // window.setTimeout('addEqualBreaks(equalBreaksOptions[0], equalBreaksOptions[1], equalBreaksOptions[2])', 1000);
   });
 }
 
@@ -381,9 +373,11 @@ function yearChange(value){
   currentYearLabel = getYearsArray(currentDataframe)[value];
   console.log('aktuell: ' + currentLayer);
   var appendix = '';
+  var lineBreak = '';
   if (layerAttributes[1].indexOf('Altersgruppen') !== -1) { appendix = ' J.'};
+  if (layerAttributes[1].indexOf('Einwohner-Entwicklung') !== -1) { lineBreak = '<br>' };
   document.getElementById('timesliderValue').innerHTML = layerAttributes[1] + ': ' + currentYearLabel + appendix;
-  document.getElementById('legendTheme').innerHTML = layerAttributes[1] + ': ' + currentYearLabel + appendix;
+  document.getElementById('legendTheme').innerHTML = '<span>'+layerAttributes[1] + ': </span>' + lineBreak + '<span>' + currentYearLabel + appendix + '</span>';
   currentYear = currentYearLabel;
   switch(activeClassification) {
     case 1:
@@ -436,18 +430,17 @@ function updateLayerVisibility(){
     else {
       operationalLayer.setVisibleLayers([fIDkreisnamen, activeDiagramLayer]);
     }
-    console.log('Labels sichtbar');
+    operationalLayer.setVisibility(true);
   }
   else {
+    operationalLayer.setVisibility(true);
     if (activeDiagramLayer === 0){
-      operationalLayer.setVisibleLayers([2]);
+      operationalLayer.setVisibility(false);
     }
     else {
       operationalLayer.setVisibleLayers([activeDiagramLayer]);
     }
-    console.log('Labels nicht sichtbar');
   }
-  //legend.refresh();
 }
 
 /**
@@ -463,10 +456,10 @@ function legendToJSON() {
   $('div#myLegend table tr').each( function () {
     legend.values.push(
       {
-        'bg' : $(this).children('.legendColorfield').css('background-color'),
-        'min' : $(this).children('td:nth-of-type(1)').text(),
-        'l' : $(this).children('td:nth-of-type(3)').text(),
-        'max' : $(this).children('td:nth-of-type(4)').text()
+        'bg' : $(this).children('td:nth-of-type(1)').children('.legendColorfield').css('background-color'),
+        'min' : $(this).children('td:nth-of-type(2)').text(),
+        'l' : $(this).children('td:nth-of-type(4)').text(),
+        'max' : $(this).children('td:nth-of-type(5)').text()
       }
     );
   });

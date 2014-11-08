@@ -43,14 +43,14 @@ function addTooltips() {
     //Geburtenrate Layer
     new Tooltip({
       connectId: ['geburtenrateInfo'],
-      label: 'Geburtenrate der Jahre 2007 - 2011<br>im Durschschnitt<br><b>Einheit: </b>&permil;',
+      label: 'Geburtenrate der Jahre 2007 - 2011<br>im Durchschnitt<br><b>Einheit: </b>&permil;',
       showDelay: 0
     });
 
     //Sterberate Layer
     new Tooltip({
       connectId: ['sterberateInfo'],
-      label: 'Sterberate der Jahre 2007 - 2011<br>im Durschschnitt<br><b>Einheit: </b>&permil;',
+      label: 'Sterberate der Jahre 2007 - 2011<br>im Durchschnitt<br><b>Einheit: </b>&permil;',
       showDelay: 0
     });
 
