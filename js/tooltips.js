@@ -167,7 +167,7 @@ function addTooltips() {
             tooltipText = 'Fasst Objekte, deren Werte eine ähnlich große Abweichung vom Durchschnitt aufweisen, zu Klassen zusammen.';
             break;
           case 'pretty':
-            tooltipText = 'Erstellt Klassen, die leicht verständlich sind.';
+            tooltipText = 'Erstellt Klassen, die leicht verständlich<br>und optisch ansprechend sind.';
             break;
           default:
             tooltipText = '';

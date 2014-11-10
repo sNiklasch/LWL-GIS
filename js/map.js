@@ -4,7 +4,7 @@ var diagramLayer = null; // the active clickable diagram layer
 var printCounter = 0; //counter for the printer widget
 
 var map, initExtent, osmLayer, featureLayerGemeinde, featureLayer, operationalLayer;
-var currentDataframe = datenEinwohner;
+var currentDataframe = datenEinwohnerEntwicklung;
 var autoClassesStartColor = 'FFF880';
 var autoClassesEndColor = 'EA3313';
 var autoClassesBreaks = 3;
@@ -186,7 +186,7 @@ require(['esri/map',
 
   //setup the timeslider:
   createTimeslider();
-  yearChange(1); //set the init-year to 2012
+  yearChange(0); //set the init-year to 2012
 
   fullExtent();
 });
@@ -401,13 +401,6 @@ function yearChange(value){
     default:
       break;
   }
-  /*if (activeClassification === 1){
-    colorizeLayer(createColorArrayByLegendArray(legendArray));
-  }
-  else {
-    colorArray = addEqualBreaksNew(value, autoClassesBreaks, autoClassesStartColor, autoClassesEndColor); //new
-    colorizeLayer(colorArray);
-  }*/
 }
 
 function getLayerAttributes(){

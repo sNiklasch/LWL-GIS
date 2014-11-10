@@ -61,7 +61,7 @@ function createTimeslider(){
 	    	style:{width:'20%', height:'20px'}
 		}, 'timeslider');
 		updateTimeslider();
-		timeslider.set({value:1});
+		timeslider.set({value:0});
 	});
 	document.getElementById('timesliderValue').innerHTML = layerAttributes[1] + ': ' + getYearsArray(currentDataframe)[0];
 	document.getElementById('legendTheme').innerHTML = layerAttributes[1] + ': ' + getYearsArray(currentDataframe)[0];
