@@ -297,7 +297,7 @@ function layerChange(layerNr,removeLayer) {
       diagramLayer = null;
     }
     activeDiagramLayer = layerNr;
-    document.getElementById('legendDiagrams').innerHTML = '<table style="margin-left:2px;" cellspacing="0" cellpadding="0"><tr><td><img src="images/legend_altersklassen_diagramm.png" /></td><td style="font-size:13px;">Altersklassen</td></tr><tr><td><img src="images/legend_altersklassen_feld1.png" /></td><td>0 - 18</td></tr><tr><td><img src="images/legend_altersklassen_feld2.png" /></td><td>18 - 30</td></tr><tr><td><img src="images/legend_altersklassen_feld3.png" /></td><td>30 - 65</td></tr><tr><td><img src="images/legend_altersklassen_feld4.png" /></td><td>>65</td></tr></table>';
+    document.getElementById('legendDiagrams').innerHTML = '<table style="margin-left:2px;" cellspacing="0" cellpadding="0"><tr><td><img src="images/legend_altersklassen_diagramm.png" /></td><td style="font-size:13px;">Altersklassen</td></tr><tr><td><img src="images/legend_altersklassen_feld1.png" /></td><td>0 - 18 J.</td></tr><tr><td><img src="images/legend_altersklassen_feld2.png" /></td><td>18 - 30 J.</td></tr><tr><td><img src="images/legend_altersklassen_feld3.png" /></td><td>30 - 65 J.</td></tr><tr><td><img src="images/legend_altersklassen_feld4.png" /></td><td>>65 J.</td></tr></table>';
     updateLayerVisibility();
   } else if (layerNr === fIDkonfessionenDiagramme20082010 && !(document.getElementById('konfessionenDiagramme2008Check').checked)) {
     diagramLayer = null;
@@ -323,10 +323,10 @@ function layerChange(layerNr,removeLayer) {
     //handling checkbox for the basemap
   } else if (layerNr === 50 && !(document.getElementById('baseMapChk').checked)) {
     map.removeLayer(osmLayer);
-    document.getElementById('copyrightLwl').innerHTML = '&copy; Landschaftsverband Westfalen-Lippe (LWL), 48133 M&uuml;nster';
+    document.getElementById('copyrightLwl').innerHTML = '&copy; Landschaftsverband Westfalen-Lippe (LWL)';
   } else if (layerNr === 50 && (document.getElementById('baseMapChk').checked)) {
     map.addLayer(osmLayer, 0);
-    document.getElementById('copyrightLwl').innerHTML = '&copy; Landschaftsverband Westfalen-Lippe (LWL), 48133 M&uuml;nster, <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>-Mitwirkende';
+    document.getElementById('copyrightLwl').innerHTML = '&copy; Landschaftsverband Westfalen-Lippe (LWL), <a target="_blank" href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>-Mitwirkende';
     //handling checkbox for the operationalLayer
   } else if (layerNr === 60 && (document.getElementById('labelChk').checked)) {
     labelVisibility = true;
