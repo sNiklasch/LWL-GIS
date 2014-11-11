@@ -24,7 +24,7 @@
 	font-size: 12px;
 	top: 75px;
 	right: 120px;
-	width: 250px;
+	width: 375px;
 	display: none;
 	max-height: 75%;
 }
@@ -68,20 +68,20 @@
 	left: 65px;
 	bottom: 55px;
 	top: auto;
-	width: 200px;
+	width: 215px;
 }
 
 #menuPane-classes {
-	width: 285px;
+	width: 375px;
 }
 
 .menuPaneContent .table {
 	display:table;
 }
 
-.menuPaneContent .row {
+/*.menuPaneContent .row {
 	display:table-row;
-}
+}*/
 
 .menuPaneContent .cell {
 	display:table-cell;
@@ -89,4 +89,32 @@
 
 .menuPaneContent label {
 	padding-right:3px;
+}
+
+.row {
+	line-height: 2;
+}
+
+.col-3 {
+	width: 30%;
+	min-width: 30%;
+	max-width: 30%;
+	display: inline-block;
+	line-height: 1;
+}
+
+.col-6 {
+	width: 60%;
+	min-width: 60%;
+	max-width: 60%;
+	display: inline-block;
+	line-height: 1;
+}
+
+.col-1 {
+	width: 2%;
+	min-width: 2%;
+	max-width: 2%;
+	display: inline-block;
+	line-height: 1;
 }

@@ -1,77 +1,65 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang="en">
-  
+
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1,user-scalable=no"/>
-    
-    <!-- Basic Interface Style -->
-	<link rel="stylesheet" href="http://serverapi.arcgisonline.com/jsapi/arcgis/3.4/js/dojo/dijit/themes/tundra/tundra.css">
-    <!-- Basic Interface Style -->
-	<link rel="stylesheet" href="http://serverapi.arcgisonline.com/jsapi/arcgis/3.4/js/dojo/dijit/themes/claro/claro.css">
-	<link rel="stylesheet" href="http://serverapi.arcgisonline.com/jsapi/arcgis/3.4/js/esri/css/esri.css">
-  <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
-  
-    
-	<!-- Style for popups containing diagrams -->
-    <link rel="stylesheet" href="http://serverapi.arcgisonline.com/jsapi/arcgis/3.4/js/esri/dijit/css/Popup.css">
+
+    <link rel="stylesheet" href="http://js.arcgis.com/3.11/dijit/themes/tundra/tundra.css">
+    <link rel="stylesheet" href="http://js.arcgis.com/3.11/esri/css/esri.css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
+    <!-- <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css"> -->
+
+	   <!-- Style for popups containing diagrams
+    <link rel="stylesheet" href="http://serverapi.arcgisonline.com/jsapi/arcgis/3.4/js/esri/dijit/css/Popup.css">-->
     <!-- Main style file-->
     <link rel="stylesheet" href="css/lwl-style.css">
     <link rel="stylesheet" href="css/menuPane.css">
-	
-	<!--dojo config settings-->
-	<script type="text/javascript">
+
+    <!--dojo config settings-->
+    <script type="text/javascript">
       var dojoConfig = {
         parseOnLoad: true
-      }
-          ;
+      };
     </script>
-    
+
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.11.1/jquery-ui.js"></script>
+
     <!-- ArcGIS Server Script -->
-    <script src="http://serverapi.arcgisonline.com/jsapi/arcgis/?v=3.4">
-    </script>
+    <script type="text/javascript" src="http://js.arcgis.com/3.11/"></script>
+
     <!-- Menu behaviour (icons, sliding etc.) -->
-    <script type="text/javascript" src="js/compareWindows.js">
-    </script>
-    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
-    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
-    <script src="js/lwldatajson.js" type="text/javascript"></script>
-    <script src="js/windowHandling.js" type="text/javascript"></script>
-    <script src="js/dataHandling.js" type="text/javascript"></script>
-    <script src="js/timeslider.js" type="text/javascript"></script>
-    <script src="js/classifications.js" type="text/javascript"></script>
-    <script src="js/tooltips.js" type="text/javascript"></script>
-    <script src="js/data.js" type="text/javascript"></script>
-    <script src="js/loading.js" type="text/javascript"></script>
-    <script src="js/legend.js" type="text/javascript"></script>
-    <!-- -->
-    <script type="text/javascript" src="js/individualBreaks.js">
-    </script>
-    <!-- Color picker -->
-    <script type="text/javascript" src="js/jscolor/jscolor.js">
-    </script>
-    <!-- Functions to create a color ramp from two colors -->
-    <script type="text/javascript" src="js/generateColorRamp.js">
-    </script>
-    </script>
-    <!-- Map init() Method and other important functions -->
-    <script type="text/javascript" src="js/main.js">
-    </script>
+    <script type="text/javascript" src="js/compareWindows.js"></script>
+    <script type="text/javascript" src="js/lwldatajson.js"></script>
+    <script type="text/javascript" src="js/windowHandling.js"></script>
+    <script type="text/javascript" src="js/dataHandling.js"></script>
+    <script type="text/javascript" src="js/timeslider.js"></script>
+    <script type="text/javascript" src="js/classifications.js"></script>
+    <script type="text/javascript" src="js/tooltips.js"></script>
+    <script type="text/javascript" src="js/data.js"></script>
+    <script type="text/javascript" src="js/loading.js"></script>
+    <script type="text/javascript" src="js/legend.js"></script>
+    <script type="text/javascript" src="js/individualBreaks.js"></script>
+    <script type="text/javascript" src="js/jscolor/jscolor.js"></script>
+    <script type="text/javascript" src="js/generateColorRamp.js"></script>
+    <script type="text/javascript" src="js/map.js"></script>
+
     <!-- Google Analytics Script: -->
     <script type="text/javascript">
 
-    //Google Analytics:
-	  var _gaq = _gaq || [];
-	  _gaq.push(['_setAccount', 'UA-39681097-1']);
-	  _gaq.push(['_setDomainName', 'webgis-westfalen.de']);
-	  _gaq.push(['_trackPageview']);
-	  (function() {
-	    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-	    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-	    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-	  })();
-	
-	</script>
+      //Google Analytics:
+  	  var _gaq = _gaq || [];
+  	  _gaq.push(['_setAccount', 'UA-39681097-1']);
+  	  _gaq.push(['_setDomainName', 'webgis-westfalen.de']);
+  	  _gaq.push(['_trackPageview']);
+  	  (function() {
+  	    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+  	    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+  	    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  	  })();
+
+  	</script>
   </head>
   <!-- LWL-Header -->
   <body onload="" class="tundra">
@@ -92,13 +80,13 @@
         <li><a href="/LWL/Kultur/Kulturabteilung/" class=" ">Kultur</a></li>
       </ul>-->
       </div><!-- /hauptmenue -->
-    
+
   </div>
-    <div id="lwl-claim"> 
+    <div id="lwl-claim">
       <img id="logo" src="http://www.lwl.org/nozope/LWL/skin11/refresh/claim.png" width="265" height="20" alt="Für die Menschen. Für Westfalen-Lippe" title="Für die Menschen. Für Westfalen-Lippe">
     </div></div>
  </div>
-  
+
   <!-- Timeslider -->
   <div id="timesliderValue"></div>
   <div id="timesliderDiv">
@@ -109,13 +97,13 @@
 
     <!-- Layer selection menu -->
     <div id="content1" style="position: absolute; width: 100%; height: 100%;">
-      
+
       <!-- Layer Button -->
       <a href="#" class="icons" id="slideAwayButton_layer" onclick="showPane('menuPane-layer')" style="position: absolute; right:10px; top:72px; z-index: 4;">
         <img src="images/layers_map.png">
         <div id="labelLayer" class="buttonLabel">
 	      Themen
-	    </div>    
+	    </div>
       </a>
 
       <!-- Layer Pane -->
@@ -137,13 +125,13 @@
                 Demographische Daten
               </div>
               <div id="demographischPane" class="menuPaneContent">
-                  <input type="radio" id="einwohnerCheck" name="Layer" value="Einwohner" checked=true onchange="layerChange(datenEinwohner)">
+                  <!-- <input type="radio" id="einwohnerCheck" name="Layer" value="Einwohner" checked=true onchange="layerChange(datenEinwohner)">
                   <label for="einwohnerCheck">Einwohner </label>
                   <a id="einwohnerInfo" style="cursor: help;">
                     <img src="images/Help_sm.png">
                   </a>
-                <br>
-                  <input type="radio" id="einwohner_entwicklungCheck" name="Layer" value="Einwohner-Entwicklung" onchange="layerChange(datenEinwohnerEntwicklung)">
+                <br> -->
+                  <input type="radio" id="einwohner_entwicklungCheck" name="Layer" checked=true value="Einwohner-Entwicklung" onchange="layerChange(datenEinwohnerEntwicklung)">
                   <label for="einwohner_entwicklungCheck">Einwohner-Entwicklung </label>
                   <a id="einwohner_entwicklungInfo" style="cursor: help;">
                     <img src="images/Help_sm.png">
@@ -162,7 +150,7 @@
                   </a>
                 <br>
                   &nbsp;&nbsp;&nbsp;
-                  <input type="checkbox" id="altersgruppenDiagramme2011Check" value="Altersgruppen Diagramme 2011" onchange="layerChange(fIDaltersgruppen_diagramme_2011)">
+                  <input type="checkbox" id="altersgruppenDiagramme2011Check" value="Altersgruppen Diagramme 2011" onchange="layerChange(fIDaltersgruppenDiagramme2011)">
                   <label for="altersgruppenDiagramme2011Check">Diagramme 2011</label>
                   <a id="altersgruppenDiagramme2011Info" style="cursor: help;">
                     <img src="images/Help_sm.png">
@@ -181,13 +169,13 @@
                   </a>
                 <br>
                   <input type="radio" id="migrationen_gesamtCheck" name="Layer" value="Migrationen Gesamt" onchange="layerChange(datenMigrationenGesamt)">
-                  <label for="migrationen_gesamtCheck">Migrationen Gesamt </label>
+                  <label for="migrationen_gesamtCheck">Zu-/Fortzüge gesamt </label>
                   <a id="migrationen_gesamtInfo" style="cursor: help;">
                     <img src="images/Help_sm.png">
                   </a>
                 <br>
                   <input type="radio" id="migrationen_nichtdeutschCheck" name="Layer" value="Migrationen Nichtdeutsch" onchange="layerChange(datenMigrationenNichtdeutsche)">
-                  <label for="migrationen_nichtdeutschCheck">Migrationen Nichtdeutsche </label>
+                  <label for="migrationen_nichtdeutschCheck">Zu-/Fortzüge Nichtdeutsche </label>
                   <a id="migrationen_nichtdeutschInfo" style="cursor: help;">
                     <img src="images/Help_sm.png">
                   </a>
@@ -206,13 +194,13 @@
                   </a>
                 <br>
                   <input type="radio" id="pflegeeinrichtungenCheck" name="Layer" value="Pflegeeinrichtungen" onchange="layerChange(datenPflegeeinrichtungen)">
-                  <label for="pflegeeinrichtungenCheck">Pflegeeinrichtungen </label>
+                  <label for="pflegeeinrichtungenCheck">Pflegeplätze </label>
                   <a id="pflegeeinrichtungenInfo" style="cursor: help;">
                     <img src="images/Help_sm.png">
                   </a>
                 <br>
                   <input type="radio" id="haushaltsgroessenCheck" name="Layer" value="Haushaltsgr&ouml;ssen" onchange="layerChange(datenHaushaltsgroesse)">
-                  <label for="haushaltsgroessenCheck">Haushaltsgr&ouml;ssen </label>
+                  <label for="haushaltsgroessenCheck">Haushaltsgrößen </label>
                   <a id="haushaltsgroessenInfo" style="cursor: help;">
                     <img src="images/Help_sm.png">
                   </a>
@@ -230,7 +218,7 @@
                   </a>
                 <br>
                   <input type="radio" id="migrationshintergrundCheck" name="Layer" value="Migrationshintergrund" onchange="layerChange(datenMigranten)">
-                  <label for="migrationshintergrundCheck">Migrationshintergrund </label>
+                  <label for="migrationshintergrundCheck">Menschen mit Migrationshintergrund </label>
                   <a id="migrationshintergrundInfo" style="cursor: help;">
                     <img src="images/Help_sm.png">
                   </a>
@@ -248,7 +236,7 @@
                   </a>
                 <br>
                   &nbsp;&nbsp;&nbsp;
-                  <input type="checkbox" id="konfessionenDiagramme2008Check" value="Konfessionen Diagramme 2008 - 2010" onchange="layerChange(fIDkonfessionen_diagramme_20082010)">
+                  <input type="checkbox" id="konfessionenDiagramme2008Check" value="Konfessionen Diagramme 2008 - 2010" onchange="layerChange(fIDkonfessionenDiagramme20082010)">
                   <label for="konfessionenDiagramme2008Check">Diagramme &#216; 2008 - 2010</label>
                   <a id="konfessionenDiagramme2008Info" style="cursor: help;">
                     <img src="images/Help_sm.png">
@@ -269,6 +257,9 @@
                 Zusätzliche Ebenen:
               </b>
               <br>
+             <!--  <input type="checkbox" id="gemeindeLayerChk" name="Layer" value="Gemeinde" onchange="layerChange(70)" autocomplete="off">
+              <label for="baseMapChk">Gemeindegrenzen einblenden</label>
+              <br> -->
               <input type="checkbox" id="baseMapChk" name="Layer" value="Basemap" onchange="layerChange(50)" autocomplete="off">
               <label for="baseMapChk">Hintergrundkarte einblenden</label>
               <br>
@@ -286,7 +277,7 @@
           Klassen
         </div>
       </a>
-  
+
       <!-- Classes Pane -->
       <div id="menuPane-classes" class="menuPane">
         <a href="#" id="hideButton_classes" onclick="hidePane('#menuPane-classes')" style="position: absolute; top:5px; right:7px; z-index: 4;">
@@ -317,43 +308,71 @@
             Automatisch
           </div>
           <div id="automaticClassesPane" class="menuPaneContent">
-            <table border="0">
-              <tr>
-                <td>
+            <div style="width:100%; height: auto;">
+              <div class="row">
+                <div class="col-3">
                   <b>
-                    Farbskala von/bis: 
+                    Klassifikation:
                   </b>
-                </td>
-                <td>
+                </div>
+                <div class="col-6">
+                  <select id="classificationMethod">
+                    <option value="equalInterval" selected>Gleiche Intervalle</option>
+                    <option value="quantile">Quantile (Gleiche Anzahl)</option>
+                    <option value="jenks">Natürliche Unterbrechungen</option>
+                    <option value="standardDeviation">Standardabweichung</option>
+                    <option value="pretty">Schöne Unterbrechungen</option>
+                  </select>
+                </div>
+                <div class="col-1">
+                  <a id="klassifikationsInfo">
+                    <img src="images/Help_sm.png">
+                  </a>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-3">
+                  <b>
+                    Farbskala von/bis:
+                  </b>
+                </div>
+                <div class="col-6">
                   <input class="color {valueElement:'colorPickerValueOne'}" id="eqBrStartColor" style="width:37px;" value="Farbe">
                   <b>
                   /
                   <b>
                   <input class="color {valueElement:'colorPickerValueTwo'}" id="eqBrEndColor" style="width:37px;" value="Farbe">
-                  <br>
-                </td>
-              </tr>
-              <tr>
-                <td>
+                </div>
+                <div class="col-1">
+
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-3">
                   <b>
-                    Anzahl der Klassen: 
+                    Anzahl der Klassen:
                   </b>
-                </td>
-                <td>
-                  <input type="text" id="equalBreaksText" value="4" style="width:50px;">
-                </td>
-              </tr>
-            </table>
-            <input type="button" onclick="javascript:colorizeLayer(addEqualBreaksNew(yearIndex, parseInt(document.getElementById('equalBreaksText').value)-1, 
-            document.getElementById('colorPickerValueOne').value, document.getElementById('colorPickerValueTwo').value))" value="Anwenden">
+                </div>
+                <div class="col-6">
+                  <input type="text" name="" value="4" id="equalBreaksText" placeholder="" />
+                </div>
+                <div class="col-1">
+
+                </div>
+              </div>
+            </div>
+            <!-- <input type="button" onclick="javascript:colorizeLayer(addEqualBreaksNew(yearIndex, parseInt(document.getElementById('equalBreaksText').value)-1,
+            document.getElementById('colorPickerValueOne').value, document.getElementById('colorPickerValueTwo').value))" value="Anwenden"> -->
+            <input type="button" onclick="javascript:classify(document.getElementById('classificationMethod').value, yearIndex, parseInt(document.getElementById('equalBreaksText').value)-1,
+            document.getElementById('colorPickerValueOne').value, document.getElementById('colorPickerValueTwo').value)" value="Anwenden">
             <input id="colorPickerValueOne" style="width:0px; visibility:hidden;">
             <input id="colorPickerValueTwo" style="width:0px; visibility:hidden;">
             <table id="Breaks">
           </table>
           </div>
         </div>
-      </div>  
-  
+      </div>
+
       <!-- Legend Button -->
       <a href="#" class="icons" id="slideAwayButton_legend" onclick="showPane('menuPane-legend')" style="position: absolute; right:10px; top:212px; z-index: 2;">
         <img id="legendBtnImg" src="images/legend.png">
@@ -361,7 +380,7 @@
           Legende
         </div>
       </a>
-  
+
       <!-- Legend Pane -->
       <div id="menuPane-legend" class="menuPane">
         <a href="#" id="hideButton_legend" onclick="hidePane('#menuPane-legend')" style="position: absolute; top:5px; right:7px; z-index: 4;">
@@ -379,7 +398,7 @@
           </div>
         </div>
       </div>
-  
+
       <!-- Export Button -->
       <a href="#" class="icons" id="slideAwayButton_export" onclick="showPane('menuPane-export')" style="position: absolute; right:10px; top:352px; z-index: 2;">
         <img id="exportBtnImg" src="images/download.png">
@@ -387,7 +406,7 @@
           Drucken
         </div>
       </a>
-  
+
       <!-- Export Pane -->
       <div id="menuPane-export" class="menuPane" style="width: 200px;">
         <a href="#" id="hideButton_export" onclick="hidePane('#menuPane-export')" style="position: absolute; top:5px; right:7px; z-index: 4;">
@@ -401,7 +420,7 @@
           <div class="table">
             <div class="row">
               <div class="cell">
-                <label for="mapExportTitle">Titel: </label> 
+                <label for="mapExportTitle">Titel: </label>
               </div>
               <div class="cell printForm">
                 <input type="text" id="mapExportTitle" placeholder="Meine Karte">
@@ -432,7 +451,7 @@
       <a href="#" class="icons" id="fullExtentButton" onclick="fullExtent()" style="position: absolute; left: 34px; top: 72px; z-index: 2; padding: 2px;">
         <img id="fullExtBtnImg" src="images/full_extent.png">
       </a>
-  
+
       <!-- Info Button -->
       <a href="http://www.lwl.org/LWL/Kultur/geko/1383213708/" target="_blank" class="icons" id="infoButton" style="position: absolute; right:10px; top:452px; z-index: 2;">
         <img id="infoBtnImg" src="images/chalkboard.png">
@@ -452,7 +471,7 @@
         WebGIS Westfalen ist ein Kooperationsprojekt der <a href="http://www.geographische-kommission.de/" style="color:lightgrey;"target="_blank">Geographischen Kommission für Westfalen</a> im <a href="http://lwl.org" style="color:lightgrey;"target="_blank">Landschaftsverband Westfalen-Lippe</a> und des <a href="http://gi-at-school.de" style="color:lightgrey;"target="_blank">GI@School Labs</a> am <a href="http://ifgi.uni-muenster.de" style="color:lightgrey;"target="_blank">Institut für Geoinformatik</a> der <a href="http://www.uni-muenster.de" style="color:lightgrey;"target="_blank">Universität Münster</a>. Datenquelle sind Statistiken des Landesbetriebes Information und Technik Nordrhein-Westfalen (IT.NRW). Die heute im WebGIS Westfalen vorhandenen Inhalte werden in Zukunft schrittweise um weitere Themen ergänzt.
         <br><br>
         Die Geographische Kommission für Westfalen dankt der Manfred-Engel-Stiftung für die finanzielle Unterstützung dieses Projektes.
-        
+
       </div>
 
 
@@ -465,7 +484,7 @@
     	    </div>
         </a>
       </div>
-  
+
       <!-- Welcome window -->
       <div id="welcome" class="textWindow" align="center">
       	<a href="#" id="close_welcome" style="position: absolute; top:7px; right:9px; z-index: 11;" onclick="hidePane('textWindows')">
@@ -486,7 +505,7 @@
   <div id="mapLoading">
     <img src="images/loading_map.gif"></img>
   </div>
-  
+
   <!--<a href="#" class="icons" id="printButton" style="position: absolute; right:0px; top:290px; z-index: 4;"></a>-->
   <!--
   <div dojotype="dijit.layout.BorderContainer" design="headline" gutters="false" style="background-color: #fff; width: auto; height: 100%; margin: 0; padding-top:62px; padding-bottom: 0px; margin-left: 10px; margin-right: 10px;">
@@ -497,11 +516,11 @@
     <div id="map" region="center" style="overflow:hidden; z-index: 1; height: 100%;">
     </div>
   </div>
-  
+
   <!-- Ifgi and LWL logo -->
   <!--<a href="http://www.lwl.org/LWL/Kultur/geko/" target="_blank" id="lwl_logo_map" style="position: absolute; right:120px; bottom: 0px; z-index: 2; opacity: 0.5; height: 25px;">-->
   	<div id="copyrightLwl">
-  	&copy; Landschaftsverband Westfalen-Lippe (LWL), 48133 M&uuml;nster
+  	&copy; Landschaftsverband Westfalen-Lippe (LWL)
   	</div>
     <!--<img src="images/lwl_logo_map.png">
   </a>-->
@@ -516,6 +535,6 @@
      </ul>
 	</div>
   </div>-->
-  
+
 </body>
 </html>

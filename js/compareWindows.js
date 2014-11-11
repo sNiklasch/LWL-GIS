@@ -1,32 +1,29 @@
-dojo.require("dojo.fx");
+require(['dojo/on', 'dojo/dom', 'dojo/domReady!'],function(on, dom){
 
-var breite = window.innerWidth - 450;
+  var slideAwayButtonSplit = dom.byId('slideAwayButton_split');
 
+  var dualView = false;
+  var fs, fs2;
 
+  on(slideAwayButtonSplit, 'click', function(evt){
+    if (dualView) {
+      fs.removeChild(parent.document.getElementById('frame2'));
+      fs = parent.document.getElementById('frameset');
+      fs.cols = '100%';
+      dualView = false;
+    } else {
+     fs = parent.document.getElementById('frameset');
+     f2 = top.document.createElement('frame');
+     fs.cols = '50%,50%';
+     f2.name = 'frame2';
+     f2.id = 'frame2';
+     f2.src = 'map.html';
+     fs.appendChild(f2);
+     dualView = true;
+    }
 
-dojo.ready(function () {
-        
-        slideAwayButton_split = dojo.byId("slideAwayButton_split");
-    
-    var dualView = false;
-    dojo.connect(slideAwayButton_split, "onclick", function (evt) {
-        if (dualView) {
-            var fs = parent.document.getElementById("frameset");
-            fs.removeChild(parent.document.getElementById("frame2"));
-            var fs = parent.document.getElementById("frameset");
-            fs.cols = "100%";
-            dualView = false;
-        } else {
-            var fs = parent.document.getElementById("frameset"),
-                f2 = top.document.createElement('frame');
-            fs.cols = "50%,50%";
-            f2.name = "frame2";
-            f2.id = "frame2";
-            f2.src = "map.html";
-            fs.appendChild(f2);
-            dualView = true;
-        }
-        window.setTimeout("fullExtent(); fullExtent();", 500);
-    });
-
+    /* jshint ignore:start */
+    window.setTimeout('fullExtent(); fullExtent();', 500);
+    /* jshint ignore:end*/
+  });
 });
