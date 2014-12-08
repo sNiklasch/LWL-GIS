@@ -125,12 +125,14 @@
                 Demographische Daten
               </div>
               <div id="demographischPane" class="menuPaneContent">
-                  <!-- <input type="radio" id="einwohnerCheck" name="Layer" value="Einwohner" checked=true onchange="layerChange(datenEinwohner)">
+                <!-- <div>
+                  <input type="radio" id="einwohnerCheck" name="Layer" value="Einwohner" checked=true onchange="layerChange(datenEinwohner)">
                   <label for="einwohnerCheck">Einwohner </label>
                   <a id="einwohnerInfo" style="cursor: help;">
                     <img src="images/Help_sm.png">
                   </a>
-                <br> -->
+                </div> -->
+                <div>
                   <input type="radio" id="einwohner_entwicklungCheck" name="Layer" checked=true value="Einwohner-Entwicklung" onchange="layerChange(datenEinwohnerEntwicklung)">
                   <label for="einwohner_entwicklungCheck">Einwohner-Entwicklung </label>
                   <a id="einwohner_entwicklungInfo" class="help">
@@ -139,22 +141,24 @@
                   <a class="gridview">
                     <img src="images/grid_sm.png">
                   </a>
-                  <br>
+                </div>
+                <div>
                   <input type="radio" id="bevoelkerungsdichteCheck" name="Layer" value="Bev&ouml;lkerungsdichte" onchange="layerChange(datenBevoelkerungsdichte)">
                   <label for="bevoelkerungsdichteCheck">Bev&ouml;lkerungsdichte </label>
                   <a id="bevoelkerungsdichteInfo" class="help">
                     <img src="images/Help_sm.png">
                   </a>
-                  <a class="gridview">
+                  <a class="gridview disabled">
                     <img src="images/grid_sm.png">
                   </a>
-                  <br>
+                </div>
+                <div>
                   <input type="radio" id="altersgruppenCheck" name="Layer" value="Altersgruppen" onchange="layerChange(datenAltersgruppen)">
                   <label for="altersgruppenCheck">Altersgruppen </label>
                   <a id="altersgruppenInfo" class="help">
                     <img src="images/Help_sm.png">
                   </a>
-                  <a class="gridview">
+                  <a class="gridview disabled">
                     <img src="images/grid_sm.png">
                   </a>
                   <br>
@@ -164,104 +168,114 @@
                   <a id="altersgruppenDiagramme2011Info" class="help">
                     <img src="images/Help_sm.png">
                   </a>
-                  <br>
+                </div>
+                <div>
                   <input type="radio" id="geburtenrateCheck" name="Layer" value="Geburtenrate" onchange="layerChange(datenGeburtenrate)">
                   <label for="geburtenrateCheck">Geburtenrate </label>
                   <a id="geburtenrateInfo" class="help">
                     <img src="images/Help_sm.png">
                   </a>
-                  <a class="gridview">
+                  <a class="gridview disabled">
                     <img src="images/grid_sm.png">
                   </a>
-                  <br>
+                </div>
+                <div>
                   <input type="radio" id="sterberateCheck" name="Layer" value="Sterberate" onchange="layerChange(datenSterberate)">
                   <label for="sterberateCheck">Sterberate </label>
                   <a id="sterberateInfo" class="help">
                     <img src="images/Help_sm.png">
                   </a>
-                  <a class="gridview">
+                  <a class="gridview disabled">
                     <img src="images/grid_sm.png">
                   </a>
-                  <br>
+                </div>
+                <div>
                   <input type="radio" id="migrationen_gesamtCheck" name="Layer" value="Migrationen Gesamt" onchange="layerChange(datenMigrationenGesamt)">
                   <label for="migrationen_gesamtCheck">Zu-/Fortzüge gesamt </label>
                   <a id="migrationen_gesamtInfo" class="help">
                     <img src="images/Help_sm.png">
                   </a>
-                  <a class="gridview">
+                  <a class="gridview disabled">
                     <img src="images/grid_sm.png">
                   </a>
-                  <br>
+                </div>
+                <div>
                   <input type="radio" id="migrationen_nichtdeutschCheck" name="Layer" value="Migrationen Nichtdeutsch" onchange="layerChange(datenMigrationenNichtdeutsche)">
                   <label for="migrationen_nichtdeutschCheck">Zu-/Fortzüge Nichtdeutsche </label>
                   <a id="migrationen_nichtdeutschInfo" class="help">
                     <img src="images/Help_sm.png">
                   </a>
-                  <a class="gridview">
+                  <a class="gridview disabled">
                     <img src="images/grid_sm.png">
                   </a>
-                <br>
-                <br>
+                </div>
               </div>
               <div class="menuPane-head subMenuPane" onClick="switchLayerPane('soziographisch')" style="font-style:italic;">
                 <img id="arrowSoziographisch" class="submenuArrow" src="images/arrow20.png">
                 Soziographische Daten
               </div>
               <div id="soziographischPane" class="menuPaneContent">
+                <div>
                   <input type="radio" id="pflegebeduerftigeCheck" name="Layer" value="Pflegebed&uuml;rftige" onchange="layerChange(datenPflegebeduerftige)">
                   <label for="pflegebeduerftigeCheck">Pflegebed&uuml;rftige </label>
                   <a id="pflegebeduerftigeInfo" class="help">
                     <img src="images/Help_sm.png">
                   </a>
-                  <a class="gridview">
+                  <a class="gridview disabled">
                     <img src="images/grid_sm.png">
                   </a>
-                  <br>
+                </div>
+                <div>
                   <input type="radio" id="pflegeeinrichtungenCheck" name="Layer" value="Pflegeeinrichtungen" onchange="layerChange(datenPflegeeinrichtungen)">
                   <label for="pflegeeinrichtungenCheck">Pflegeplätze </label>
                   <a id="pflegeeinrichtungenInfo" class="help">
                     <img src="images/Help_sm.png">
                   </a>
-                  <a class="gridview">
+                  <a class="gridview disabled">
                     <img src="images/grid_sm.png">
                   </a>
-                  <br>
+                </div>
+                <div>
                   <input type="radio" id="haushaltsgroessenCheck" name="Layer" value="Haushaltsgr&ouml;ssen" onchange="layerChange(datenHaushaltsgroesse)">
                   <label for="haushaltsgroessenCheck">Haushaltsgrößen </label>
                   <a id="haushaltsgroessenInfo" class="help">
                     <img src="images/Help_sm.png">
                   </a>
-                  <a class="gridview">
+                  <a class="gridview disabled">
                     <img src="images/grid_sm.png">
                   </a>
-                  <br>
+                </div>
+                <div>
                   <input type="radio" id="single_haushalteCheck" name="Layer" value="Single-Haushalte" onchange="layerChange(datenSingleHaushalte)">
                   <label for="single_haushalteCheck">Single-Haushalte </label>
                   <a id="single_haushalteInfo" class="help">
                     <img src="images/Help_sm.png">
                   </a>
-                  <a class="gridview">
+                  <a class="gridview disabled">
                     <img src="images/grid_sm.png">
                   </a>
-                  <br>
+                </div>
+                <div>
                   <input type="radio" id="nichtdeutscheCheck" name="Layer" value="Nichtdeutsche" onchange="layerChange(datenNichtdeutsche)">
                   <label for="nichtdeutscheCheck">Nichtdeutsche </label>
                   <a id="nichtdeutscheInfo" class="help">
                     <img src="images/Help_sm.png">
                   </a>
-                  <a class="gridview">
+                  <a class="gridview disabled">
                     <img src="images/grid_sm.png">
                   </a>
-                  <br>
+                </div>
+                <div>
                   <input type="radio" id="migrationshintergrundCheck" name="Layer" value="Migrationshintergrund" onchange="layerChange(datenMigranten)">
                   <label for="migrationshintergrundCheck">Menschen mit Migrationshintergrund </label>
                   <a id="migrationshintergrundInfo" class="help">
                     <img src="images/Help_sm.png">
                   </a>
-                  <a class="gridview">
+                  <a class="gridview disabled">
                     <img src="images/grid_sm.png">
                   </a>
-                  <br>
+                </div>
+                <div>
                   <input type="radio" id="einkommenCheck" name="Layer" value="Einkommen" onchange="layerChange(datenEinkommen)">
                   <label for="einkommenCheck">Einkommen </label>
                   <a id="einkommenInfo" class="help">
@@ -270,13 +284,14 @@
                   <a class="gridview">
                     <img src="images/grid_sm.png">
                   </a>
-                  <br>
+                </div>
+                <div>
                   <input type="radio" id="konfessionenCheck" name="Layer" value="Konfessionen" onchange="layerChange(datenKonfessionen)">
                   <label for="konfessionenCheck">Konfessionen </label>
                   <a id="konfessionenInfo" class="help">
                     <img src="images/Help_sm.png">
                   </a>
-                  <a class="gridview">
+                  <a class="gridview disabled">
                     <img src="images/grid_sm.png">
                   </a>
                   <br>
@@ -286,6 +301,7 @@
                   <a id="konfessionenDiagramme2008Info" style="cursor: help;">
                     <img src="images/Help_sm.png">
                   </a>
+                </div>
               </div>
             </form>
           </p>

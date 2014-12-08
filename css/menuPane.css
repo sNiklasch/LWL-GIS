@@ -126,3 +126,9 @@
 .dgrid {
 	border: none;
 }
+
+.disabled {
+	pointer-events: none;
+  cursor: default;
+  opacity: 0.5;
+}
