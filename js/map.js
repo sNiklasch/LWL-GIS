@@ -344,19 +344,20 @@ require(['esri/map',
  * Method for changing the active overlay layer
  */
 function layerChange(layerNr,removeLayer) {
-  //disconnect and connect click handlers for diagrams based on checkboxes
 
-  require(['dojo/query'], function(query){
-    query('input[type="radio"]').forEach(function(entry,i){
-      console.log(entry);
-      if (entry.checked) {
-
+  //enable / disable gridview button
+  require(['dojo/query', 'dojo/dom-class'], function(query, domClass){
+    query('input[type="radio"]').forEach(function(node,index,arr){
+      gridview = query('a.gridview',node.parentElement);
+      if (node.checked) {
+        domClass.remove(gridview[0],'disabled');
       } else {
-
+        domClass.add(gridview[0],'disabled');
       }
     });
   });
 
+  //disconnect and connect click handlers for diagrams based on checkboxes
   if (layerNr === fIDaltersgruppenDiagramme2011 && !(document.getElementById('altersgruppenDiagramme2011Check').checked)) {
     diagramLayer = null;
     activeDiagramLayer = 0;

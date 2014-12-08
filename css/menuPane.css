@@ -123,10 +123,6 @@
 	cursor: help;
 }
 
-.dgrid {
-	border: none;
-}
-
 .disabled {
 	pointer-events: none;
   cursor: default;

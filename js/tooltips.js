@@ -38,8 +38,8 @@ function addTooltips() {
         }
       }
       store.data = data;
-
       grid.set({'store':store});
+      query('#menuPane-grid .menuPane-head')[0].innerHTML = layerAttributes[1];
       showPane('menuPane-grid');
     });
 
