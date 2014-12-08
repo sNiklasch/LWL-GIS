@@ -53,8 +53,10 @@ function showPane(layer){
 	else if (layer === 'infoWindow'){
 		$('#'+layer).show('slow');
 		$('#welcomeBackground').show('slow');
-	}
-	else {
+	} else if (layer === 'menuPane-grid') {
+		hidePane('#menuPane-layer');
+		$('#'+layer).show('slow');
+	} else {
 		$('#'+layer).show('slow');
 	}
 }

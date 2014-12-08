@@ -1,4 +1,4 @@
-/* jshint ignore:start */
+/* ignore:start */
 var breakCount = 0; // keep track of how many individual breaks have been created, used to fetch the correct field values
 var diagramLayer = null; // the active clickable diagram layer
 var printCounter = 0; //counter for the printer widget
@@ -18,6 +18,7 @@ var activeDiagramLayer = 0; //Aktuell angezeigter Diagrammlayer, 0=keiner
 var labelVisibility = true; //zum überprüfen, ob die Label angezeigt sind
 
 var legend;
+var grid, store;
 
 /**
  * at this point the min and max values have to be entered manually for each layer.
@@ -95,6 +96,154 @@ function reLocate(extent) {
   for (var i = 0; i < parent.frames.length; i++) { //go through all frames and re-center
     if (parent.frames[i].name !== self.name) {
       parent.frames[i].reCenterAndZoom(extent.extent.getCenter(), map.getLevel(), extent, i);
+    }
+  }
+}
+
+/**
+ * This function zooms back to the maximum Extent
+ */
+function fullExtent(){
+  map.setExtent(maxExtent);
+}
+
+function getLayerAttributes(){
+  for (var i = allLayerAttributes.length - 1; i >= 0; i--) {
+    if (allLayerAttributes[i][0] === currentDataframe){
+      layerAttributes = allLayerAttributes[i];
+    }
+  }
+}
+
+/**
+* Diese Funktion initialisiert den operationalLayer, welcher die gesamten Layer vom Server enthält.
+* Zusätzlich wird beim ausführen der Funktion der operationalLayer zur map hinzugefügt und der Layer mit den Kreisnamen auf sichtbar gestellt.
+*/
+function initLayers(){
+  //Set labels visible on load:
+  require(['esri/layers/FeatureLayer',
+           'esri/layers/ArcGISDynamicMapServiceLayer',
+           'esri/InfoTemplate'], function(FeatureLayer, ArcGISDynamicMapServiceLayer, InfoTemplate) {
+    featureLayer = new FeatureLayer(featureLayerServer + '/0', {
+      infoTemplate: new InfoTemplate('&nbsp;', '${Kreisname}'),
+      mode: FeatureLayer.MODE_ONDEMAND,
+      outFields: ['Kreisname']
+    });
+    // featureLayerGemeinde = new FeatureLayer(fLGemeinde + '/0', {
+    //   infoTemplate: new InfoTemplate('&nbsp;', '${Kreisname}'),
+    //   mode: FeatureLayer.MODE_ONDEMAND,
+    //   outFields: ['Kreisname']
+    // });
+    map.addLayer(featureLayer, 0);
+    classify('equalInterval', 0, autoClassesBreaks, autoClassesStartColor, autoClassesEndColor);
+
+    operationalLayer = new ArcGISDynamicMapServiceLayer(mapServer, { 'id': 'collection' });
+    featureLayer.on('update-start', showLoadingIcon);
+    featureLayer.on('update-end', hideLoadingIcon);
+    operationalLayer.setVisibleLayers([fIDkreisnamen],true);
+    map.addLayer(operationalLayer, 1);
+    getLayerAttributes();
+  });
+}
+
+/**
+ * this method check on page creation if this is in split mode
+ * if it is then the split-button is removed on the newly created frame
+ */
+function onLoadCheck() {
+  if (self.name === 'frame1') {
+    // document.getElementById('welcome').style.display = 'block';
+    // document.getElementById('welcomeBackground').style.display = 'block';
+  }
+  if (self.name === 'frame2') {
+    document.getElementById('splitDiv').removeChild(document.getElementById('slideAwayButton_split'));
+    if(map !== null){
+      map.setLevel(parent.frames[0].map.getLevel());
+    }
+  }
+}
+
+/**
+ * this function expects an array of colors for the features of the main layer
+ *
+*/
+function colorizeLayer(colorArray){
+  require(['esri/symbols/SimpleFillSymbol',
+           'esri/renderers/UniqueValueRenderer',
+           'esri/Color'], function(SimpleFillSymbol, UniqueValueRenderer, Color) {
+    var defaultSymbol = new SimpleFillSymbol().setColor(new Color([255,255,255,0.5]));
+
+    var renderer = new UniqueValueRenderer(defaultSymbol, 'Kreisname');
+    for (var i = colorArray.length - 1; i >= 0; i--) {
+      renderer.addValue(colorArray[i][0], new SimpleFillSymbol().setColor(new Color(colorArray[i][1])));
+    }
+
+    featureLayer.setRenderer(renderer);
+    featureLayer.redraw();
+
+    var minmax = getMinMax(datenEinwohner);
+
+    addLegendItems(legendArray); //update the Legend
+    console.log(map.getLayersVisibleAtScale());
+  });
+}
+
+function yearChange(value){
+  yearIndex = value;
+  currentYearLabel = getYearsArray(currentDataframe)[value];
+  console.log('aktuell: ' + currentLayer);
+  var appendix = '';
+  var lineBreak = '';
+  if (layerAttributes[1].indexOf('Altersgruppen') !== -1) { appendix = ' J.';}
+  if (layerAttributes[1].indexOf('Einwohner-Entwicklung') !== -1) { lineBreak = '<br>' ;}
+  document.getElementById('timesliderValue').innerHTML = layerAttributes[1] + ': ' + currentYearLabel + appendix;
+  document.getElementById('legendTheme').innerHTML = '<span>'+layerAttributes[1] + ': </span>' + lineBreak + '<span>' + currentYearLabel + appendix + '</span>';
+  currentYear = currentYearLabel;
+  switch(activeClassification) {
+    case 1:
+      colorizeLayer(createColorArrayByLegendArray(legendArray));
+      break;
+    case 2:
+      classify('equalInterval', value, autoClassesBreaks, autoClassesStartColor, autoClassesEndColor);
+      break;
+    case 3:
+      classify('quantile', value, autoClassesBreaks, autoClassesStartColor, autoClassesEndColor);
+      break;
+    case 4:
+      classify('jenks', value, autoClassesBreaks, autoClassesStartColor, autoClassesEndColor);
+      break;
+    case 5:
+      classify('standardDeviation', value, autoClassesBreaks, autoClassesStartColor, autoClassesEndColor);
+      break;
+    case 6:
+      classify('pretty', value, autoClassesBreaks, autoClassesStartColor, autoClassesEndColor);
+      break;
+    default:
+      break;
+  }
+}
+
+/**
+ * function to update the visibility of the Layers
+ * should be called everytime, when 'labelVisibility', 'activeDiagramLayer' or 'activeLayer' changes
+ */
+function updateLayerVisibility(){
+  if (labelVisibility) {
+    if (activeDiagramLayer === 0){
+      operationalLayer.setVisibleLayers([fIDkreisnamen]);
+    }
+    else {
+      operationalLayer.setVisibleLayers([fIDkreisnamen, activeDiagramLayer]);
+    }
+    operationalLayer.setVisibility(true);
+  }
+  else {
+    operationalLayer.setVisibility(true);
+    if (activeDiagramLayer === 0){
+      operationalLayer.setVisibility(false);
+    }
+    else {
+      operationalLayer.setVisibleLayers([activeDiagramLayer]);
     }
   }
 }
@@ -192,88 +341,6 @@ require(['esri/map',
 });
 
 /**
- * This function zooms back to the maximum Extent
- */
-function fullExtent(){
-  map.setExtent(maxExtent);
-  //reLocate(maxExtent);
-  //syncZoom(maxExtent);
-}
-
-/**
-* Diese Funktion initialisiert den operationalLayer, welcher die gesamten Layer vom Server enthält.
-* Zusätzlich wird beim ausführen der Funktion der operationalLayer zur map hinzugefügt und der Layer mit den Kreisnamen auf sichtbar gestellt.
-*/
-function initLayers(){
-  //Set labels visible on load:
-  require(['esri/layers/FeatureLayer',
-           'esri/layers/ArcGISDynamicMapServiceLayer',
-           'esri/InfoTemplate'], function(FeatureLayer, ArcGISDynamicMapServiceLayer, InfoTemplate) {
-    featureLayer = new FeatureLayer(featureLayerServer + '/0', {
-      infoTemplate: new InfoTemplate('&nbsp;', '${Kreisname}'),
-      mode: FeatureLayer.MODE_ONDEMAND,
-      outFields: ['Kreisname']
-    });
-    // featureLayerGemeinde = new FeatureLayer(fLGemeinde + '/0', {
-    //   infoTemplate: new InfoTemplate('&nbsp;', '${Kreisname}'),
-    //   mode: FeatureLayer.MODE_ONDEMAND,
-    //   outFields: ['Kreisname']
-    // });
-    map.addLayer(featureLayer, 0);
-    classify('equalInterval', 0, autoClassesBreaks, autoClassesStartColor, autoClassesEndColor);
-
-    operationalLayer = new ArcGISDynamicMapServiceLayer(mapServer, { 'id': 'collection' });
-    featureLayer.on('update-start', showLoadingIcon);
-    featureLayer.on('update-end', hideLoadingIcon);
-    operationalLayer.setVisibleLayers([fIDkreisnamen],true);
-    map.addLayer(operationalLayer, 1);
-    getLayerAttributes();
-  });
-}
-
-/**
- * this function expects an array of colors for the features of the main layer
- *
-*/
-function colorizeLayer(colorArray){
-  require(['esri/symbols/SimpleFillSymbol',
-           'esri/renderers/UniqueValueRenderer',
-           'esri/Color'], function(SimpleFillSymbol, UniqueValueRenderer, Color) {
-    var defaultSymbol = new SimpleFillSymbol().setColor(new Color([255,255,255,0.5]));
-
-    var renderer = new UniqueValueRenderer(defaultSymbol, 'Kreisname');
-    for (var i = colorArray.length - 1; i >= 0; i--) {
-      renderer.addValue(colorArray[i][0], new SimpleFillSymbol().setColor(new Color(colorArray[i][1])));
-    }
-
-    featureLayer.setRenderer(renderer);
-    featureLayer.redraw();
-
-    var minmax = getMinMax(datenEinwohner);
-
-    addLegendItems(legendArray); //update the Legend
-    console.log(map.getLayersVisibleAtScale());
-  });
-}
-
-/**
- * this method check on page creation if this is in split mode
- * if it is then the split-button is removed on the newly created frame
- */
-function onLoadCheck() {
-  if (self.name === 'frame1') {
-    // document.getElementById('welcome').style.display = 'block';
-    // document.getElementById('welcomeBackground').style.display = 'block';
-  }
-  if (self.name === 'frame2') {
-    document.getElementById('splitDiv').removeChild(document.getElementById('slideAwayButton_split'));
-    if(map !== null){
-      map.setLevel(parent.frames[0].map.getLevel());
-    }
-  }
-}
-
-/**
  * Method for changing the active overlay layer
  */
 function layerChange(layerNr,removeLayer) {
@@ -347,7 +414,7 @@ function layerChange(layerNr,removeLayer) {
         if (diagramLayer !== null) {
           map.removeLayer(diagramLayer);
           diagramLayer = null;
-        };
+        }
         activeDiagramLayer = 0;
         document.getElementById('legendDiagrams').innerHTML = '';
         document.getElementById('altersgruppenDiagramme2011Check').checked = false;
@@ -365,74 +432,6 @@ function layerChange(layerNr,removeLayer) {
     //activeLayer = layerNr; //setting the new layer
     //updateLayerVisibility();
     updateTimeslider();
-  }
-}
-
-function yearChange(value){
-  yearIndex = value;
-  currentYearLabel = getYearsArray(currentDataframe)[value];
-  console.log('aktuell: ' + currentLayer);
-  var appendix = '';
-  var lineBreak = '';
-  if (layerAttributes[1].indexOf('Altersgruppen') !== -1) { appendix = ' J.'};
-  if (layerAttributes[1].indexOf('Einwohner-Entwicklung') !== -1) { lineBreak = '<br>' };
-  document.getElementById('timesliderValue').innerHTML = layerAttributes[1] + ': ' + currentYearLabel + appendix;
-  document.getElementById('legendTheme').innerHTML = '<span>'+layerAttributes[1] + ': </span>' + lineBreak + '<span>' + currentYearLabel + appendix + '</span>';
-  currentYear = currentYearLabel;
-  switch(activeClassification) {
-    case 1:
-      colorizeLayer(createColorArrayByLegendArray(legendArray));
-      break;
-    case 2:
-      classify('equalInterval', value, autoClassesBreaks, autoClassesStartColor, autoClassesEndColor);
-      break;
-    case 3:
-      classify('quantile', value, autoClassesBreaks, autoClassesStartColor, autoClassesEndColor);
-      break;
-    case 4:
-      classify('jenks', value, autoClassesBreaks, autoClassesStartColor, autoClassesEndColor);
-      break;
-    case 5:
-      classify('standardDeviation', value, autoClassesBreaks, autoClassesStartColor, autoClassesEndColor);
-      break;
-    case 6:
-      classify('pretty', value, autoClassesBreaks, autoClassesStartColor, autoClassesEndColor);
-      break;
-    default:
-      break;
-  }
-}
-
-function getLayerAttributes(){
-  for (var i = allLayerAttributes.length - 1; i >= 0; i--) {
-    if (allLayerAttributes[i][0] === currentDataframe){
-      layerAttributes = allLayerAttributes[i];
-    }
-  }
-}
-
-/**
- * function to update the visibility of the Layers
- * should be called everytime, when 'labelVisibility', 'activeDiagramLayer' or 'activeLayer' changes
- */
-function updateLayerVisibility(){
-  if (labelVisibility) {
-    if (activeDiagramLayer === 0){
-      operationalLayer.setVisibleLayers([fIDkreisnamen]);
-    }
-    else {
-      operationalLayer.setVisibleLayers([fIDkreisnamen, activeDiagramLayer]);
-    }
-    operationalLayer.setVisibility(true);
-  }
-  else {
-    operationalLayer.setVisibility(true);
-    if (activeDiagramLayer === 0){
-      operationalLayer.setVisibility(false);
-    }
-    else {
-      operationalLayer.setVisibleLayers([activeDiagramLayer]);
-    }
   }
 }
 

@@ -2,7 +2,46 @@
  * programmatically add onMouseOver-tooltips
  */
 function addTooltips() {
-  require(['dijit/Tooltip', 'dojo/dom', 'dojo/domReady!'],function(Tooltip, dom){
+  require(['dijit/Tooltip',
+    'dojo/dom',
+    'dgrid/OnDemandGrid',
+    'dojo/store/Memory',
+    'dojo/query',
+    'dojo/domReady!'],function(Tooltip, dom, Grid, Memory, query){
+
+    query('.gridview').on('click', function(e){
+      //create columns
+      var columns = {
+        0: {
+            label: 'Kreis'
+        }
+      };
+
+      for (var j = 0; j < currentDataframe[0].Data.length; j++) {
+        columns[j+1] = {label: currentDataframe[0].Data[j]};
+      }
+
+      store = new Memory();
+      grid = new Grid({columns: columns}, 'grid');
+      var data = [];
+      var column;
+      var i;
+      for (i = 1; i < currentDataframe.length; i++) {
+        data.push({});
+        for (column in columns) {
+          data[i-1].id = i;
+          if (column === '0') {
+            data[i-1][column] = currentDataframe[i].Name;
+          } else {
+            data[i-1][column] = currentDataframe[i].Data[column-1];
+          }
+        }
+      }
+      store.data = data;
+
+      grid.set({'store':store});
+      showPane('menuPane-grid');
+    });
 
     //Layers:
     //Einwohner Layer

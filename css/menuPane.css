@@ -118,3 +118,11 @@
 	display: inline-block;
 	line-height: 1;
 }
+
+.help {
+	cursor: help;
+}
+
+.dgrid {
+	border: none;
+}
