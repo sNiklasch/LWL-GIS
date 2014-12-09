@@ -122,10 +122,8 @@ function getLayerAttributes(){
 function initLayers(){
   //Set labels visible on load:
   require(['esri/layers/FeatureLayer',
-           'esri/layers/ArcGISDynamicMapServiceLayer',
-           'esri/InfoTemplate'], function(FeatureLayer, ArcGISDynamicMapServiceLayer, InfoTemplate) {
+           'esri/layers/ArcGISDynamicMapServiceLayer'], function(FeatureLayer, ArcGISDynamicMapServiceLayer) {
     featureLayer = new FeatureLayer(featureLayerServer + '/0', {
-      infoTemplate: new InfoTemplate('&nbsp;', '${Kreisname}'),
       mode: FeatureLayer.MODE_ONDEMAND,
       outFields: ['Kreisname']
     });
@@ -258,7 +256,7 @@ require(['esri/map',
 
   addTooltips(); //the mouse-over tooltips are created programmatically
 
-  var popup = new Popup(null, domConstruct.create('div')); //ini popups for diagrams
+  //var popup = new Popup(null, domConstruct.create('div')); //ini popups for diagrams
 
   initExtent = new Extent(518012, 6573584, 1286052, 6898288, new SpatialReference({
     wkid: 102100
@@ -276,7 +274,7 @@ require(['esri/map',
     minZoom: 8,
     extent: initExtent,
     sliderStyle: 'large',
-    infoWindow: popup
+    // infoWindow: popup
   });
 
   map.on('extent-change', reLocate);
@@ -285,24 +283,6 @@ require(['esri/map',
   map.on('mouse-down', function() {
     for (var i = 0; i < parent.frames.length; i++) {
       parent.frames[i].counter = 0; //the counter is used if any pan related events occured onMouseDown
-    }
-  });
-
-  //Initialize the Legend:
-  map.on('layers-add-result', function(results) {
-    var layerInfo = dojo.map(results, function(layer,index){
-      return {
-        layer:layer.layer,
-        title:layer.layer.name,
-        hideLayers:[0]
-      };
-    });
-    if(layerInfo.length > 0){
-      legend = new esri.dijit.Legend({
-        map:map,
-        layerInfos: layerInfo
-      },'legend');
-      legend.startup();
     }
   });
 
