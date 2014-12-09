@@ -122,16 +122,13 @@ function getLayerAttributes(){
 function initLayers(){
   //Set labels visible on load:
   require(['esri/layers/FeatureLayer',
-           'esri/layers/ArcGISDynamicMapServiceLayer'], function(FeatureLayer, ArcGISDynamicMapServiceLayer) {
+    'esri/layers/ArcGISDynamicMapServiceLayer'], function(FeatureLayer, ArcGISDynamicMapServiceLayer) {
     featureLayer = new FeatureLayer(featureLayerServer + '/0', {
+      id: 'kreise',
       mode: FeatureLayer.MODE_ONDEMAND,
       outFields: ['Kreisname']
     });
-    // featureLayerGemeinde = new FeatureLayer(fLGemeinde + '/0', {
-    //   infoTemplate: new InfoTemplate('&nbsp;', '${Kreisname}'),
-    //   mode: FeatureLayer.MODE_ONDEMAND,
-    //   outFields: ['Kreisname']
-    // });
+
     map.addLayer(featureLayer, 0);
     classify('equalInterval', 0, autoClassesBreaks, autoClassesStartColor, autoClassesEndColor);
 
@@ -182,7 +179,6 @@ function colorizeLayer(colorArray){
     var minmax = getMinMax(datenEinwohner);
 
     addLegendItems(legendArray); //update the Legend
-    console.log(map.getLayersVisibleAtScale());
   });
 }
 
@@ -247,16 +243,13 @@ function updateLayerVisibility(){
 }
 
 require(['esri/map',
-  'esri/dijit/Popup',
   'esri/geometry/Extent',
   'esri/SpatialReference',
   'esri/layers/OpenStreetMapLayer',
   'dojo/dom-construct',
-  'dojo/domReady!'], function(Map, Popup, Extent, SpatialReference, OpenStreetMapLayer, domConstruct) {
+  'dojo/domReady!'], function(Map, Extent, SpatialReference, OpenStreetMapLayer, domConstruct) {
 
   addTooltips(); //the mouse-over tooltips are created programmatically
-
-  //var popup = new Popup(null, domConstruct.create('div')); //ini popups for diagrams
 
   initExtent = new Extent(518012, 6573584, 1286052, 6898288, new SpatialReference({
     wkid: 102100
@@ -273,8 +266,7 @@ require(['esri/map',
   map = new Map('map', {
     minZoom: 8,
     extent: initExtent,
-    sliderStyle: 'large',
-    // infoWindow: popup
+    sliderStyle: 'large'
   });
 
   map.on('extent-change', reLocate);

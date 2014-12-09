@@ -1,3 +1,69 @@
+function selectGrid(e){
+  require(['esri/layers/FeatureLayer',
+    'esri/symbols/SimpleFillSymbol',
+    'esri/symbols/SimpleLineSymbol',
+    'esri/tasks/query',
+    'esri/Color'],function(FeatureLayer, SimpleFillSymbol, SimpleLineSymbol, Query, Color){
+    console.log(e);
+    var id = e.graphic.attributes.Kreisname;
+    var query = new Query();
+    query.where = 'Kreisname = \'' + id + '\'';
+    var fl = map.getLayer('kreise');
+    fl.selectFeatures(query, FeatureLayer.SELECTION_NEW, function(results){
+      for (var i = 0; i < fl.renderer.infos.length; i++) {
+        if (fl.renderer.infos[i].value.toLowerCase() === results[0].attributes.Kreisname.toLowerCase()) {
+          color = fl.renderer.infos[i].symbol.color;
+          break;
+        }
+      }
+
+      sls = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([255,255,255]),3);
+
+      featureLayer.setSelectionSymbol(new SimpleFillSymbol().setOutline(sls).setColor(color));
+    });
+    grid.clearSelection();
+    var result_id = store.query({'0':id})[0].id;
+    grid.select(result_id);
+    grid.row(result_id).element.scrollIntoView();
+  });
+}
+
+function selectState(e) {
+  require(['esri/layers/FeatureLayer',
+    'esri/symbols/SimpleFillSymbol',
+    'esri/symbols/SimpleLineSymbol',
+    'esri/tasks/query',
+    'esri/Color'],function(FeatureLayer, SimpleFillSymbol, SimpleLineSymbol, Query, Color){
+    var fl = map.getLayer('kreise');
+    var query = new Query();
+    query.where = 'Kreisname = \'' + e.target.innerHTML + '\'';
+    fl.selectFeatures(query, FeatureLayer.SELECTION_NEW, function(results){
+      if (results.length) {
+        for (var i = 0; i < fl.renderer.infos.length; i++) {
+          if (fl.renderer.infos[i].value.toLowerCase() === results[0].attributes.Kreisname.toLowerCase()) {
+            color = fl.renderer.infos[i].symbol.color;
+            break;
+          }
+        }
+
+        featureLayer.on('mouse-over', function() {
+          map.setMapCursor('pointer');
+        });
+
+        featureLayer.on('mouse-out', function() {
+          map.setMapCursor('default');
+        });
+
+        featureLayer.on('click', selectGrid);
+
+        sls = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([255,255,255]),3);
+
+        featureLayer.setSelectionSymbol(new SimpleFillSymbol().setOutline(sls).setColor(color));
+      }
+    });
+  });
+}
+
 /**
  * programmatically add onMouseOver-tooltips
  */
@@ -5,9 +71,11 @@ function addTooltips() {
   require(['dijit/Tooltip',
     'dojo/dom',
     'dgrid/OnDemandGrid',
+    'dgrid/Selection',
     'dojo/store/Memory',
     'dojo/query',
-    'dojo/domReady!'],function(Tooltip, dom, Grid, Memory, query){
+    'dojo/_base/declare',
+    'dojo/domReady!'],function(Tooltip, dom, Grid, Selection, Memory, query, declare){
 
     query('.gridview').on('click', function(e){
       //create columns
@@ -22,7 +90,10 @@ function addTooltips() {
       }
 
       store = new Memory();
-      grid = new Grid({columns: columns}, 'grid');
+      grid = new (declare([Grid,Selection]))({
+        columns: columns
+      }, 'grid');
+
       var data = [];
       var column;
       var i;
@@ -39,6 +110,7 @@ function addTooltips() {
       }
       store.data = data;
       grid.set({'store':store});
+      grid.on('.field-0:click', selectState);
       query('#menuPane-grid .menuPane-head')[0].innerHTML = layerAttributes[1];
       showPane('menuPane-grid');
     });

@@ -26,6 +26,10 @@ function hidePane(layer){
 		$('#welcomeBackground').hide('slow');
 	}
 	else {
+		if (layer === '#menuPane-grid') {
+			fl = map.getLayer('kreise');
+			fl.clearSelection();
+		}
 		$(layer).hide('slow');
 	}
 }
