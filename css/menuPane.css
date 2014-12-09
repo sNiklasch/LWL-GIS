@@ -128,3 +128,7 @@
   cursor: default;
   opacity: 0.5;
 }
+
+.field-0 {
+	cursor: pointer;
+}

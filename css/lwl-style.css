@@ -37,7 +37,7 @@ img {
 }
 
 .wipe-menu {
-	background-color:#ededff;	
+	background-color:#ededff;
 	border-radius:6px;
 	border:1px solid #dcdcdc;
 	margin:2em;
@@ -64,15 +64,15 @@ opacity: 0;
 }
 
 
-html, body { 
+html, body {
 position: relative;
 height: 100%; width: 100%;
 margin: 0; padding: 0;
-} 
+}
 body{
-background-color: #ededed; overflow:hidden; 
+background-color: #ededed; overflow:hidden;
 font-family: verdana;
-}	 
+}
 .content{
 padding:0px;
 z-index:20;
@@ -134,7 +134,7 @@ font-weight:bold;
 #header{
 	position: relative;
 	margin: 0px 10px 0px 10px;
-	
+
 }
 
 #headercontent{
@@ -251,6 +251,17 @@ font-weight:bold;
 	display: none;
 }
 
-.esriLegendLayerLabel {
-	/*display: none;*/
+#content1 {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+}
+
+#background {
+	background-color: #fff;
+	height: calc(100% - 60px);
+	top: 60px;
+	margin-left: 10px;
+	margin-right: 10px;
+	position: relative;
 }

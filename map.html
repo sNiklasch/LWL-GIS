@@ -5,14 +5,11 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1,user-scalable=no"/>
 
+    <link rel="stylesheet" href="http://js.arcgis.com/3.11/dojo/resources/dojo.css">
+    <link rel="stylesheet" href="http://js.arcgis.com/3.11/dgrid/css/dgrid.css">
+    <link rel="stylesheet" href="http://js.arcgis.com/3.11/dgrid/css/skins/tundra.css">
     <link rel="stylesheet" href="http://js.arcgis.com/3.11/dijit/themes/tundra/tundra.css">
     <link rel="stylesheet" href="http://js.arcgis.com/3.11/esri/css/esri.css">
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
-    <!-- <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css"> -->
-
-	   <!-- Style for popups containing diagrams
-    <link rel="stylesheet" href="http://serverapi.arcgisonline.com/jsapi/arcgis/3.4/js/esri/dijit/css/Popup.css">-->
-    <!-- Main style file-->
     <link rel="stylesheet" href="css/lwl-style.css">
     <link rel="stylesheet" href="css/menuPane.css">
 
@@ -63,521 +60,541 @@
   </head>
   <!-- LWL-Header -->
   <body onload="" class="tundra">
-  <div id="header" class="lwl-cd">
-  <div id="headercontent">
-  <div id="quadrat_claim_logo">
-    <div id="lwl-logo"> <a href="http://www.lwl.org/" target="_blank"><img id="quadrat" src="http://www.lwl.org/nozope/LWL/skin11/refresh/logo.png" width="136" height="30" alt="LWL" /></a>
-      <!--a href="#" onclick="">Test</a-->
-    </div>
-      <div id="hauptmenue">
-      <!--<ul>
-        <li><a href="/">LWL-Startseite</a></li>
-        <li><a href="/LWL/Der_LWL" class=" ">Der LWL</a></li>
-        <li><a href="/LWL/Soziales" class=" ">Soziales</a></li>
-        <li><a href="/LWL/Gesundheit/psychiatrieverbund/" class=" ">Psychiatrie</a></li>
-        <li><a href="/LWL/Gesundheit/Massregelvollzug/" class=" ">Maßregelvollzug</a></li>
-        <li><a href="/LWL/Jugend/" class="aktiv">Jugend und Schule</a></li>
-        <li><a href="/LWL/Kultur/Kulturabteilung/" class=" ">Kultur</a></li>
-      </ul>-->
-      </div><!-- /hauptmenue -->
-
-  </div>
-    <div id="lwl-claim">
-      <img id="logo" src="http://www.lwl.org/nozope/LWL/skin11/refresh/claim.png" width="265" height="20" alt="Für die Menschen. Für Westfalen-Lippe" title="Für die Menschen. Für Westfalen-Lippe">
-    </div></div>
- </div>
-
-  <!-- Timeslider -->
-  <div id="timesliderValue"></div>
-  <div id="timesliderDiv">
-    <div id="timesliderMinLabel"></div>
-    <div id="timeslider"></div>
-    <div id="timesliderMaxLabel"></div>
-  </div>
-
-    <!-- Layer selection menu -->
-    <div id="content1" style="position: absolute; width: 100%; height: 100%;">
-
-      <!-- Layer Button -->
-      <a href="#" class="icons" id="slideAwayButton_layer" onclick="showPane('menuPane-layer')" style="position: absolute; right:10px; top:72px; z-index: 4;">
-        <img src="images/layers_map.png">
-        <div id="labelLayer" class="buttonLabel">
-	      Themen
-	    </div>
-      </a>
-
-      <!-- Layer Pane -->
-      <div id="menuPane-layer" class="menuPane">
-        <a href="#" id="hideButton_layer" onclick="hidePane('#menuPane-layer')" style="position: absolute; top:5px; right:11px; z-index: 4;">
-          <img src="images/close12.png">
-        </a>
-        <a id="themenauswahlInfo" style="position: absolute; top:5px; right:25px; z-index: 4; cursor: help;">
-          <img src="images/Help_sm.png">
-        </a>
-        <div class="menuPane-head">
-          Themenauswahl
-        </div>
-        <div class="menuPaneContent">
-          <p>
-            <form name="form1" id="form1" method="post" autocomplete="off">
-              <div class="menuPane-head subMenuPane" onClick="switchLayerPane('demographisch')" style="font-style:italic;">
-                <img id="arrowDemographisch" class="submenuArrow" src="images/arrow20.png">
-                Demographische Daten
-              </div>
-              <div id="demographischPane" class="menuPaneContent">
-                <!-- <div>
-                  <input type="radio" id="einwohnerCheck" name="Layer" value="Einwohner" checked=true onchange="layerChange(datenEinwohner)">
-                  <label for="einwohnerCheck">Einwohner </label>
-                  <a id="einwohnerInfo" style="cursor: help;">
-                    <img src="images/Help_sm.png">
-                  </a>
-                </div> -->
-                <div>
-                  <input type="radio" id="einwohner_entwicklungCheck" name="Layer" checked=true value="Einwohner-Entwicklung" onchange="layerChange(datenEinwohnerEntwicklung)">
-                  <label for="einwohner_entwicklungCheck">Einwohner-Entwicklung </label>
-                  <a id="einwohner_entwicklungInfo" class="help">
-                    <img src="images/Help_sm.png">
-                  </a>
-                  <a class="gridview">
-                    <img src="images/grid_sm.png">
-                  </a>
-                </div>
-                <div>
-                  <input type="radio" id="bevoelkerungsdichteCheck" name="Layer" value="Bev&ouml;lkerungsdichte" onchange="layerChange(datenBevoelkerungsdichte)">
-                  <label for="bevoelkerungsdichteCheck">Bev&ouml;lkerungsdichte </label>
-                  <a id="bevoelkerungsdichteInfo" class="help">
-                    <img src="images/Help_sm.png">
-                  </a>
-                  <a class="gridview disabled">
-                    <img src="images/grid_sm.png">
-                  </a>
-                </div>
-                <div>
-                  <input type="radio" id="altersgruppenCheck" name="Layer" value="Altersgruppen" onchange="layerChange(datenAltersgruppen)">
-                  <label for="altersgruppenCheck">Altersgruppen </label>
-                  <a id="altersgruppenInfo" class="help">
-                    <img src="images/Help_sm.png">
-                  </a>
-                  <a class="gridview disabled">
-                    <img src="images/grid_sm.png">
-                  </a>
-                  <br>
-                  &nbsp;&nbsp;&nbsp;
-                  <input type="checkbox" id="altersgruppenDiagramme2011Check" value="Altersgruppen Diagramme 2011" onchange="layerChange(fIDaltersgruppenDiagramme2011)">
-                  <label for="altersgruppenDiagramme2011Check">Diagramme 2011</label>
-                  <a id="altersgruppenDiagramme2011Info" class="help">
-                    <img src="images/Help_sm.png">
-                  </a>
-                </div>
-                <div>
-                  <input type="radio" id="geburtenrateCheck" name="Layer" value="Geburtenrate" onchange="layerChange(datenGeburtenrate)">
-                  <label for="geburtenrateCheck">Geburtenrate </label>
-                  <a id="geburtenrateInfo" class="help">
-                    <img src="images/Help_sm.png">
-                  </a>
-                  <a class="gridview disabled">
-                    <img src="images/grid_sm.png">
-                  </a>
-                </div>
-                <div>
-                  <input type="radio" id="sterberateCheck" name="Layer" value="Sterberate" onchange="layerChange(datenSterberate)">
-                  <label for="sterberateCheck">Sterberate </label>
-                  <a id="sterberateInfo" class="help">
-                    <img src="images/Help_sm.png">
-                  </a>
-                  <a class="gridview disabled">
-                    <img src="images/grid_sm.png">
-                  </a>
-                </div>
-                <div>
-                  <input type="radio" id="migrationen_gesamtCheck" name="Layer" value="Migrationen Gesamt" onchange="layerChange(datenMigrationenGesamt)">
-                  <label for="migrationen_gesamtCheck">Zu-/Fortzüge gesamt </label>
-                  <a id="migrationen_gesamtInfo" class="help">
-                    <img src="images/Help_sm.png">
-                  </a>
-                  <a class="gridview disabled">
-                    <img src="images/grid_sm.png">
-                  </a>
-                </div>
-                <div>
-                  <input type="radio" id="migrationen_nichtdeutschCheck" name="Layer" value="Migrationen Nichtdeutsch" onchange="layerChange(datenMigrationenNichtdeutsche)">
-                  <label for="migrationen_nichtdeutschCheck">Zu-/Fortzüge Nichtdeutsche </label>
-                  <a id="migrationen_nichtdeutschInfo" class="help">
-                    <img src="images/Help_sm.png">
-                  </a>
-                  <a class="gridview disabled">
-                    <img src="images/grid_sm.png">
-                  </a>
-                </div>
-              </div>
-              <div class="menuPane-head subMenuPane" onClick="switchLayerPane('soziographisch')" style="font-style:italic;">
-                <img id="arrowSoziographisch" class="submenuArrow" src="images/arrow20.png">
-                Soziographische Daten
-              </div>
-              <div id="soziographischPane" class="menuPaneContent">
-                <div>
-                  <input type="radio" id="pflegebeduerftigeCheck" name="Layer" value="Pflegebed&uuml;rftige" onchange="layerChange(datenPflegebeduerftige)">
-                  <label for="pflegebeduerftigeCheck">Pflegebed&uuml;rftige </label>
-                  <a id="pflegebeduerftigeInfo" class="help">
-                    <img src="images/Help_sm.png">
-                  </a>
-                  <a class="gridview disabled">
-                    <img src="images/grid_sm.png">
-                  </a>
-                </div>
-                <div>
-                  <input type="radio" id="pflegeeinrichtungenCheck" name="Layer" value="Pflegeeinrichtungen" onchange="layerChange(datenPflegeeinrichtungen)">
-                  <label for="pflegeeinrichtungenCheck">Pflegeplätze </label>
-                  <a id="pflegeeinrichtungenInfo" class="help">
-                    <img src="images/Help_sm.png">
-                  </a>
-                  <a class="gridview disabled">
-                    <img src="images/grid_sm.png">
-                  </a>
-                </div>
-                <div>
-                  <input type="radio" id="haushaltsgroessenCheck" name="Layer" value="Haushaltsgr&ouml;ssen" onchange="layerChange(datenHaushaltsgroesse)">
-                  <label for="haushaltsgroessenCheck">Haushaltsgrößen </label>
-                  <a id="haushaltsgroessenInfo" class="help">
-                    <img src="images/Help_sm.png">
-                  </a>
-                  <a class="gridview disabled">
-                    <img src="images/grid_sm.png">
-                  </a>
-                </div>
-                <div>
-                  <input type="radio" id="single_haushalteCheck" name="Layer" value="Single-Haushalte" onchange="layerChange(datenSingleHaushalte)">
-                  <label for="single_haushalteCheck">Single-Haushalte </label>
-                  <a id="single_haushalteInfo" class="help">
-                    <img src="images/Help_sm.png">
-                  </a>
-                  <a class="gridview disabled">
-                    <img src="images/grid_sm.png">
-                  </a>
-                </div>
-                <div>
-                  <input type="radio" id="nichtdeutscheCheck" name="Layer" value="Nichtdeutsche" onchange="layerChange(datenNichtdeutsche)">
-                  <label for="nichtdeutscheCheck">Nichtdeutsche </label>
-                  <a id="nichtdeutscheInfo" class="help">
-                    <img src="images/Help_sm.png">
-                  </a>
-                  <a class="gridview disabled">
-                    <img src="images/grid_sm.png">
-                  </a>
-                </div>
-                <div>
-                  <input type="radio" id="migrationshintergrundCheck" name="Layer" value="Migrationshintergrund" onchange="layerChange(datenMigranten)">
-                  <label for="migrationshintergrundCheck">Menschen mit Migrationshintergrund </label>
-                  <a id="migrationshintergrundInfo" class="help">
-                    <img src="images/Help_sm.png">
-                  </a>
-                  <a class="gridview disabled">
-                    <img src="images/grid_sm.png">
-                  </a>
-                </div>
-                <div>
-                  <input type="radio" id="einkommenCheck" name="Layer" value="Einkommen" onchange="layerChange(datenEinkommen)">
-                  <label for="einkommenCheck">Einkommen </label>
-                  <a id="einkommenInfo" class="help">
-                    <img src="images/Help_sm.png" class="help">
-                  </a>
-                  <a class="gridview">
-                    <img src="images/grid_sm.png">
-                  </a>
-                </div>
-                <div>
-                  <input type="radio" id="konfessionenCheck" name="Layer" value="Konfessionen" onchange="layerChange(datenKonfessionen)">
-                  <label for="konfessionenCheck">Konfessionen </label>
-                  <a id="konfessionenInfo" class="help">
-                    <img src="images/Help_sm.png">
-                  </a>
-                  <a class="gridview disabled">
-                    <img src="images/grid_sm.png">
-                  </a>
-                  <br>
-                  &nbsp;&nbsp;&nbsp;
-                  <input type="checkbox" id="konfessionenDiagramme2008Check" value="Konfessionen Diagramme 2008 - 2010" onchange="layerChange(fIDkonfessionenDiagramme20082010)">
-                  <label for="konfessionenDiagramme2008Check">Diagramme &#216; 2008 - 2010</label>
-                  <a id="konfessionenDiagramme2008Info" style="cursor: help;">
-                    <img src="images/Help_sm.png">
-                  </a>
-                </div>
-              </div>
-            </form>
-          </p>
-          <br>
-          <div id="slider1" data-dojo-type="dijit.form.HorizontalSlider" data-dojo-props='name:"horizontal1", onChange:function(val){ setFeatureLayerOpacity(val) }, value:1, maximum:1, minimum:0, pageIncrement:100, showButtons:true, intermediateChanges:true, slideDuration:500, style:{width:"50%", height:"20px"} '>
-            <div align="center" style="font-size:0.75em">
-              Transparenz
-            </div>
+    <div id="header" class="lwl-cd">
+      <div id="headercontent">
+        <div id="quadrat_claim_logo">
+          <div id="lwl-logo">
+            <a href="http://www.lwl.org/" target="_blank">
+              <img id="quadrat" src="http://www.lwl.org/nozope/LWL/skin11/refresh/logo.png" width="136" height="30" alt="LWL" />
+            </a>
           </div>
-          <form>
-            <div align="left" style="font-size:1em">
-              <br>
-              <b>
-                Zusätzliche Ebenen:
-              </b>
-              <br>
-             <!--  <input type="checkbox" id="gemeindeLayerChk" name="Layer" value="Gemeinde" onchange="layerChange(70)" autocomplete="off">
-              <label for="baseMapChk">Gemeindegrenzen einblenden</label>
-              <br> -->
-              <input type="checkbox" id="baseMapChk" name="Layer" value="Basemap" onchange="layerChange(50)" autocomplete="off">
-              <label for="baseMapChk">Hintergrundkarte einblenden</label>
-              <br>
-              <input type="checkbox" id="labelChk" name="Layer" value="Label" onchange="layerChange(60)" checked="checked">
-              <label for="labelChk">Beschriftungen einblenden</label>
+          <div id="hauptmenue">
+            <!--<ul>
+              <li><a href="/">LWL-Startseite</a></li>
+              <li><a href="/LWL/Der_LWL" class=" ">Der LWL</a></li>
+              <li><a href="/LWL/Soziales" class=" ">Soziales</a></li>
+              <li><a href="/LWL/Gesundheit/psychiatrieverbund/" class=" ">Psychiatrie</a></li>
+              <li><a href="/LWL/Gesundheit/Massregelvollzug/" class=" ">Maßregelvollzug</a></li>
+              <li><a href="/LWL/Jugend/" class="aktiv">Jugend und Schule</a></li>
+              <li><a href="/LWL/Kultur/Kulturabteilung/" class=" ">Kultur</a></li>
+            </ul>-->
+          </div><!-- /hauptmenue -->
+        </div>
+        <div id="lwl-claim">
+          <img id="logo" src="http://www.lwl.org/nozope/LWL/skin11/refresh/claim.png" width="265" height="20" alt="Für die Menschen. Für Westfalen-Lippe" title="Für die Menschen. Für Westfalen-Lippe">
+        </div>
+      </div>
+    </div>
+
+    <!-- Timeslider -->
+    <div id="timesliderValue"></div>
+    <div id="timesliderDiv">
+      <div id="timesliderMinLabel"></div>
+      <div id="timeslider"></div>
+      <div id="timesliderMaxLabel"></div>
+    </div>
+
+    <!-- Content pane -->
+    <div id="content1">
+      <div id="background">
+        <div id="map" region="center" style="overflow:hidden; z-index: 1; height: 100%;">
+        </div>
+      </div>
+    </div>
+    <!-- Content pane End -->
+
+    <!-- Layer Button -->
+    <a href="#" class="icons" id="slideAwayButton_layer" onclick="showPane('menuPane-layer')" style="position: absolute; right:10px; top:72px; z-index: 4;">
+      <img src="images/layers_map.png">
+      <div id="labelLayer" class="buttonLabel">
+      Themen
+    </div>
+    </a>
+    <!-- Layer Button End -->
+
+    <!-- Layer Pane -->
+    <div id="menuPane-layer" class="menuPane">
+      <a href="#" id="hideButton_layer" onclick="hidePane('#menuPane-layer')" style="position: absolute; top:5px; right:11px; z-index: 4;">
+        <img src="images/close12.png">
+      </a>
+      <a id="themenauswahlInfo" style="position: absolute; top:5px; right:25px; z-index: 4; cursor: help;">
+        <img src="images/Help_sm.png">
+      </a>
+      <div class="menuPane-head">
+        Themenauswahl
+      </div>
+      <div class="menuPaneContent">
+        <p>
+          <form name="form1" id="form1" method="post" autocomplete="off">
+            <div class="menuPane-head subMenuPane" onClick="switchLayerPane('demographisch')" style="font-style:italic;">
+              <img id="arrowDemographisch" class="submenuArrow" src="images/arrow20.png">
+              Demographische Daten
+            </div>
+            <div id="demographischPane" class="menuPaneContent">
+              <!-- <div>
+                <input type="radio" id="einwohnerCheck" name="Layer" value="Einwohner" checked=true onchange="layerChange(datenEinwohner)">
+                <label for="einwohnerCheck">Einwohner </label>
+                <a id="einwohnerInfo" style="cursor: help;">
+                  <img src="images/Help_sm.png">
+                </a>
+              </div> -->
+              <div>
+                <input type="radio" id="einwohner_entwicklungCheck" name="Layer" checked=true value="Einwohner-Entwicklung" onchange="layerChange(datenEinwohnerEntwicklung)">
+                <label for="einwohner_entwicklungCheck">Einwohner-Entwicklung </label>
+                <a id="einwohner_entwicklungInfo" class="help">
+                  <img src="images/Help_sm.png">
+                </a>
+                <a class="gridview">
+                  <img src="images/grid_sm.png">
+                </a>
+              </div>
+              <div>
+                <input type="radio" id="bevoelkerungsdichteCheck" name="Layer" value="Bev&ouml;lkerungsdichte" onchange="layerChange(datenBevoelkerungsdichte)">
+                <label for="bevoelkerungsdichteCheck">Bev&ouml;lkerungsdichte </label>
+                <a id="bevoelkerungsdichteInfo" class="help">
+                  <img src="images/Help_sm.png">
+                </a>
+                <a class="gridview disabled">
+                  <img src="images/grid_sm.png">
+                </a>
+              </div>
+              <div>
+                <input type="radio" id="altersgruppenCheck" name="Layer" value="Altersgruppen" onchange="layerChange(datenAltersgruppen)">
+                <label for="altersgruppenCheck">Altersgruppen </label>
+                <a id="altersgruppenInfo" class="help">
+                  <img src="images/Help_sm.png">
+                </a>
+                <a class="gridview disabled">
+                  <img src="images/grid_sm.png">
+                </a>
+                <br>
+                &nbsp;&nbsp;&nbsp;
+                <input type="checkbox" id="altersgruppenDiagramme2011Check" value="Altersgruppen Diagramme 2011" onchange="layerChange(fIDaltersgruppenDiagramme2011)">
+                <label for="altersgruppenDiagramme2011Check">Diagramme 2011</label>
+                <a id="altersgruppenDiagramme2011Info" class="help">
+                  <img src="images/Help_sm.png">
+                </a>
+              </div>
+              <div>
+                <input type="radio" id="geburtenrateCheck" name="Layer" value="Geburtenrate" onchange="layerChange(datenGeburtenrate)">
+                <label for="geburtenrateCheck">Geburtenrate </label>
+                <a id="geburtenrateInfo" class="help">
+                  <img src="images/Help_sm.png">
+                </a>
+                <a class="gridview disabled">
+                  <img src="images/grid_sm.png">
+                </a>
+              </div>
+              <div>
+                <input type="radio" id="sterberateCheck" name="Layer" value="Sterberate" onchange="layerChange(datenSterberate)">
+                <label for="sterberateCheck">Sterberate </label>
+                <a id="sterberateInfo" class="help">
+                  <img src="images/Help_sm.png">
+                </a>
+                <a class="gridview disabled">
+                  <img src="images/grid_sm.png">
+                </a>
+              </div>
+              <div>
+                <input type="radio" id="migrationen_gesamtCheck" name="Layer" value="Migrationen Gesamt" onchange="layerChange(datenMigrationenGesamt)">
+                <label for="migrationen_gesamtCheck">Zu-/Fortzüge gesamt </label>
+                <a id="migrationen_gesamtInfo" class="help">
+                  <img src="images/Help_sm.png">
+                </a>
+                <a class="gridview disabled">
+                  <img src="images/grid_sm.png">
+                </a>
+              </div>
+              <div>
+                <input type="radio" id="migrationen_nichtdeutschCheck" name="Layer" value="Migrationen Nichtdeutsch" onchange="layerChange(datenMigrationenNichtdeutsche)">
+                <label for="migrationen_nichtdeutschCheck">Zu-/Fortzüge Nichtdeutsche </label>
+                <a id="migrationen_nichtdeutschInfo" class="help">
+                  <img src="images/Help_sm.png">
+                </a>
+                <a class="gridview disabled">
+                  <img src="images/grid_sm.png">
+                </a>
+              </div>
+            </div>
+            <div class="menuPane-head subMenuPane" onClick="switchLayerPane('soziographisch')" style="font-style:italic;">
+              <img id="arrowSoziographisch" class="submenuArrow" src="images/arrow20.png">
+              Soziographische Daten
+            </div>
+            <div id="soziographischPane" class="menuPaneContent">
+              <div>
+                <input type="radio" id="pflegebeduerftigeCheck" name="Layer" value="Pflegebed&uuml;rftige" onchange="layerChange(datenPflegebeduerftige)">
+                <label for="pflegebeduerftigeCheck">Pflegebed&uuml;rftige </label>
+                <a id="pflegebeduerftigeInfo" class="help">
+                  <img src="images/Help_sm.png">
+                </a>
+                <a class="gridview disabled">
+                  <img src="images/grid_sm.png">
+                </a>
+              </div>
+              <div>
+                <input type="radio" id="pflegeeinrichtungenCheck" name="Layer" value="Pflegeeinrichtungen" onchange="layerChange(datenPflegeeinrichtungen)">
+                <label for="pflegeeinrichtungenCheck">Pflegeplätze </label>
+                <a id="pflegeeinrichtungenInfo" class="help">
+                  <img src="images/Help_sm.png">
+                </a>
+                <a class="gridview disabled">
+                  <img src="images/grid_sm.png">
+                </a>
+              </div>
+              <div>
+                <input type="radio" id="haushaltsgroessenCheck" name="Layer" value="Haushaltsgr&ouml;ssen" onchange="layerChange(datenHaushaltsgroesse)">
+                <label for="haushaltsgroessenCheck">Haushaltsgrößen </label>
+                <a id="haushaltsgroessenInfo" class="help">
+                  <img src="images/Help_sm.png">
+                </a>
+                <a class="gridview disabled">
+                  <img src="images/grid_sm.png">
+                </a>
+              </div>
+              <div>
+                <input type="radio" id="single_haushalteCheck" name="Layer" value="Single-Haushalte" onchange="layerChange(datenSingleHaushalte)">
+                <label for="single_haushalteCheck">Single-Haushalte </label>
+                <a id="single_haushalteInfo" class="help">
+                  <img src="images/Help_sm.png">
+                </a>
+                <a class="gridview disabled">
+                  <img src="images/grid_sm.png">
+                </a>
+              </div>
+              <div>
+                <input type="radio" id="nichtdeutscheCheck" name="Layer" value="Nichtdeutsche" onchange="layerChange(datenNichtdeutsche)">
+                <label for="nichtdeutscheCheck">Nichtdeutsche </label>
+                <a id="nichtdeutscheInfo" class="help">
+                  <img src="images/Help_sm.png">
+                </a>
+                <a class="gridview disabled">
+                  <img src="images/grid_sm.png">
+                </a>
+              </div>
+              <div>
+                <input type="radio" id="migrationshintergrundCheck" name="Layer" value="Migrationshintergrund" onchange="layerChange(datenMigranten)">
+                <label for="migrationshintergrundCheck">Menschen mit Migrationshintergrund </label>
+                <a id="migrationshintergrundInfo" class="help">
+                  <img src="images/Help_sm.png">
+                </a>
+                <a class="gridview disabled">
+                  <img src="images/grid_sm.png">
+                </a>
+              </div>
+              <div>
+                <input type="radio" id="einkommenCheck" name="Layer" value="Einkommen" onchange="layerChange(datenEinkommen)">
+                <label for="einkommenCheck">Einkommen </label>
+                <a id="einkommenInfo" class="help">
+                  <img src="images/Help_sm.png" class="help">
+                </a>
+                <a class="gridview">
+                  <img src="images/grid_sm.png">
+                </a>
+              </div>
+              <div>
+                <input type="radio" id="konfessionenCheck" name="Layer" value="Konfessionen" onchange="layerChange(datenKonfessionen)">
+                <label for="konfessionenCheck">Konfessionen </label>
+                <a id="konfessionenInfo" class="help">
+                  <img src="images/Help_sm.png">
+                </a>
+                <a class="gridview disabled">
+                  <img src="images/grid_sm.png">
+                </a>
+                <br>
+                &nbsp;&nbsp;&nbsp;
+                <input type="checkbox" id="konfessionenDiagramme2008Check" value="Konfessionen Diagramme 2008 - 2010" onchange="layerChange(fIDkonfessionenDiagramme20082010)">
+                <label for="konfessionenDiagramme2008Check">Diagramme &#216; 2008 - 2010</label>
+                <a id="konfessionenDiagramme2008Info" style="cursor: help;">
+                  <img src="images/Help_sm.png">
+                </a>
+              </div>
             </div>
           </form>
-        </div>
+        </p>
+        <br>
+        <!-- <div id="slider1" data-dojo-type="dijit.form.HorizontalSlider" data-dojo-props='name:"horizontal1", onChange:function(val){ setFeatureLayerOpacity(val) }, value:1, maximum:1, minimum:0, pageIncrement:100, showButtons:true, intermediateChanges:true, slideDuration:500, style:{width:"50%", height:"20px"} '>
+          <div align="center" style="font-size:0.75em">
+            Transparenz
+          </div>
+        </div> -->
+        <form>
+          <div align="left" style="font-size:1em">
+            <br>
+            <b>
+              Zusätzliche Ebenen:
+            </b>
+            <br>
+           <!--  <input type="checkbox" id="gemeindeLayerChk" name="Layer" value="Gemeinde" onchange="layerChange(70)" autocomplete="off">
+            <label for="baseMapChk">Gemeindegrenzen einblenden</label>
+            <br> -->
+            <input type="checkbox" id="baseMapChk" name="Layer" value="Basemap" onchange="layerChange(50)" autocomplete="off">
+            <label for="baseMapChk">Hintergrundkarte einblenden</label>
+            <br>
+            <input type="checkbox" id="labelChk" name="Layer" value="Label" onchange="layerChange(60)" checked="checked">
+            <label for="labelChk">Beschriftungen einblenden</label>
+          </div>
+        </form>
       </div>
+    </div>
+    <!-- Layer Pane End -->
 
-      <!-- GridView Pane -->
-      <div id="menuPane-grid" class="menuPane">
-        <a href="#" id="hideButton_classes" onclick="hidePane('#menuPane-grid')" style="position: absolute; top:5px; right:7px; z-index: 4;">
-          <img src="images/close12.png">
-        </a>
-        <div class="menuPane-head">
-        </div>
-        <div id="grid">
-
-        </div>
-      </div>
-
-      <!-- Classes Button-->
-      <a href="#" class="icons" id="slideAwayButton_classes" onclick="showPane('menuPane-classes')" style="position: absolute; right:10px; top:142px; z-index: 3;">
-        <img id="classesBtnImg" src="images/classes.png">
-        <div id="labelClass" class="buttonLabel">
-          Klassen
-        </div>
+    <!-- GridView Pane -->
+    <div id="menuPane-grid" class="menuPane">
+      <a href="#" id="hideButton_classes" onclick="hidePane('#menuPane-grid')" style="position: absolute; top:5px; right:7px; z-index: 4;">
+        <img src="images/close12.png">
       </a>
-
-      <!-- Classes Pane -->
-      <div id="menuPane-classes" class="menuPane">
-        <a href="#" id="hideButton_classes" onclick="hidePane('#menuPane-classes')" style="position: absolute; top:5px; right:7px; z-index: 4;">
-          <img src="images/close12.png">
-        </a>
-        <a id="klasseneinteilungInfo" style="position: absolute; top:5px; right:21px; z-index: 4; cursor: help;">
-          <img src="images/Help_sm.png">
-        </a>
-        <div class="menuPane-head">
-          Klasseneinteilung
-        </div>
-        <div>
-          <div class="menuPane-head subMenuPane" onClick="switchClassificationPane('manual')" style="font-style:italic;">
-            <img id="arrowManual" class="submenuArrow" src="images/arrow20.png">
-            Individuell
-          </div>
-          <div id="individualClassesPane" class="menuPaneContent">
-            <div id="breaksTable">
-              <table id="Breaks"></table>
-            </div>
-            <a href="javascript:addIndivBreakField()">
-              <img src="images/plus20.png">
-            </a>
-            <input id="indivBreaksApply" type="button" onclick="addIndividualBreaks()" value="Anwenden">
-            </div>
-          <div class="menuPane-head subMenuPane" onClick="switchClassificationPane('automatic')" style="font-style:italic;">
-            <img id="arrowAutomatic" class="submenuArrow" src="images/arrow20.png">
-            Automatisch
-          </div>
-          <div id="automaticClassesPane" class="menuPaneContent">
-            <div style="width:100%; height: auto;">
-              <div class="row">
-                <div class="col-3">
-                  <b>
-                    Klassifikation:
-                  </b>
-                </div>
-                <div class="col-6">
-                  <select id="classificationMethod">
-                    <option value="equalInterval" selected>Gleiche Intervalle</option>
-                    <option value="quantile">Quantile (Gleiche Anzahl)</option>
-                    <option value="jenks">Natürliche Unterbrechungen</option>
-                    <option value="standardDeviation">Standardabweichung</option>
-                    <option value="pretty">Schöne Unterbrechungen</option>
-                  </select>
-                </div>
-                <div class="col-1">
-                  <a id="klassifikationsInfo">
-                    <img src="images/Help_sm.png">
-                  </a>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-3">
-                  <b>
-                    Farbskala von/bis:
-                  </b>
-                </div>
-                <div class="col-6">
-                  <input class="color {valueElement:'colorPickerValueOne'}" id="eqBrStartColor" style="width:37px;" value="Farbe">
-                  <b>
-                  /
-                  <b>
-                  <input class="color {valueElement:'colorPickerValueTwo'}" id="eqBrEndColor" style="width:37px;" value="Farbe">
-                </div>
-                <div class="col-1">
-
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-3">
-                  <b>
-                    Anzahl der Klassen:
-                  </b>
-                </div>
-                <div class="col-6">
-                  <input type="text" name="" value="4" id="equalBreaksText" placeholder="" />
-                </div>
-                <div class="col-1">
-
-                </div>
-              </div>
-            </div>
-            <!-- <input type="button" onclick="javascript:colorizeLayer(addEqualBreaksNew(yearIndex, parseInt(document.getElementById('equalBreaksText').value)-1,
-            document.getElementById('colorPickerValueOne').value, document.getElementById('colorPickerValueTwo').value))" value="Anwenden"> -->
-            <input type="button" onclick="javascript:classify(document.getElementById('classificationMethod').value, yearIndex, parseInt(document.getElementById('equalBreaksText').value)-1,
-            document.getElementById('colorPickerValueOne').value, document.getElementById('colorPickerValueTwo').value)" value="Anwenden">
-            <input id="colorPickerValueOne" style="width:0px; visibility:hidden;">
-            <input id="colorPickerValueTwo" style="width:0px; visibility:hidden;">
-            <table id="Breaks">
-          </table>
-          </div>
-        </div>
+      <div class="menuPane-head">
       </div>
-
-      <!-- Legend Button -->
-      <a href="#" class="icons" id="slideAwayButton_legend" onclick="showPane('menuPane-legend')" style="position: absolute; right:10px; top:212px; z-index: 2;">
-        <img id="legendBtnImg" src="images/legend.png">
-        <div id="labelLegend" class="buttonLabel">
-          Legende
-        </div>
-      </a>
-
-      <!-- Legend Pane -->
-      <div id="menuPane-legend" class="menuPane">
-        <a href="#" id="hideButton_legend" onclick="hidePane('#menuPane-legend')" style="position: absolute; top:5px; right:7px; z-index: 4;">
-          <img src="images/close12.png">
-        </a>
-        <div id="legendDiv">
-          <div id="legendTitle" style="margin-bottom:10px;">Legende</div>
-          <div id="legendTheme" style="font-size:13px;">
-          </div>
-          <div id="myLegend" style="margin-bottom:10px;">
-          </div>
-          <div id="legend">
-          </div>
-          <div id="legendDiagrams">
-          </div>
-        </div>
+      <div id="grid">
       </div>
+    </div>
+    <!-- GridView Pane End -->
 
-      <!-- Export Button -->
-      <a href="#" class="icons" id="slideAwayButton_export" onclick="showPane('menuPane-export')" style="position: absolute; right:10px; top:352px; z-index: 2;">
-        <img id="exportBtnImg" src="images/download.png">
-        <div id="labelExport" class="buttonLabel">
-          Drucken
-        </div>
+    <!-- Classes Button -->
+    <a href="#" class="icons" id="slideAwayButton_classes" onclick="showPane('menuPane-classes')" style="position: absolute; right:10px; top:142px; z-index: 3;">
+      <img id="classesBtnImg" src="images/classes.png">
+      <div id="labelClass" class="buttonLabel">
+        Klassen
+      </div>
+    </a>
+    <!-- Classes Button End -->
+
+    <!-- Classes Pane -->
+    <div id="menuPane-classes" class="menuPane">
+      <a href="#" id="hideButton_classes" onclick="hidePane('#menuPane-classes')" style="position: absolute; top:5px; right:7px; z-index: 4;">
+        <img src="images/close12.png">
       </a>
-
-      <!-- Export Pane -->
-      <div id="menuPane-export" class="menuPane" style="width: 200px;">
-        <a href="#" id="hideButton_export" onclick="hidePane('#menuPane-export')" style="position: absolute; top:5px; right:7px; z-index: 4;">
-          <img src="images/close12.png">
-        </a>
-        <div class="menuPane-head">
-          Karte drucken:
+      <a id="klasseneinteilungInfo" style="position: absolute; top:5px; right:21px; z-index: 4; cursor: help;">
+        <img src="images/Help_sm.png">
+      </a>
+      <div class="menuPane-head">
+        Klasseneinteilung
+      </div>
+      <div>
+        <div class="menuPane-head subMenuPane" onClick="switchClassificationPane('manual')" style="font-style:italic;">
+          <img id="arrowManual" class="submenuArrow" src="images/arrow20.png">
+          Individuell
         </div>
-        <div class="menuPaneContent">
-
-          <div class="table">
+        <div id="individualClassesPane" class="menuPaneContent">
+          <div id="breaksTable">
+            <table id="Breaks"></table>
+          </div>
+          <a href="javascript:addIndivBreakField()">
+            <img src="images/plus20.png">
+          </a>
+          <input id="indivBreaksApply" type="button" onclick="addIndividualBreaks()" value="Anwenden">
+          </div>
+        <div class="menuPane-head subMenuPane" onClick="switchClassificationPane('automatic')" style="font-style:italic;">
+          <img id="arrowAutomatic" class="submenuArrow" src="images/arrow20.png">
+          Automatisch
+        </div>
+        <div id="automaticClassesPane" class="menuPaneContent">
+          <div style="width:100%; height: auto;">
             <div class="row">
-              <div class="cell">
-                <label for="mapExportTitle">Titel: </label>
+              <div class="col-3">
+                <b>
+                  Klassifikation:
+                </b>
               </div>
-              <div class="cell printForm">
-                <input type="text" id="mapExportTitle" placeholder="Meine Karte">
+              <div class="col-6">
+                <select id="classificationMethod">
+                  <option value="equalInterval" selected>Gleiche Intervalle</option>
+                  <option value="quantile">Quantile (Gleiche Anzahl)</option>
+                  <option value="jenks">Natürliche Unterbrechungen</option>
+                  <option value="standardDeviation">Standardabweichung</option>
+                  <option value="pretty">Schöne Unterbrechungen</option>
+                </select>
+              </div>
+              <div class="col-1">
+                <a id="klassifikationsInfo">
+                  <img src="images/Help_sm.png">
+                </a>
               </div>
             </div>
             <div class="row">
-              <div class="cell">
-                <label for="mapExportAuthor">Autor: </label>
+              <div class="col-3">
+                <b>
+                  Farbskala von/bis:
+                </b>
               </div>
-              <div class="cell printForm">
-                <input type="text" id="mapExportAuthor" placeholder="Anonym">
+              <div class="col-6">
+                <input class="color {valueElement:'colorPickerValueOne'}" id="eqBrStartColor" style="width:37px;" value="Farbe">
+                <b>
+                /
+                <b>
+                <input class="color {valueElement:'colorPickerValueTwo'}" id="eqBrEndColor" style="width:37px;" value="Farbe">
+              </div>
+              <div class="col-1">
+
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-3">
+                <b>
+                  Anzahl der Klassen:
+                </b>
+              </div>
+              <div class="col-6">
+                <input type="text" name="" value="4" id="equalBreaksText" placeholder="" />
+              </div>
+              <div class="col-1">
+
               </div>
             </div>
           </div>
-
-          <br>
-          <div id="exportWarning">
-            Achtung: Das exportieren der Karte kann einige Sekunden in Anspruch nehmen.
-          </div>
-
-          <br>
-          <input type="button" id="mapExportChange" onclick="initPrinter();" value="Drucken">
-          <a href="#" id="printButton"></a>
+          <!-- <input type="button" onclick="javascript:colorizeLayer(addEqualBreaksNew(yearIndex, parseInt(document.getElementById('equalBreaksText').value)-1,
+          document.getElementById('colorPickerValueOne').value, document.getElementById('colorPickerValueTwo').value))" value="Anwenden"> -->
+          <input type="button" onclick="javascript:classify(document.getElementById('classificationMethod').value, yearIndex, parseInt(document.getElementById('equalBreaksText').value)-1,
+          document.getElementById('colorPickerValueOne').value, document.getElementById('colorPickerValueTwo').value)" value="Anwenden">
+          <input id="colorPickerValueOne" style="width:0px; visibility:hidden;">
+          <input id="colorPickerValueTwo" style="width:0px; visibility:hidden;">
+          <table id="Breaks">
+        </table>
         </div>
       </div>
+    </div>
+    <!-- Classes Pane End -->
 
-      <!-- Full Extent Button -->
-      <a href="#" class="icons" id="fullExtentButton" onclick="fullExtent()" style="position: absolute; left: 34px; top: 72px; z-index: 2; padding: 2px;">
-        <img id="fullExtBtnImg" src="images/full_extent.png">
+    <!-- Legend Button -->
+    <a href="#" class="icons" id="slideAwayButton_legend" onclick="showPane('menuPane-legend')" style="position: absolute; right:10px; top:212px; z-index: 2;">
+      <img id="legendBtnImg" src="images/legend.png">
+      <div id="labelLegend" class="buttonLabel">
+        Legende
+      </div>
+    </a>
+    <!-- Legend Button End -->
+
+    <!-- Legend Pane -->
+    <div id="menuPane-legend" class="menuPane">
+      <a href="#" id="hideButton_legend" onclick="hidePane('#menuPane-legend')" style="position: absolute; top:5px; right:7px; z-index: 4;">
+        <img src="images/close12.png">
       </a>
+      <div id="legendDiv">
+        <div id="legendTitle" style="margin-bottom:10px;">Legende</div>
+        <div id="legendTheme" style="font-size:13px;">
+        </div>
+        <div id="myLegend" style="margin-bottom:10px;">
+        </div>
+        <div id="legend">
+        </div>
+        <div id="legendDiagrams">
+        </div>
+      </div>
+    </div>
+    <!-- Legend Pane End -->
 
-      <!-- Info Button -->
-      <a href="http://www.lwl.org/LWL/Kultur/geko/1383213708/" target="_blank" class="icons" id="infoButton" style="position: absolute; right:10px; top:452px; z-index: 2;">
-        <img id="infoBtnImg" src="images/chalkboard.png">
+    <!-- Export Button -->
+    <a href="#" class="icons" id="slideAwayButton_export" onclick="showPane('menuPane-export')" style="position: absolute; right:10px; top:352px; z-index: 2;">
+      <img id="exportBtnImg" src="images/download.png">
+      <div id="labelExport" class="buttonLabel">
+        Drucken
+      </div>
+    </a>
+    <!-- Export Button End -->
+
+    <!-- Export Pane -->
+    <div id="menuPane-export" class="menuPane" style="width: 200px;">
+      <a href="#" id="hideButton_export" onclick="hidePane('#menuPane-export')" style="position: absolute; top:5px; right:7px; z-index: 4;">
+        <img src="images/close12.png">
       </a>
-
-      <!-- Info Pane -->
-      <div id="infoWindow" class="textWindow">
-        <a href="#" id="close_welcome" style="position: absolute; top:7px; right:9px; z-index: 11;" onclick="hidePane('textWindows')">
-          <img src="images/close12.png">
-        </a>
-        <div style="font-size: x-large;">Herzlich willkommen beim WebGIS Westfalen!</div>
-        <br><br>
-        Mit diesem internetbasierten Geo-Informationssystem (WebGIS) lassen sich im Handumdrehen übersichtliche thematische Karten über den Raum Westfalen erstellen.
-        <br><br>
-        WebGIS Westfalen eignet sich besonders für den modernen Erdkundeunterricht (<a href="http://lwl.org" style="color:lightgrey;"target="_blank">Unterrichtsmaterialien</a>), um hier den Schülerinnen und Schülern räumliche Disparitäten zwischen den insgesamt 27 Kreisen bzw. kreisfreien Städten Westfalens mit nur wenigen Schritten näherzubringen – egal ob am PC, Beamer, Whiteboard, Tablet oder Smartphone.
-        <br><br>
-        WebGIS Westfalen ist ein Kooperationsprojekt der <a href="http://www.geographische-kommission.de/" style="color:lightgrey;"target="_blank">Geographischen Kommission für Westfalen</a> im <a href="http://lwl.org" style="color:lightgrey;"target="_blank">Landschaftsverband Westfalen-Lippe</a> und des <a href="http://gi-at-school.de" style="color:lightgrey;"target="_blank">GI@School Labs</a> am <a href="http://ifgi.uni-muenster.de" style="color:lightgrey;"target="_blank">Institut für Geoinformatik</a> der <a href="http://www.uni-muenster.de" style="color:lightgrey;"target="_blank">Universität Münster</a>. Datenquelle sind Statistiken des Landesbetriebes Information und Technik Nordrhein-Westfalen (IT.NRW). Die heute im WebGIS Westfalen vorhandenen Inhalte werden in Zukunft schrittweise um weitere Themen ergänzt.
-        <br><br>
-        Die Geographische Kommission für Westfalen dankt der Manfred-Engel-Stiftung für die finanzielle Unterstützung dieses Projektes.
-
+      <div class="menuPane-head">
+        Karte drucken:
       </div>
+      <div class="menuPaneContent">
 
+        <div class="table">
+          <div class="row">
+            <div class="cell">
+              <label for="mapExportTitle">Titel: </label>
+            </div>
+            <div class="cell printForm">
+              <input type="text" id="mapExportTitle" placeholder="Meine Karte">
+            </div>
+          </div>
+          <div class="row">
+            <div class="cell">
+              <label for="mapExportAuthor">Autor: </label>
+            </div>
+            <div class="cell printForm">
+              <input type="text" id="mapExportAuthor" placeholder="Anonym">
+            </div>
+          </div>
+        </div>
 
-      <!-- Split Screen -->
-      <div id="splitDiv">
-        <a href="#" class="icons" id="slideAwayButton_split" style="position: absolute; right:10px; top:282px; z-index: 5;">
-          <img src="images/map_btn.png" >
-          <div id="labelSplit" class="buttonLabel">
-    	      Vergleichen
-    	    </div>
-        </a>
+        <br>
+        <div id="exportWarning">
+          Achtung: Das exportieren der Karte kann einige Sekunden in Anspruch nehmen.
+        </div>
+
+        <br>
+        <input type="button" id="mapExportChange" onclick="initPrinter();" value="Drucken">
+        <a href="#" id="printButton"></a>
       </div>
+    </div>
+    <!-- Export Pane End -->
 
-      <!-- Welcome window -->
-      <div id="welcome" class="textWindow" align="center">
-      	<a href="#" id="close_welcome" style="position: absolute; top:7px; right:9px; z-index: 11;" onclick="hidePane('textWindows')">
-          <img src="images/close12.png">
-        </a>
-    	      Herzlich Willkommen!
-    	      <br>
-    	      Diese Seite befindet sich noch in der Beta-Phase.
-    	      <br>
-    	      Über Feedback würden wir uns unter <a href="mailto:feedback.lwl-webgis@uni-muenster.de" style="color:white;">feedback.lwl-webgis@uni-muenster.de</a> sehr freuen!
-      </div>
+    <!-- Full Extent Button -->
+    <a href="#" class="icons" id="fullExtentButton" onclick="fullExtent()" style="position: absolute; left: 34px; top: 72px; z-index: 2; padding: 2px;">
+      <img id="fullExtBtnImg" src="images/full_extent.png">
+    </a>
+    <!-- Full Extent Button End -->
+
+    <!-- Info Button -->
+    <a href="http://www.lwl.org/LWL/Kultur/geko/1383213708/" target="_blank" class="icons" id="infoButton" style="position: absolute; right:10px; top:452px; z-index: 2;">
+      <img id="infoBtnImg" src="images/chalkboard.png">
+    </a>
+    <!-- Info Button End -->
+
+    <!-- Info Pane -->
+    <div id="infoWindow" class="textWindow">
+      <a href="#" id="close_welcome" style="position: absolute; top:7px; right:9px; z-index: 11;" onclick="hidePane('textWindows')">
+        <img src="images/close12.png">
+      </a>
+      <div style="font-size: x-large;">Herzlich willkommen beim WebGIS Westfalen!</div>
+      <br><br>
+      Mit diesem internetbasierten Geo-Informationssystem (WebGIS) lassen sich im Handumdrehen übersichtliche thematische Karten über den Raum Westfalen erstellen.
+      <br><br>
+      WebGIS Westfalen eignet sich besonders für den modernen Erdkundeunterricht (<a href="http://lwl.org" style="color:lightgrey;"target="_blank">Unterrichtsmaterialien</a>), um hier den Schülerinnen und Schülern räumliche Disparitäten zwischen den insgesamt 27 Kreisen bzw. kreisfreien Städten Westfalens mit nur wenigen Schritten näherzubringen – egal ob am PC, Beamer, Whiteboard, Tablet oder Smartphone.
+      <br><br>
+      WebGIS Westfalen ist ein Kooperationsprojekt der <a href="http://www.geographische-kommission.de/" style="color:lightgrey;"target="_blank">Geographischen Kommission für Westfalen</a> im <a href="http://lwl.org" style="color:lightgrey;"target="_blank">Landschaftsverband Westfalen-Lippe</a> und des <a href="http://gi-at-school.de" style="color:lightgrey;"target="_blank">GI@School Labs</a> am <a href="http://ifgi.uni-muenster.de" style="color:lightgrey;"target="_blank">Institut für Geoinformatik</a> der <a href="http://www.uni-muenster.de" style="color:lightgrey;"target="_blank">Universität Münster</a>. Datenquelle sind Statistiken des Landesbetriebes Information und Technik Nordrhein-Westfalen (IT.NRW). Die heute im WebGIS Westfalen vorhandenen Inhalte werden in Zukunft schrittweise um weitere Themen ergänzt.
+      <br><br>
+      Die Geographische Kommission für Westfalen dankt der Manfred-Engel-Stiftung für die finanzielle Unterstützung dieses Projektes.
+    </div>
+    <!-- Info Pane End -->
 
 
-      <div id="welcomeBackground" onclick="hidePane('textWindows')">
-      </div>
+    <!-- Split Screen -->
+    <div id="splitDiv">
+      <a href="#" class="icons" id="slideAwayButton_split" style="position: absolute; right:10px; top:282px; z-index: 5;">
+        <img src="images/map_btn.png" >
+        <div id="labelSplit" class="buttonLabel">
+  	      Vergleichen
+  	    </div>
+      </a>
+    </div>
+    <!-- Split Screen End -->
 
-  <!--loading Icon for the Map-->
-  <div id="mapLoading">
-    <img src="images/loading_map.gif"></img>
-  </div>
+    <!-- Welcome window -->
+    <div id="welcome" class="textWindow" align="center">
+    	<a href="#" id="close_welcome" style="position: absolute; top:7px; right:9px; z-index: 11;" onclick="hidePane('textWindows')">
+        <img src="images/close12.png">
+      </a>
+  	      Herzlich Willkommen!
+  	      <br>
+  	      Diese Seite befindet sich noch in der Beta-Phase.
+  	      <br>
+  	      Über Feedback würden wir uns unter <a href="mailto:feedback.lwl-webgis@uni-muenster.de" style="color:white;">feedback.lwl-webgis@uni-muenster.de</a> sehr freuen!
+    </div>
+    <!-- Welcome window End -->
+
+    <div id="welcomeBackground" onclick="hidePane('textWindows')">
+    </div>
+
+    <!-- Loading Icon for the Map -->
+    <div id="mapLoading">
+      <img src="images/loading_map.gif"></img>
+    </div>
+    <!--Loading Icon for the Map End -->
 
   <!--<a href="#" class="icons" id="printButton" style="position: absolute; right:0px; top:290px; z-index: 4;"></a>-->
   <!--
@@ -585,21 +602,24 @@
     <div id="map" dojotype="dijit.layout.ContentPane" region="center" style="overflow:hidden; z-index: 1;">
     </div>
   </div>-->
-  <div style="background-color: #fff; width: auto; height: 100%; margin: 0; padding-top:62px; padding-bottom: 0px; margin-left: 10px; margin-right: 10px;">
+  <!-- <div style="background-color: red;">
+
+  </div> -->
+  <!-- <div style="background-color: #fff; width: auto; height: 95%; margin: 0; padding-top:62px; padding-bottom: 0px; margin-left: 10px; margin-right: 10px;">
     <div id="map" region="center" style="overflow:hidden; z-index: 1; height: 100%;">
     </div>
-  </div>
+  </div> -->
 
   <!-- Ifgi and LWL logo -->
   <!--<a href="http://www.lwl.org/LWL/Kultur/geko/" target="_blank" id="lwl_logo_map" style="position: absolute; right:120px; bottom: 0px; z-index: 2; opacity: 0.5; height: 25px;">-->
-  	<div id="copyrightLwl">
+  	<!-- <div id="copyrightLwl">
   	&copy; Landschaftsverband Westfalen-Lippe (LWL)
-  	</div>
+  	</div> -->
     <!--<img src="images/lwl_logo_map.png">
   </a>-->
-  <a href="http://ifgi.uni-muenster.de/" target="_blank" id="ifgi_logo_map" style="position: absolute; right:10px; bottom:2px; z-index: 2; height:45px;">
+  <!-- <a href="http://ifgi.uni-muenster.de/" target="_blank" id="ifgi_logo_map" style="position: absolute; right:10px; bottom:2px; z-index: 2; height:45px;">
     <img src="images/ifgi_logo_map.png">
-  </a>
+  </a> -->
   <!--
   <div id="footer" class="lwl-cd">
   	<div id="footercontent">
@@ -609,5 +629,5 @@
 	</div>
   </div>-->
 
-</body>
+  </body>
 </html>
