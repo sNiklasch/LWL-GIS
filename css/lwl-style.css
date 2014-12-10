@@ -265,3 +265,7 @@ font-weight:bold;
 	margin-right: 10px;
 	position: relative;
 }
+
+.esriAttribution {
+	margin-bottom: 8px;
+}

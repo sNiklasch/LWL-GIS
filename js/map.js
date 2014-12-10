@@ -122,7 +122,11 @@ function getLayerAttributes(){
 function initLayers(){
   //Set labels visible on load:
   require(['esri/layers/FeatureLayer',
-    'esri/layers/ArcGISDynamicMapServiceLayer'], function(FeatureLayer, ArcGISDynamicMapServiceLayer) {
+    'esri/symbols/TextSymbol',
+    'esri/renderers/SimpleRenderer',
+    'esri/Color',
+    'esri/layers/LabelLayer',
+    'esri/layers/ArcGISDynamicMapServiceLayer'], function(FeatureLayer, TextSymbol, SimpleRenderer, Color, LabelLayer, ArcGISDynamicMapServiceLayer) {
     featureLayer = new FeatureLayer(featureLayerServer + '/0', {
       id: 'kreise',
       mode: FeatureLayer.MODE_ONDEMAND,
@@ -131,6 +135,20 @@ function initLayers(){
 
     map.addLayer(featureLayer, 0);
     classify('equalInterval', 0, autoClassesBreaks, autoClassesStartColor, autoClassesEndColor);
+
+    // create a text symbol to define the style of labels
+    /*var labelField = 'Kreisname';
+    var statesColor = new Color("#666");
+    var statesLabel = new TextSymbol().setColor(statesColor);
+    statesLabel.font.setSize("14pt");
+    statesLabel.font.setFamily("arial");
+    var statesLabelRenderer = new SimpleRenderer(statesLabel);
+    var labels = new LabelLayer({ id: "labels" });
+    // tell the label layer to label the countries feature layer
+    // using the field named "admin"
+    labels.addFeatureLayer(featureLayer, statesLabelRenderer, "{" + labelField + "}");
+    // add the label layer to the map
+    map.addLayer(labels);*/
 
     operationalLayer = new ArcGISDynamicMapServiceLayer(mapServer, { 'id': 'collection' });
     featureLayer.on('update-start', showLoadingIcon);
@@ -247,7 +265,8 @@ require(['esri/map',
   'esri/SpatialReference',
   'esri/layers/OpenStreetMapLayer',
   'dojo/dom-construct',
-  'dojo/domReady!'], function(Map, Extent, SpatialReference, OpenStreetMapLayer, domConstruct) {
+  'dojo/query',
+  'dojo/domReady!'], function(Map, Extent, SpatialReference, OpenStreetMapLayer, domConstruct, query) {
 
   addTooltips(); //the mouse-over tooltips are created programmatically
 
@@ -310,6 +329,9 @@ require(['esri/map',
   yearChange(0); //set the init-year to 2012
 
   fullExtent();
+
+  attributionDiv = query('.esriAttributionList');
+  domConstruct.place('<span class="esriAttributionLastItem" style="display: inline;">&copy; Landschaftsverband Westfalen-Lippe (LWL)<span class="esriAttributionDelim"> | </span></span>', attributionDiv[0]);
 });
 
 /**
@@ -378,7 +400,11 @@ function layerChange(layerNr,removeLayer) {
     document.getElementById('copyrightLwl').innerHTML = '&copy; Landschaftsverband Westfalen-Lippe (LWL)';
   } else if (layerNr === 50 && (document.getElementById('baseMapChk').checked)) {
     map.addLayer(osmLayer, 0);
-    document.getElementById('copyrightLwl').innerHTML = '&copy; Landschaftsverband Westfalen-Lippe (LWL), <a target="_blank" href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>-Mitwirkende';
+    require(['dojo/query'], function(query){
+      attribution = query('.esriAttributionList');
+      console.log('test');
+      attribution[0].childNodes[1].innerHTML = '<a target="_blank" href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>-Mitwirkende';
+    });
     //handling checkbox for the operationalLayer
   } else if (layerNr === 60 && (document.getElementById('labelChk').checked)) {
     labelVisibility = true;
