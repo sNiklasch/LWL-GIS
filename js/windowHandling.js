@@ -42,16 +42,19 @@ function showPane(layer){
 	else if (layer === 'menuPane-classes'){
 		hidePane('#menuPane-layer');
 		hidePane('#menuPane-export');
+		hidePane('#menuPane-grid');
 		$('#'+layer).show('slow');
 	}
 	else if (layer === 'menuPane-layer'){
 		hidePane('#menuPane-classes');
 		hidePane('#menuPane-export');
+		hidePane('#menuPane-grid');
 		$('#'+layer).show('slow');
 	}
 	else if (layer === 'menuPane-export'){
 		hidePane('#menuPane-classes');
 		hidePane('#menuPane-layer');
+		hidePane('#menuPane-grid');
 		$('#'+layer).show('slow');
 	}
 	else if (layer === 'infoWindow'){
