@@ -493,7 +493,7 @@
     <!-- Export Button End -->
 
     <!-- Export Pane -->
-    <div id="menuPane-export" class="menuPane" style="width: 200px;">
+    <div id="menuPane-export" class="menuPane" style="width: 250px;">
       <a href="#" id="hideButton_export" onclick="hidePane('#menuPane-export')" style="position: absolute; top:5px; right:7px; z-index: 4;">
         <img src="images/close12.png">
       </a>
@@ -501,26 +501,14 @@
         Karte drucken:
       </div>
       <div class="menuPaneContent">
-
-        <div class="table">
-          <div class="row">
-            <div class="cell">
-              <label for="mapExportTitle">Titel: </label>
-            </div>
-            <div class="cell printForm">
-              <input type="text" id="mapExportTitle" placeholder="Meine Karte">
-            </div>
-          </div>
-          <div class="row">
-            <div class="cell">
-              <label for="mapExportAuthor">Autor: </label>
-            </div>
-            <div class="cell printForm">
-              <input type="text" id="mapExportAuthor" placeholder="Anonym">
-            </div>
-          </div>
+        <div>
+          <label>Titel: </label>
+          <input type="text" id="mapExportTitle" placeholder="Meine Karte">
         </div>
-
+        <div>
+          <label>Autor: </label>
+          <input type="text" id="mapExportAuthor" placeholder="Anonym">
+        </div>
         <br>
         <div id="exportWarning">
           Achtung: Das exportieren der Karte kann einige Sekunden in Anspruch nehmen.
