@@ -332,6 +332,11 @@ require(['esri/map',
 
   attributionDiv = query('.esriAttributionList');
   domConstruct.place('<span class="esriAttributionLastItem" style="display: inline;">&copy; Landschaftsverband Westfalen-Lippe (LWL)<span class="esriAttributionDelim"> | </span></span>', attributionDiv[0]);
+  esriLogoDiv = query('.logo-med');
+  logoDiv = domConstruct.create('div',{
+    className: 'logo'
+  }, esriLogoDiv[0], 'before');
+  domConstruct.place('<a id="logo-ifgi" href="http://ifgi.uni-muenster.de/" target="_blank"></a>', logoDiv);
 });
 
 /**
@@ -397,12 +402,10 @@ function layerChange(layerNr,removeLayer) {
     //handling checkbox for the basemap
   } else if (layerNr === 50 && !(document.getElementById('baseMapChk').checked)) {
     map.removeLayer(osmLayer);
-    document.getElementById('copyrightLwl').innerHTML = '&copy; Landschaftsverband Westfalen-Lippe (LWL)';
   } else if (layerNr === 50 && (document.getElementById('baseMapChk').checked)) {
     map.addLayer(osmLayer, 0);
     require(['dojo/query'], function(query){
       attribution = query('.esriAttributionList');
-      console.log('test');
       attribution[0].childNodes[1].innerHTML = '<a target="_blank" href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>-Mitwirkende';
     });
     //handling checkbox for the operationalLayer

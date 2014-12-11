@@ -269,3 +269,19 @@ font-weight:bold;
 .esriAttribution {
 	margin-bottom: 8px;
 }
+
+.logo {
+	display: inline-block;
+	width: 30px;
+	height: 36px;
+	z-index: 30;
+}
+
+#logo-ifgi {
+	background-image: url("../images/ifgi_logo_map_resize.png");
+	background-repeat: no-repeat;
+	cursor: pointer;
+	display: inline-block;
+	height: inherit;
+	width: inherit;
+}
