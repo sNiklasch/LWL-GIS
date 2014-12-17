@@ -24,7 +24,7 @@
 	font-size: 12px;
 	top: 75px;
 	right: 120px;
-	width: 375px;
+	width: 275px;
 	display: none;
 	max-height: 75%;
 }
@@ -117,4 +117,38 @@
 	max-width: 2%;
 	display: inline-block;
 	line-height: 1;
+}
+
+.help {
+	cursor: help;
+}
+
+.disabled {
+	pointer-events: none;
+  cursor: default;
+  opacity: 0.5;
+}
+
+.field-0 {
+	cursor: pointer;
+}
+
+#menuPane-export label {
+	display:inline-block;
+  *display: inline;     /* for IE7*/
+  zoom:1;              /* for IE7*/
+  float: left;
+  padding-top: 5px;
+  text-align: left;
+  width: 20px;
+}
+
+#menuPane-export input[type="text"] {
+	margin-top: 5px;
+  margin-bottom: 5px;
+  display:inline-block;
+  *display: inline;     /* for IE7*/
+  zoom:1;              /* for IE7*/
+  vertical-align:middle;
+  margin-left:20px;
 }
