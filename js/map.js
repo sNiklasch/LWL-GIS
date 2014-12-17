@@ -1,4 +1,4 @@
-/* jshint ignore:start */
+/* ignore:start */
 var breakCount = 0; // keep track of how many individual breaks have been created, used to fetch the correct field values
 var diagramLayer = null; // the active clickable diagram layer
 var printCounter = 0; //counter for the printer widget
@@ -18,6 +18,7 @@ var activeDiagramLayer = 0; //Aktuell angezeigter Diagrammlayer, 0=keiner
 var labelVisibility = true; //zum überprüfen, ob die Label angezeigt sind
 
 var legend;
+var grid, store;
 
 /**
  * at this point the min and max values have to be entered manually for each layer.
@@ -99,17 +100,175 @@ function reLocate(extent) {
   }
 }
 
+/**
+ * This function zooms back to the maximum Extent
+ */
+function fullExtent(){
+  map.setExtent(maxExtent);
+}
+
+function getLayerAttributes(){
+  for (var i = allLayerAttributes.length - 1; i >= 0; i--) {
+    if (allLayerAttributes[i][0] === currentDataframe){
+      layerAttributes = allLayerAttributes[i];
+    }
+  }
+}
+
+/**
+* Diese Funktion initialisiert den operationalLayer, welcher die gesamten Layer vom Server enthält.
+* Zusätzlich wird beim ausführen der Funktion der operationalLayer zur map hinzugefügt und der Layer mit den Kreisnamen auf sichtbar gestellt.
+*/
+function initLayers(){
+  //Set labels visible on load:
+  require(['esri/layers/FeatureLayer',
+    'esri/symbols/TextSymbol',
+    'esri/renderers/SimpleRenderer',
+    'esri/Color',
+    'esri/layers/LabelLayer',
+    'esri/layers/ArcGISDynamicMapServiceLayer'], function(FeatureLayer, TextSymbol, SimpleRenderer, Color, LabelLayer, ArcGISDynamicMapServiceLayer) {
+    featureLayer = new FeatureLayer(featureLayerServer + '/0', {
+      id: 'kreise',
+      mode: FeatureLayer.MODE_ONDEMAND,
+      outFields: ['Kreisname']
+    });
+
+    map.addLayer(featureLayer, 0);
+    classify('equalInterval', 0, autoClassesBreaks, autoClassesStartColor, autoClassesEndColor);
+
+    // create a text symbol to define the style of labels
+    /*var labelField = 'Kreisname';
+    var statesColor = new Color("#666");
+    var statesLabel = new TextSymbol().setColor(statesColor);
+    statesLabel.font.setSize("14pt");
+    statesLabel.font.setFamily("arial");
+    var statesLabelRenderer = new SimpleRenderer(statesLabel);
+    var labels = new LabelLayer({ id: "labels" });
+    // tell the label layer to label the countries feature layer
+    // using the field named "admin"
+    labels.addFeatureLayer(featureLayer, statesLabelRenderer, "{" + labelField + "}");
+    // add the label layer to the map
+    map.addLayer(labels);*/
+
+    operationalLayer = new ArcGISDynamicMapServiceLayer(mapServer, { 'id': 'collection' });
+    featureLayer.on('update-start', showLoadingIcon);
+    featureLayer.on('update-end', hideLoadingIcon);
+    operationalLayer.setVisibleLayers([fIDkreisnamen],true);
+    map.addLayer(operationalLayer, 1);
+    getLayerAttributes();
+  });
+}
+
+/**
+ * this method check on page creation if this is in split mode
+ * if it is then the split-button is removed on the newly created frame
+ */
+function onLoadCheck() {
+  if (self.name === 'frame1') {
+    // document.getElementById('welcome').style.display = 'block';
+    // document.getElementById('welcomeBackground').style.display = 'block';
+  }
+  if (self.name === 'frame2') {
+    document.getElementById('splitDiv').removeChild(document.getElementById('slideAwayButton_split'));
+    if(map !== null){
+      map.setLevel(parent.frames[0].map.getLevel());
+    }
+  }
+}
+
+/**
+ * this function expects an array of colors for the features of the main layer
+ *
+*/
+function colorizeLayer(colorArray){
+  require(['esri/symbols/SimpleFillSymbol',
+           'esri/renderers/UniqueValueRenderer',
+           'esri/Color'], function(SimpleFillSymbol, UniqueValueRenderer, Color) {
+    var defaultSymbol = new SimpleFillSymbol().setColor(new Color([255,255,255,0.5]));
+
+    var renderer = new UniqueValueRenderer(defaultSymbol, 'Kreisname');
+    for (var i = colorArray.length - 1; i >= 0; i--) {
+      renderer.addValue(colorArray[i][0], new SimpleFillSymbol().setColor(new Color(colorArray[i][1])));
+    }
+
+    featureLayer.setRenderer(renderer);
+    featureLayer.redraw();
+
+    var minmax = getMinMax(datenEinwohner);
+
+    addLegendItems(legendArray); //update the Legend
+  });
+}
+
+function yearChange(value){
+  yearIndex = value;
+  currentYearLabel = getYearsArray(currentDataframe)[value];
+  console.log('aktuell: ' + currentLayer);
+  var appendix = '';
+  var lineBreak = '';
+  if (layerAttributes[1].indexOf('Altersgruppen') !== -1) { appendix = ' J.';}
+  if (layerAttributes[1].indexOf('Einwohner-Entwicklung') !== -1) { lineBreak = '<br>' ;}
+  document.getElementById('timesliderValue').innerHTML = layerAttributes[1] + ': ' + currentYearLabel + appendix;
+  document.getElementById('legendTheme').innerHTML = '<span>'+layerAttributes[1] + ': </span>' + lineBreak + '<span>' + currentYearLabel + appendix + '</span>';
+  currentYear = currentYearLabel;
+  switch(activeClassification) {
+    case 1:
+      colorizeLayer(createColorArrayByLegendArray(legendArray));
+      break;
+    case 2:
+      classify('equalInterval', value, autoClassesBreaks, autoClassesStartColor, autoClassesEndColor);
+      break;
+    case 3:
+      classify('quantile', value, autoClassesBreaks, autoClassesStartColor, autoClassesEndColor);
+      break;
+    case 4:
+      classify('jenks', value, autoClassesBreaks, autoClassesStartColor, autoClassesEndColor);
+      break;
+    case 5:
+      classify('standardDeviation', value, autoClassesBreaks, autoClassesStartColor, autoClassesEndColor);
+      break;
+    case 6:
+      classify('pretty', value, autoClassesBreaks, autoClassesStartColor, autoClassesEndColor);
+      break;
+    default:
+      break;
+  }
+}
+
+/**
+ * function to update the visibility of the Layers
+ * should be called everytime, when 'labelVisibility', 'activeDiagramLayer' or 'activeLayer' changes
+ */
+function updateLayerVisibility(){
+  if (labelVisibility) {
+    if (activeDiagramLayer === 0){
+      operationalLayer.setVisibleLayers([fIDkreisnamen]);
+    }
+    else {
+      operationalLayer.setVisibleLayers([fIDkreisnamen, activeDiagramLayer]);
+    }
+    operationalLayer.setVisibility(true);
+  }
+  else {
+    operationalLayer.setVisibility(true);
+    if (activeDiagramLayer === 0){
+      operationalLayer.setVisibility(false);
+    }
+    else {
+      operationalLayer.setVisibleLayers([activeDiagramLayer]);
+    }
+  }
+}
+
 require(['esri/map',
-  'esri/dijit/Popup',
   'esri/geometry/Extent',
   'esri/SpatialReference',
   'esri/layers/OpenStreetMapLayer',
   'dojo/dom-construct',
-  'dojo/domReady!'], function(Map, Popup, Extent, SpatialReference, OpenStreetMapLayer, domConstruct) {
+  'dojo/query',
+  'dojo/domReady!'], function(Map, Extent, SpatialReference, OpenStreetMapLayer, domConstruct, query) {
 
   addTooltips(); //the mouse-over tooltips are created programmatically
-
-  var popup = new Popup(null, domConstruct.create('div')); //ini popups for diagrams
 
   initExtent = new Extent(518012, 6573584, 1286052, 6898288, new SpatialReference({
     wkid: 102100
@@ -126,8 +285,7 @@ require(['esri/map',
   map = new Map('map', {
     minZoom: 8,
     extent: initExtent,
-    sliderStyle: 'large',
-    infoWindow: popup
+    sliderStyle: 'large'
   });
 
   map.on('extent-change', reLocate);
@@ -136,24 +294,6 @@ require(['esri/map',
   map.on('mouse-down', function() {
     for (var i = 0; i < parent.frames.length; i++) {
       parent.frames[i].counter = 0; //the counter is used if any pan related events occured onMouseDown
-    }
-  });
-
-  //Initialize the Legend:
-  map.on('layers-add-result', function(results) {
-    var layerInfo = dojo.map(results, function(layer,index){
-      return {
-        layer:layer.layer,
-        title:layer.layer.name,
-        hideLayers:[0]
-      };
-    });
-    if(layerInfo.length > 0){
-      legend = new esri.dijit.Legend({
-        map:map,
-        layerInfos: layerInfo
-      },'legend');
-      legend.startup();
     }
   });
 
@@ -189,94 +329,33 @@ require(['esri/map',
   yearChange(0); //set the init-year to 2012
 
   fullExtent();
+
+  attributionDiv = query('.esriAttributionList');
+  domConstruct.place('<span class="esriAttributionLastItem" style="display: inline;">&copy; Landschaftsverband Westfalen-Lippe (LWL)<span class="esriAttributionDelim"> | </span></span>', attributionDiv[0]);
+  esriLogoDiv = query('.logo-med');
+  logoDiv = domConstruct.create('div',{
+    className: 'logo'
+  }, esriLogoDiv[0], 'before');
+  domConstruct.place('<a id="logo-ifgi" href="http://ifgi.uni-muenster.de/" target="_blank"></a>', logoDiv);
 });
-
-/**
- * This function zooms back to the maximum Extent
- */
-function fullExtent(){
-  map.setExtent(maxExtent);
-  //reLocate(maxExtent);
-  //syncZoom(maxExtent);
-}
-
-/**
-* Diese Funktion initialisiert den operationalLayer, welcher die gesamten Layer vom Server enthält.
-* Zusätzlich wird beim ausführen der Funktion der operationalLayer zur map hinzugefügt und der Layer mit den Kreisnamen auf sichtbar gestellt.
-*/
-function initLayers(){
-  //Set labels visible on load:
-  require(['esri/layers/FeatureLayer',
-           'esri/layers/ArcGISDynamicMapServiceLayer',
-           'esri/InfoTemplate'], function(FeatureLayer, ArcGISDynamicMapServiceLayer, InfoTemplate) {
-    featureLayer = new FeatureLayer(featureLayerServer + '/0', {
-      infoTemplate: new InfoTemplate('&nbsp;', '${Kreisname}'),
-      mode: FeatureLayer.MODE_ONDEMAND,
-      outFields: ['Kreisname']
-    });
-    // featureLayerGemeinde = new FeatureLayer(fLGemeinde + '/0', {
-    //   infoTemplate: new InfoTemplate('&nbsp;', '${Kreisname}'),
-    //   mode: FeatureLayer.MODE_ONDEMAND,
-    //   outFields: ['Kreisname']
-    // });
-    map.addLayer(featureLayer, 0);
-    classify('equalInterval', 0, autoClassesBreaks, autoClassesStartColor, autoClassesEndColor);
-
-    operationalLayer = new ArcGISDynamicMapServiceLayer(mapServer, { 'id': 'collection' });
-    featureLayer.on('update-start', showLoadingIcon);
-    featureLayer.on('update-end', hideLoadingIcon);
-    operationalLayer.setVisibleLayers([fIDkreisnamen],true);
-    map.addLayer(operationalLayer, 1);
-    getLayerAttributes();
-  });
-}
-
-/**
- * this function expects an array of colors for the features of the main layer
- *
-*/
-function colorizeLayer(colorArray){
-  require(['esri/symbols/SimpleFillSymbol',
-           'esri/renderers/UniqueValueRenderer',
-           'esri/Color'], function(SimpleFillSymbol, UniqueValueRenderer, Color) {
-    var defaultSymbol = new SimpleFillSymbol().setColor(new Color([255,255,255,0.5]));
-
-    var renderer = new UniqueValueRenderer(defaultSymbol, 'Kreisname');
-    for (var i = colorArray.length - 1; i >= 0; i--) {
-      renderer.addValue(colorArray[i][0], new SimpleFillSymbol().setColor(new Color(colorArray[i][1])));
-    }
-
-    featureLayer.setRenderer(renderer);
-    featureLayer.redraw();
-
-    var minmax = getMinMax(datenEinwohner);
-
-    addLegendItems(legendArray); //update the Legend
-    console.log(map.getLayersVisibleAtScale());
-  });
-}
-
-/**
- * this method check on page creation if this is in split mode
- * if it is then the split-button is removed on the newly created frame
- */
-function onLoadCheck() {
-  if (self.name === 'frame1') {
-    // document.getElementById('welcome').style.display = 'block';
-    // document.getElementById('welcomeBackground').style.display = 'block';
-  }
-  if (self.name === 'frame2') {
-    document.getElementById('splitDiv').removeChild(document.getElementById('slideAwayButton_split'));
-    if(map !== null){
-      map.setLevel(parent.frames[0].map.getLevel());
-    }
-  }
-}
 
 /**
  * Method for changing the active overlay layer
  */
 function layerChange(layerNr,removeLayer) {
+
+  //enable / disable gridview button
+  require(['dojo/query', 'dojo/dom-class'], function(query, domClass){
+    query('input[type="radio"]').forEach(function(node,index,arr){
+      gridview = query('a.gridview',node.parentElement);
+      if (node.checked) {
+        domClass.remove(gridview[0],'disabled');
+      } else {
+        domClass.add(gridview[0],'disabled');
+      }
+    });
+  });
+
   //disconnect and connect click handlers for diagrams based on checkboxes
   if (layerNr === fIDaltersgruppenDiagramme2011 && !(document.getElementById('altersgruppenDiagramme2011Check').checked)) {
     diagramLayer = null;
@@ -323,10 +402,12 @@ function layerChange(layerNr,removeLayer) {
     //handling checkbox for the basemap
   } else if (layerNr === 50 && !(document.getElementById('baseMapChk').checked)) {
     map.removeLayer(osmLayer);
-    document.getElementById('copyrightLwl').innerHTML = '&copy; Landschaftsverband Westfalen-Lippe (LWL)';
   } else if (layerNr === 50 && (document.getElementById('baseMapChk').checked)) {
     map.addLayer(osmLayer, 0);
-    document.getElementById('copyrightLwl').innerHTML = '&copy; Landschaftsverband Westfalen-Lippe (LWL), <a target="_blank" href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>-Mitwirkende';
+    require(['dojo/query'], function(query){
+      attribution = query('.esriAttributionList');
+      attribution[0].childNodes[1].innerHTML = '<a target="_blank" href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>-Mitwirkende';
+    });
     //handling checkbox for the operationalLayer
   } else if (layerNr === 60 && (document.getElementById('labelChk').checked)) {
     labelVisibility = true;
@@ -347,7 +428,7 @@ function layerChange(layerNr,removeLayer) {
         if (diagramLayer !== null) {
           map.removeLayer(diagramLayer);
           diagramLayer = null;
-        };
+        }
         activeDiagramLayer = 0;
         document.getElementById('legendDiagrams').innerHTML = '';
         document.getElementById('altersgruppenDiagramme2011Check').checked = false;
@@ -365,74 +446,6 @@ function layerChange(layerNr,removeLayer) {
     //activeLayer = layerNr; //setting the new layer
     //updateLayerVisibility();
     updateTimeslider();
-  }
-}
-
-function yearChange(value){
-  yearIndex = value;
-  currentYearLabel = getYearsArray(currentDataframe)[value];
-  console.log('aktuell: ' + currentLayer);
-  var appendix = '';
-  var lineBreak = '';
-  if (layerAttributes[1].indexOf('Altersgruppen') !== -1) { appendix = ' J.'};
-  if (layerAttributes[1].indexOf('Einwohner-Entwicklung') !== -1) { lineBreak = '<br>' };
-  document.getElementById('timesliderValue').innerHTML = layerAttributes[1] + ': ' + currentYearLabel + appendix;
-  document.getElementById('legendTheme').innerHTML = '<span>'+layerAttributes[1] + ': </span>' + lineBreak + '<span>' + currentYearLabel + appendix + '</span>';
-  currentYear = currentYearLabel;
-  switch(activeClassification) {
-    case 1:
-      colorizeLayer(createColorArrayByLegendArray(legendArray));
-      break;
-    case 2:
-      classify('equalInterval', value, autoClassesBreaks, autoClassesStartColor, autoClassesEndColor);
-      break;
-    case 3:
-      classify('quantile', value, autoClassesBreaks, autoClassesStartColor, autoClassesEndColor);
-      break;
-    case 4:
-      classify('jenks', value, autoClassesBreaks, autoClassesStartColor, autoClassesEndColor);
-      break;
-    case 5:
-      classify('standardDeviation', value, autoClassesBreaks, autoClassesStartColor, autoClassesEndColor);
-      break;
-    case 6:
-      classify('pretty', value, autoClassesBreaks, autoClassesStartColor, autoClassesEndColor);
-      break;
-    default:
-      break;
-  }
-}
-
-function getLayerAttributes(){
-  for (var i = allLayerAttributes.length - 1; i >= 0; i--) {
-    if (allLayerAttributes[i][0] === currentDataframe){
-      layerAttributes = allLayerAttributes[i];
-    }
-  }
-}
-
-/**
- * function to update the visibility of the Layers
- * should be called everytime, when 'labelVisibility', 'activeDiagramLayer' or 'activeLayer' changes
- */
-function updateLayerVisibility(){
-  if (labelVisibility) {
-    if (activeDiagramLayer === 0){
-      operationalLayer.setVisibleLayers([fIDkreisnamen]);
-    }
-    else {
-      operationalLayer.setVisibleLayers([fIDkreisnamen, activeDiagramLayer]);
-    }
-    operationalLayer.setVisibility(true);
-  }
-  else {
-    operationalLayer.setVisibility(true);
-    if (activeDiagramLayer === 0){
-      operationalLayer.setVisibility(false);
-    }
-    else {
-      operationalLayer.setVisibleLayers([activeDiagramLayer]);
-    }
   }
 }
 

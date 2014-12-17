@@ -26,6 +26,10 @@ function hidePane(layer){
 		$('#welcomeBackground').hide('slow');
 	}
 	else {
+		if (layer === '#menuPane-grid') {
+			fl = map.getLayer('kreise');
+			fl.clearSelection();
+		}
 		$(layer).hide('slow');
 	}
 }
@@ -38,23 +42,28 @@ function showPane(layer){
 	else if (layer === 'menuPane-classes'){
 		hidePane('#menuPane-layer');
 		hidePane('#menuPane-export');
+		hidePane('#menuPane-grid');
 		$('#'+layer).show('slow');
 	}
 	else if (layer === 'menuPane-layer'){
 		hidePane('#menuPane-classes');
 		hidePane('#menuPane-export');
+		hidePane('#menuPane-grid');
 		$('#'+layer).show('slow');
 	}
 	else if (layer === 'menuPane-export'){
 		hidePane('#menuPane-classes');
 		hidePane('#menuPane-layer');
+		hidePane('#menuPane-grid');
 		$('#'+layer).show('slow');
 	}
 	else if (layer === 'infoWindow'){
 		$('#'+layer).show('slow');
 		$('#welcomeBackground').show('slow');
-	}
-	else {
+	} else if (layer === 'menuPane-grid') {
+		hidePane('#menuPane-layer');
+		$('#'+layer).show('slow');
+	} else {
 		$('#'+layer).show('slow');
 	}
 }
